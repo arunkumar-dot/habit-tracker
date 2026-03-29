@@ -1,0 +1,122 @@
+
+> habit-tracker@0.1.0 lint
+> eslint
+
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/app/(dashboard)/analytics/page.tsx
+  10:26  warning  'formatDateLabel' is defined but never used                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  27:9   warning  The 'dailyHabits' logical expression could make the dependencies of useMemo Hook (at line 51) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'dailyHabits' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/app/(dashboard)/calendar/page.tsx
+  11:31  warning  'addDays' is defined but never used                      @typescript-eslint/no-unused-vars
+  26:35  warning  'completionsLoading' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/app/(dashboard)/dashboard/page.tsx
+  31:48  error  React Hook "useHabits" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?              react-hooks/rules-of-hooks
+  33:5   error  React Hook "useCompletionsForDate" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  35:43  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?               react-hooks/rules-of-hooks
+  36:43  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?               react-hooks/rules-of-hooks
+  37:31  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?               react-hooks/rules-of-hooks
+  38:49  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?               react-hooks/rules-of-hooks
+  43:26  error  React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?                react-hooks/rules-of-hooks
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/analytics/streak-summary.tsx
+   3:10  warning  'Flame' is defined but never used        @typescript-eslint/no-unused-vars
+   3:17  warning  'Trophy' is defined but never used       @typescript-eslint/no-unused-vars
+   3:25  warning  'CheckCircle' is defined but never used  @typescript-eslint/no-unused-vars
+   3:38  warning  'TrendingUp' is defined but never used   @typescript-eslint/no-unused-vars
+  16:10  warning  'StatCard' is defined but never used     @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/calendar/habit-calendar.tsx
+  5:10  warning  'addDays' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/habits/habit-dialog.tsx
+   7:22  warning  'HabitId' is defined but never used  @typescript-eslint/no-unused-vars
+  31:14  warning  'err' is defined but never used      @typescript-eslint/no-unused-vars
+  66:14  warning  'err' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/habits/habit-form.tsx
+  41:25  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/habits/habit-form.tsx:41:25
+  39 |   });
+  40 |
+> 41 |   const selectedColor = watch("color");
+     |                         ^^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  42 |
+  43 |   async function handleFormSubmit(values: HabitFormValues) {
+  44 |     await onSubmit(values);  react-hooks/incompatible-library
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/layout/mobile-nav.tsx
+  6:10  warning  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/layout/topbar.tsx
+  7:9  warning  'todayLabel' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/timeline/timeline-gap.tsx
+  8:38  warning  'gapMinutes' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/timeline/timeline-view.tsx
+    4:10  warning  'Clock' is defined but never used                     @typescript-eslint/no-unused-vars
+   18:20  warning  'currentHabitId' is assigned a value but never used   @typescript-eslint/no-unused-vars
+   18:36  warning  'upcomingHabitId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   91:9   warning  'totalHabits' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  115:26  warning  'isCompleted' is assigned a value but never used      @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/components/ui/toast.tsx
+  3:20  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+  5:10  warning  'cn' is defined but never used         @typescript-eslint/no-unused-vars
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/convex/_generated/api.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/convex/_generated/dataModel.d.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/convex/_generated/server.d.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/convex/_generated/server.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/convex/auth.config.ts
+  9:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/convex/completions.ts
+  63:9  error  'completionsQuery' is never reassigned. Use 'const' instead  prefer-const
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/hooks/use-optimistic-completion.ts
+  43:28  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/hooks/use-optimistic-completion.ts:43:28
+  41 |           {
+  42 |             _id: `optimistic-${args.habitId}-${args.date}` as Id<"habitCompletions">,
+> 43 |             _creationTime: Date.now(),
+     |                            ^^^^^^^^^^ Cannot call impure function
+  44 |             habitId: args.habitId,
+  45 |             userId: "optimistic" as Id<"users">,
+  46 |             date: args.date,  react-hooks/purity
+  47:26  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/hooks/use-optimistic-completion.ts:47:26
+  45 |             userId: "optimistic" as Id<"users">,
+  46 |             date: args.date,
+> 47 |             completedAt: Date.now(),
+     |                          ^^^^^^^^^^ Cannot call impure function
+  48 |           },
+  49 |         ]
+  50 |       );                                                                                                           react-hooks/purity
+
+/Users/arunkumarkulkarni/Downloads/Dev/habit-tracker/lib/date-utils.ts
+  62:9  warning  'startMins' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  63:9  warning  'endMins' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+✖ 41 problems (10 errors, 31 warnings)
+  1 error and 4 warnings potentially fixable with the `--fix` option.
+

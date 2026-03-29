@@ -1,0 +1,45 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign In — HabitFlow",
+};
+
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4"
+         style={{ background: "var(--bg-base)" }}>
+      {/* Background gradient effect */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.12) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="relative w-full max-w-md">
+        {/* Logo / App name */}
+        <div className="text-center mb-8">
+          <div
+            className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4"
+            style={{ background: "var(--accent-primary)" }}
+          >
+            <span className="text-white text-xl font-bold">H</span>
+          </div>
+          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
+            HabitFlow
+          </h1>
+          <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+            Build better habits, one day at a time.
+          </p>
+        </div>
+
+        {children}
+      </div>
+    </div>
+  );
+}
