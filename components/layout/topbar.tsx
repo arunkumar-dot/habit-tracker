@@ -45,14 +45,41 @@ export function Topbar() {
           variables: {
             colorPrimary: "#6366f1",
             colorBackground: "#12121a",
-            colorText: "#e2e8f0",
-            colorTextSecondary: "#94a3b8",
+            colorText: "#f1f5f9",
+            colorTextSecondary: "#cbd5e1",
             borderRadius: "0.75rem",
           },
           elements: {
             userButtonPopoverCard: {
               background: "#1a1a28",
               border: "1px solid #2a2a3e",
+            },
+            userButtonPopoverActionButton: {
+              color: "#f1f5f9",
+              borderRadius: "0.5rem",
+            },
+            "userButtonPopoverActionButton:hover": {
+              background: "#2a2a4a",
+              color: "#a5b4fc",
+            },
+            userButtonPopoverActionButtonText: {
+              color: "#f1f5f9",
+            },
+            userButtonPopoverActionButtonIcon: {
+              color: "#a5b4fc",
+            },
+            userButtonPopoverUserFullName: {
+              color: "#f1f5f9",
+            },
+            userButtonPopoverUserEmailAddress: {
+              color: "#cbd5e1",
+            },
+            userPreviewMainIdentifier: {
+              color: "#f1f5f9",
+              fontWeight: "600",
+            },
+            userPreviewSecondaryIdentifier: {
+              color: "#cbd5e1",
             },
           },
         }}

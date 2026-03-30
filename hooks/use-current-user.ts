@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { api } from "@/convex/_generated/api";
@@ -10,23 +10,22 @@ import type { User } from "@/types";
  * Returns the current user's Convex record and loading state.
  * Also triggers upsertUser to keep the record in sync with Clerk.
  *
- * Skips all Convex queries until Clerk has fully loaded and the
- * user is confirmed signed-in, preventing "Unauthenticated" errors.
+ * Skips all Convex calls until Convex has received and validated
+ * the auth token, preventing "Unauthenticated" errors.
  */
 export function useCurrentUser(): { user: User | null | undefined; isLoading: boolean } {
-  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  const { user: clerkUser } = useUser();
+  const { isLoading: authLoading, isAuthenticated } = useConvexAuth();
 
-  // Only fire the Convex query once Clerk has confirmed the user is signed in.
-  const isSignedIn = clerkLoaded && !!clerkUser;
   const convexUser = useQuery(
     api.users.getCurrentUser,
-    isSignedIn ? {} : "skip"
+    !authLoading && isAuthenticated ? {} : "skip"
   );
 
   const upsertUser = useMutation(api.users.upsertUser);
 
   useEffect(() => {
-    if (!clerkLoaded || !clerkUser) return;
+    if (authLoading || !isAuthenticated || !clerkUser) return;
 
     // Sync Clerk user data into Convex
     upsertUser({
@@ -34,9 +33,9 @@ export function useCurrentUser(): { user: User | null | undefined; isLoading: bo
       email: clerkUser.primaryEmailAddress?.emailAddress ?? "",
       imageUrl: clerkUser.imageUrl,
     }).catch(console.error);
-  }, [clerkLoaded, clerkUser, upsertUser]);
+  }, [authLoading, isAuthenticated, clerkUser, upsertUser]);
 
-  const isLoading = !clerkLoaded || (isSignedIn && convexUser === undefined);
+  const isLoading = authLoading || (isAuthenticated && convexUser === undefined);
 
   return { user: convexUser, isLoading };
 }

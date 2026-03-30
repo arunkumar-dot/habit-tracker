@@ -1,7 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "convex/react";
-import { useAuth } from "@clerk/nextjs";
+import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { HabitCompletion, HabitId } from "@/types";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -17,11 +16,11 @@ let pendingToggleTimestamp = 0;
  * Skips the query until Clerk has authenticated the user.
  */
 export function useOptimisticCompletion(habitId: HabitId, date: string) {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoading: authLoading, isAuthenticated } = useConvexAuth();
 
   const raw = useQuery(
     api.completions.getCompletionsForDate,
-    isLoaded && isSignedIn ? { date } : "skip"
+    !authLoading && isAuthenticated ? { date } : "skip"
   );
   const completions = raw as HabitCompletion[] | undefined;
 

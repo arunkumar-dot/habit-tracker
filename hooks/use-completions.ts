@@ -1,27 +1,26 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { useAuth } from "@clerk/nextjs";
+import { useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { HabitCompletion, HabitId } from "@/types";
 
 /**
  * Subscribe to all completions for the current user on a specific date.
  * Returns a set of completed habitIds for O(1) lookup.
- * Skips the query until Clerk has authenticated the user.
+ * Skips the query until Convex has received and validated the auth token.
  */
 export function useCompletionsForDate(date: string): {
   completions: HabitCompletion[] | undefined;
   completedHabitIds: Set<string>;
   isLoading: boolean;
 } {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoading: authLoading, isAuthenticated } = useConvexAuth();
   const raw = useQuery(
     api.completions.getCompletionsForDate,
-    isLoaded && isSignedIn ? { date } : "skip"
+    !authLoading && isAuthenticated ? { date } : "skip"
   );
   const completions = raw as HabitCompletion[] | undefined;
-  const isLoading = !isLoaded || (!!isSignedIn && completions === undefined);
+  const isLoading = authLoading || (isAuthenticated && completions === undefined);
 
   const completedHabitIds = new Set<string>(
     completions?.map((c: HabitCompletion) => c.habitId as string) ?? []
@@ -42,13 +41,13 @@ export function useCompletionsForHabit(
   completedDates: string[];
   isLoading: boolean;
 } {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoading: authLoading, isAuthenticated } = useConvexAuth();
   const raw = useQuery(
     api.completions.getCompletionsForHabit,
-    isLoaded && isSignedIn && habitId ? { habitId, startDate, endDate } : "skip"
+    !authLoading && isAuthenticated && habitId ? { habitId, startDate, endDate } : "skip"
   );
   const completions = raw as HabitCompletion[] | undefined;
-  const isLoading = !isLoaded || (!!isSignedIn && habitId !== undefined && completions === undefined);
+  const isLoading = authLoading || (isAuthenticated && habitId !== undefined && completions === undefined);
   const completedDates = completions?.map((c: HabitCompletion) => c.date) ?? [];
 
   return { completions, completedDates, isLoading };
@@ -64,11 +63,11 @@ export function useCompletionsForDateRange(
   completions: HabitCompletion[] | undefined;
   isLoading: boolean;
 } {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoading: authLoading, isAuthenticated } = useConvexAuth();
   const raw = useQuery(
     api.completions.getCompletionsForDateRange,
-    isLoaded && isSignedIn ? { startDate, endDate } : "skip"
+    !authLoading && isAuthenticated ? { startDate, endDate } : "skip"
   );
   const completions = raw as HabitCompletion[] | undefined;
-  return { completions, isLoading: !isLoaded || (!!isSignedIn && completions === undefined) };
+  return { completions, isLoading: authLoading || (isAuthenticated && completions === undefined) };
 }

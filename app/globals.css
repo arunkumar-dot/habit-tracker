@@ -110,3 +110,26 @@
 .animate-spin-slow {
   animation: spin 1s linear infinite;
 }
+
+/* Clerk UserButton popup — action button hover */
+.cl-userButtonPopoverActionButton:hover {
+  background: #2a2a4a !important;
+  color: #a5b4fc !important;
+}
+.cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonText {
+  color: #a5b4fc !important;
+}
+.cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonIcon {
+  color: #a5b4fc !important;
+}
+
+/* Clerk UserButton popup — username/email visibility */
+.cl-userPreviewMainIdentifier,
+.cl-userButtonPopoverUserFullName {
+  color: #f1f5f9 !important;
+  font-weight: 600;
+}
+.cl-userPreviewSecondaryIdentifier,
+.cl-userButtonPopoverUserEmailAddress {
+  color: #cbd5e1 !important;
+}
