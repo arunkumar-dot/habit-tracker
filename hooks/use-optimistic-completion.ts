@@ -2,6 +2,8 @@
 
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useToast } from "@/components/ui/toast";
+import { MILESTONES } from "@/lib/milestone-config";
 import type { HabitCompletion, HabitId } from "@/types";
 import type { Id } from "@/convex/_generated/dataModel";
 
@@ -13,10 +15,12 @@ let pendingToggleTimestamp = 0;
 /**
  * Provides optimistic completion toggle for a habit on a given date.
  * The UI updates instantly without waiting for the server round-trip.
+ * Shows achievement toasts when new milestones are unlocked.
  * Skips the query until Clerk has authenticated the user.
  */
 export function useOptimisticCompletion(habitId: HabitId, date: string) {
   const { isLoading: authLoading, isAuthenticated } = useConvexAuth();
+  const { showToast } = useToast();
 
   const raw = useQuery(
     api.completions.getCompletionsForDate,
@@ -68,7 +72,18 @@ export function useOptimisticCompletion(habitId: HabitId, date: string) {
 
   async function toggle() {
     pendingToggleTimestamp = Date.now(); // set before mutation fires, outside render
-    await toggleMutation({ habitId, date });
+    const result = await toggleMutation({ habitId, date });
+    if (result?.action === "completed" && result.newMilestones.length > 0) {
+      for (const days of result.newMilestones) {
+        const config = MILESTONES.find((m) => m.daysRequired === days);
+        if (config) {
+          showToast(
+            `🎉 Milestone unlocked: ${config.icon} ${config.name} — ${config.description}`,
+            "success"
+          );
+        }
+      }
+    }
   }
 
   return { isCompleted, toggle };

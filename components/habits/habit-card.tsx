@@ -4,6 +4,7 @@ import { Clock, Repeat } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { HabitCompletionButton } from "./habit-completion-button";
 import { HabitStreakBadge } from "./habit-streak-badge";
+import { HabitMilestoneHint } from "./habit-milestone-hint";
 import { HabitMenu } from "./habit-menu";
 import { useOptimisticCompletion } from "@/hooks/use-optimistic-completion";
 import { formatDisplayTime, formatDuration, getDurationMinutes } from "@/lib/date-utils";
@@ -96,6 +97,7 @@ export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
             {habit.frequency === "daily" ? "Daily" : "Weekly"}
           </Badge>
           <HabitStreakBadge habitId={habit._id} frequency={habit.frequency} />
+          <HabitMilestoneHint habitId={habit._id} frequency={habit.frequency} />
         </div>
       </div>
 

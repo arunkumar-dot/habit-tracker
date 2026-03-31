@@ -10,6 +10,8 @@
 
 import type * as completions from "../completions.js";
 import type * as habits from "../habits.js";
+import type * as milestones from "../milestones.js";
+import type * as pomodoro from "../pomodoro.js";
 import type * as users from "../users.js";
 
 import type {
@@ -21,6 +23,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   completions: typeof completions;
   habits: typeof habits;
+  milestones: typeof milestones;
+  pomodoro: typeof pomodoro;
   users: typeof users;
 }>;
 

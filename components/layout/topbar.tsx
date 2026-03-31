@@ -2,6 +2,7 @@
 
 import { UserButton } from "@clerk/nextjs";
 import { today, formatDateLabel } from "@/lib/date-utils";
+import { NotificationToggle } from "@/components/notifications/notification-toggle";
 
 export function Topbar() {
   const todayLabel = formatDateLabel(today());
@@ -39,8 +40,11 @@ export function Topbar() {
 
       <div className="flex-1 lg:flex-none" />
 
-      {/* Clerk user button */}
-      <UserButton
+      <div className="flex items-center gap-3">
+        <NotificationToggle />
+
+        {/* Clerk user button */}
+        <UserButton
         appearance={{
           variables: {
             colorPrimary: "#6366f1",
@@ -83,7 +87,8 @@ export function Topbar() {
             },
           },
         }}
-      />
+        />
+      </div>
     </header>
   );
 }

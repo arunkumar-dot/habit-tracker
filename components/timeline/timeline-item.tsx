@@ -68,7 +68,8 @@ export function TimelineItem({
         className={cn(
           "flex-1 flex items-start justify-between gap-3 mb-4 p-4 rounded-2xl transition-all",
           isCurrent && "ring-1",
-          isPast && !isCompleted && "opacity-50"
+          isPast && !isCompleted && "opacity-50",
+          !isCompleted && !isCurrent && "hover:brightness-150"
         )}
         style={{
           background: isCurrent

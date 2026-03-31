@@ -20,6 +20,7 @@ export function HabitCompletionButton({
   disabled = false,
 }: HabitCompletionButtonProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   async function handleClick() {
     if (disabled || isAnimating) return;
@@ -39,6 +40,8 @@ export function HabitCompletionButton({
       onClick={handleClick}
       disabled={disabled}
       aria-label={isCompleted ? "Mark incomplete" : "Mark complete"}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={cn(
         "flex-shrink-0 rounded-full flex items-center justify-center transition-all duration-200",
         sizeClass,
@@ -54,8 +57,8 @@ export function HabitCompletionButton({
               boxShadow: `0 0 12px ${color}40`,
             }
           : {
-              background: "transparent",
-              border: `2px solid ${color}60`,
+              background: isHovered ? `${color}20` : "transparent",
+              border: `2px solid ${isHovered ? color : `${color}60`}`,
             }
       }
     >

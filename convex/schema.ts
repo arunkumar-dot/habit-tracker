@@ -10,7 +10,14 @@ export default defineSchema({
     clerkId: v.string(), // Clerk user ID (JWT subject / tokenIdentifier)
     name: v.string(),
     email: v.string(),
-    imageUrl: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),        // Clerk-synced profile image URL
+    // App-specific profile fields (all optional for zero-downtime migration)
+    age: v.optional(v.number()),
+    sex: v.optional(v.union(v.literal("male"), v.literal("female"), v.literal("other"))),
+    location: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    profileImageStorageId: v.optional(v.id("_storage")), // Custom uploaded image
+    updatedAt: v.optional(v.number()),       // Unix timestamp ms of last profile edit
     createdAt: v.number(), // Unix timestamp ms
   }).index("by_clerk_id", ["clerkId"]),
 
@@ -53,4 +60,37 @@ export default defineSchema({
     .index("by_habit", ["habitId"])
     // Get all completions for a user (analytics)
     .index("by_user", ["userId"]),
+
+  /**
+   * Milestone achievements earned by a user for a specific habit.
+   * keyed by daysRequired (from MILESTONES config in lib/milestone-config.ts).
+   * Awards are permanent — never deleted even if streak breaks.
+   */
+  userMilestones: defineTable({
+    userId: v.id("users"),
+    habitId: v.id("habits"),
+    daysRequired: v.number(), // e.g. 3, 7, 14, 21, 30, 45, 66
+    achievedAt: v.number(),   // Unix timestamp ms
+  })
+    .index("by_user_habit", ["userId", "habitId"])
+    .index("by_user", ["userId"]),
+
+  /**
+   * Completed Pomodoro sessions.
+   * Recorded when a focus or break timer reaches zero.
+   */
+  pomodoroSessions: defineTable({
+    userId: v.id("users"),
+    habitId: v.optional(v.id("habits")), // linked habit, if any
+    mode: v.union(
+      v.literal("focus"),
+      v.literal("shortBreak"),
+      v.literal("longBreak")
+    ),
+    durationSecs: v.number(), // planned duration in seconds
+    date: v.string(), // "YYYY-MM-DD" in user's local timezone
+    completedAt: v.number(), // Unix timestamp ms
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_date", ["userId", "date"]),
 });

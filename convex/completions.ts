@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import type { QueryCtx, MutationCtx } from "./_generated/server";
+import { internal } from "./_generated/api";
 
 // ============================================
 // INTERNAL HELPER
@@ -132,7 +133,8 @@ export const isHabitCompletedOnDate = query({
  * Toggle habit completion for a given date.
  * If no completion exists → creates one (marks complete).
  * If completion exists → deletes it (marks incomplete).
- * Returns the new state: "completed" | "uncompleted"
+ * Returns { action, newMilestones } where newMilestones contains daysRequired
+ * values for any milestones just unlocked (used for achievement toasts).
  */
 export const toggleCompletion = mutation({
   args: {
@@ -159,7 +161,7 @@ export const toggleCompletion = mutation({
     if (existing) {
       // Remove completion (mark incomplete)
       await ctx.db.delete(existing._id);
-      return "uncompleted" as const;
+      return { action: "uncompleted" as const, newMilestones: [] as number[] };
     } else {
       // Add completion (mark complete)
       await ctx.db.insert("habitCompletions", {
@@ -168,7 +170,14 @@ export const toggleCompletion = mutation({
         date: args.date,
         completedAt: Date.now(),
       });
-      return "completed" as const;
+
+      // Check for newly unlocked milestones
+      const newMilestones: number[] = await ctx.runMutation(
+        internal.milestones.checkAndAwardMilestones,
+        { habitId: args.habitId, userId: user._id }
+      );
+
+      return { action: "completed" as const, newMilestones };
     }
   },
 });
