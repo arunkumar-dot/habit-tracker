@@ -71,20 +71,20 @@ export function HabitCalendar({
   return (
     <div>
       {/* Weekday headers */}
-      <div className="grid grid-cols-7 mb-2">
+      <div className="grid grid-cols-7 mb-1">
         {WEEKDAYS.map((day) => (
           <div
             key={day}
-            className="text-center text-xs font-medium py-2"
+            className="text-center text-[10px] font-medium py-1"
             style={{ color: "var(--text-disabled)" }}
           >
-            {day}
+            {day[0]}
           </div>
         ))}
       </div>
 
       {/* Days grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-0.5">
         {calendarDays.map(({ dateStr, isCurrentMonth }) => {
           const completedIds = completionsByDate.get(dateStr) ?? new Set();
           const completedCount = completedIds.size;

@@ -1,5 +1,14 @@
 import { cn } from "@/lib/utils";
 
+/**
+ * Card — shadcn-aligned card primitives.
+ *
+ * Uses `bg-card`, `text-card-foreground`, `border-border` Tailwind tokens
+ * that resolve to the project's CSS variables via @theme inline.
+ *
+ * Backward-compatible: `variant` and `padding` props are preserved.
+ */
+
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "default" | "elevated" | "bordered";
   padding?: "none" | "sm" | "md" | "lg";
@@ -17,29 +26,16 @@ export function Card({
   padding = "md",
   className,
   children,
-  style,
   ...props
 }: CardProps) {
-  const variantStyle: React.CSSProperties = {
-    default: {
-      background: "var(--bg-surface)",
-      border: "1px solid var(--border)",
-    },
-    elevated: {
-      background: "var(--bg-elevated)",
-      border: "1px solid var(--border)",
-      boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
-    },
-    bordered: {
-      background: "var(--bg-surface)",
-      border: "1px solid var(--border)",
-    },
-  }[variant];
-
   return (
     <div
-      className={cn("rounded-2xl", paddingStyles[padding], className)}
-      style={{ ...variantStyle, ...style }}
+      className={cn(
+        "rounded-2xl border border-border bg-card text-card-foreground",
+        variant === "elevated" && "shadow-[0_4px_24px_rgba(0,0,0,0.3)]",
+        paddingStyles[padding],
+        className
+      )}
       {...props}
     >
       {children}
@@ -69,12 +65,26 @@ export function CardTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn("text-base font-semibold", className)}
-      style={{ color: "var(--text-primary)" }}
+      className={cn("text-base font-semibold text-foreground", className)}
       {...props}
     >
       {children}
     </h3>
+  );
+}
+
+export function CardDescription({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
+  return (
+    <p
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    >
+      {children}
+    </p>
   );
 }
 
@@ -98,10 +108,9 @@ export function CardFooter({
   return (
     <div
       className={cn(
-        "flex items-center justify-between mt-4 pt-4",
+        "flex items-center justify-between mt-4 pt-4 border-t border-border",
         className
       )}
-      style={{ borderTop: "1px solid var(--border)" }}
       {...props}
     >
       {children}

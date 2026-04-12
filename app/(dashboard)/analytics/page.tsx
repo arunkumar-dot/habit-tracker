@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatCardSkeleton } from "@/components/ui/skeleton";
 import { StreakSummary } from "@/components/analytics/streak-summary";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDateRange } from "@/hooks/use-completions";
@@ -50,6 +51,8 @@ export default function AnalyticsPage() {
     return days;
   }, [completions, dailyHabits, todayStr]);
 
+  const isStatsLoading = !habits || !completions;
+
   const totalCompletionsThisWeek = weeklyData.reduce(
     (sum, d) => sum + d.completed,
     0
@@ -67,30 +70,42 @@ export default function AnalyticsPage() {
 
       {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-        <Card variant="default" padding="md">
-          <p className="text-2xl font-bold" style={{ color: "var(--accent-primary)" }}>
-            {totalHabits}
-          </p>
-          <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
-            Active Habits
-          </p>
-        </Card>
-        <Card variant="default" padding="md">
-          <p className="text-2xl font-bold" style={{ color: "var(--accent-success)" }}>
-            {totalCompletionsThisWeek}
-          </p>
-          <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
-            This Week
-          </p>
-        </Card>
-        <Card variant="default" padding="md" className="col-span-2 sm:col-span-1">
-          <p className="text-2xl font-bold" style={{ color: "var(--accent-warning)" }}>
-            {avgCompletionRate}%
-          </p>
-          <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
-            Avg Completion
-          </p>
-        </Card>
+        {isStatsLoading ? (
+          <>
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <div className="col-span-2 sm:col-span-1">
+              <StatCardSkeleton />
+            </div>
+          </>
+        ) : (
+          <>
+            <Card variant="default" padding="md">
+              <p className="text-2xl font-bold" style={{ color: "var(--accent-primary)" }}>
+                {totalHabits}
+              </p>
+              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                Active Habits
+              </p>
+            </Card>
+            <Card variant="default" padding="md">
+              <p className="text-2xl font-bold" style={{ color: "var(--accent-success)" }}>
+                {totalCompletionsThisWeek}
+              </p>
+              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                This Week
+              </p>
+            </Card>
+            <Card variant="default" padding="md" className="col-span-2 sm:col-span-1">
+              <p className="text-2xl font-bold" style={{ color: "var(--accent-warning)" }}>
+                {avgCompletionRate}%
+              </p>
+              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                Avg Completion
+              </p>
+            </Card>
+          </>
+        )}
       </div>
 
       {/* Weekly chart */}

@@ -34,6 +34,7 @@ export default defineSchema({
     endTime: v.optional(v.string()), // "HH:MM" 24-hour format
     color: v.optional(v.string()), // Hex color e.g. "#6366f1"
     isArchived: v.boolean(), // Soft delete flag
+    weeklyGoal: v.optional(v.number()), // Target completions per week e.g. 4
     createdAt: v.number(), // Unix timestamp ms
     updatedAt: v.number(), // Unix timestamp ms
   })
@@ -79,6 +80,20 @@ export default defineSchema({
    * Completed Pomodoro sessions.
    * Recorded when a focus or break timer reaches zero.
    */
+  /**
+   * Daily check-in records — one per user per day.
+   * completed=true: user confirmed habits done; completed=false: user skipped.
+   * Absence means check-in has not been shown/answered yet today.
+   */
+  dailyCheckIns: defineTable({
+    userId: v.id("users"),
+    date: v.string(),       // "YYYY-MM-DD" in user's local timezone
+    completed: v.boolean(), // true = "Yes I completed", false = "Not today"
+    createdAt: v.number(),  // Unix timestamp ms
+  })
+    .index("by_user_date", ["userId", "date"])
+    .index("by_user", ["userId"]),
+
   pomodoroSessions: defineTable({
     userId: v.id("users"),
     habitId: v.optional(v.id("habits")), // linked habit, if any
@@ -93,4 +108,18 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_user_date", ["userId", "date"]),
+
+  /**
+   * FCM push tokens for web push notifications.
+   * One token per device/browser — multiple tokens per user allowed.
+   * Timezone stored so the server-side cron can match habit startTime to local time.
+   */
+  pushTokens: defineTable({
+    userId: v.id("users"),
+    token: v.string(),       // FCM registration token
+    timezone: v.string(),    // IANA timezone e.g. "America/New_York"
+    createdAt: v.number(),   // Unix timestamp ms
+  })
+    .index("by_user", ["userId"])
+    .index("by_token", ["token"]),
 });

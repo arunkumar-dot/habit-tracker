@@ -1,6 +1,12 @@
 import { forwardRef } from "react";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+/**
+ * Select — native HTML select with optional label, error, and helper text.
+ * Uses shadcn/ui design tokens: bg-input, border-border, text-foreground.
+ * Backward-compatible: all existing props work unchanged.
+ */
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
@@ -14,53 +20,67 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <div className="flex flex-col gap-1.5">
-        {label && (
-          <label
-            htmlFor={selectId}
-            className="text-sm font-medium"
-            style={{ color: "var(--text-primary)" }}
+        {label && <Label htmlFor={selectId}>{label}</Label>}
+        <div className="relative">
+          <select
+            ref={ref}
+            id={selectId}
+            className={cn(
+              "w-full appearance-none rounded-xl border border-border bg-input",
+              "px-3 py-2.5 pr-9 text-sm text-foreground outline-none transition-colors",
+              "cursor-pointer",
+              "focus:ring-1 focus:ring-ring",
+              "disabled:cursor-not-allowed disabled:opacity-50",
+              error && "ring-1 ring-destructive focus:ring-destructive",
+              className
+            )}
+            aria-invalid={!!error}
+            aria-describedby={
+              error
+                ? `${selectId}-error`
+                : helperText
+                  ? `${selectId}-helper`
+                  : undefined
+            }
+            {...props}
           >
-            {label}
-          </label>
-        )}
-        <select
-          ref={ref}
-          id={selectId}
-          className={cn(
-            "w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors appearance-none cursor-pointer",
-            error
-              ? "ring-1 ring-[color:var(--accent-danger)]"
-              : "focus:ring-1 focus:ring-[color:var(--border-focus)]",
-            className
-          )}
-          style={{
-            background: "var(--bg-input)",
-            border: "1px solid var(--border)",
-            color: "var(--text-primary)",
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "right 12px center",
-            paddingRight: "36px",
-          }}
-          {...props}
-        >
-          {options.map((option) => (
-            <option
-              key={option.value}
-              value={option.value}
-              style={{ background: "var(--bg-elevated)" }}
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          {/* Custom chevron */}
+          <div
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              {option.label}
-            </option>
-          ))}
-        </select>
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
         {error && (
-          <p className="text-xs" style={{ color: "var(--accent-danger)" }}>
+          <p
+            id={`${selectId}-error`}
+            className="text-xs text-destructive"
+            role="alert"
+          >
             {error}
           </p>
         )}
         {!error && helperText && (
-          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+          <p id={`${selectId}-helper`} className="text-xs text-muted-foreground">
             {helperText}
           </p>
         )}

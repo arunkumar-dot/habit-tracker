@@ -25,6 +25,7 @@ export interface CreateHabitInput {
   startTime: string;
   endTime?: string;
   color?: string;
+  weeklyGoal?: number;
 }
 
 export interface UpdateHabitInput extends Partial<CreateHabitInput> {

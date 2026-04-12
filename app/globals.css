@@ -1,7 +1,52 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
 /* ============================================
-   DARK MODE DESIGN TOKENS
+   TAILWIND V4 THEME — dark mode defaults
+   Points directly at the project's CSS variable
+   names so bg-background, text-foreground, etc.
+   resolve correctly at runtime in both modes.
+   ============================================ */
+@theme inline {
+  /* Backgrounds */
+  --color-background:         var(--bg-base);
+  --color-card:               var(--bg-surface);
+  --color-card-foreground:    var(--text-primary);
+  --color-popover:            var(--bg-elevated);
+  --color-popover-foreground: var(--text-primary);
+  --color-secondary:          var(--bg-elevated);
+  --color-secondary-foreground: var(--text-primary);
+  --color-muted:              var(--bg-elevated);
+  --color-accent:             var(--bg-hover);
+  --color-accent-foreground:  var(--text-primary);
+  --color-input:              var(--bg-input);
+
+  /* Text */
+  --color-foreground:         var(--text-primary);
+  --color-muted-foreground:   var(--text-secondary);
+
+  /* Brand / semantic */
+  --color-primary:            var(--accent-primary);
+  --color-primary-foreground: #ffffff;
+  --color-destructive:        var(--accent-danger);
+  --color-destructive-foreground: #ffffff;
+  --color-success:            var(--accent-success);
+  --color-success-foreground: #ffffff;
+
+  /* Structural */
+  --color-border:             var(--border);
+  --color-ring:               var(--border-focus);
+
+  /* Radius scale */
+  --radius-sm:  0.5rem;
+  --radius-md:  0.625rem;
+  --radius-lg:  0.75rem;
+  --radius-xl:  1rem;
+  --radius-2xl: 1.5rem;
+}
+
+/* ============================================
+   DARK MODE DESIGN TOKENS (default)
    ============================================ */
 @layer base {
   :root {
@@ -26,6 +71,36 @@
 
     /* Timeline */
     --timeline-line: #2a2a3e;
+    --timeline-now: #ef4444;
+
+  }
+
+  /* ============================================
+     LIGHT MODE DESIGN TOKENS
+     Applied when <html> has class="light"
+     ============================================ */
+  html.light {
+    --bg-base: #f1f5f9;
+    --bg-surface: #ffffff;
+    --bg-elevated: #f8fafc;
+    --bg-input: #f1f5f9;
+    --bg-hover: #e2e8f0;
+    --border: #e2e8f0;
+    --border-focus: #6366f1;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-disabled: #94a3b8;
+    --accent-primary: #6366f1;
+    --accent-primary-hover: #4f46e5;
+    --accent-success: #10b981;
+    --accent-success-hover: #059669;
+    --accent-warning: #f59e0b;
+    --accent-danger: #ef4444;
+    --accent-danger-hover: #dc2626;
+    --accent-info: #3b82f6;
+
+    /* Timeline */
+    --timeline-line: #e2e8f0;
     --timeline-now: #ef4444;
   }
 }
@@ -89,6 +164,26 @@
   to { transform: rotate(360deg); }
 }
 
+/* Completion ripple — used by HabitCompletionButton */
+@keyframes completion-ripple {
+  0%   { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Swipe hint fade-in */
+@keyframes fade-in-right {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Card hover lift — for browsers that can't run JS (no framer-motion) */
+@media (hover: hover) {
+  .habit-card-hover:hover {
+    transform: translateY(-2px);
+    transition: transform 0.15s ease;
+  }
+}
+
 /* ============================================
    CUSTOM UTILITY CLASSES
    ============================================ */
@@ -123,7 +218,7 @@
   color: #a5b4fc !important;
 }
 
-/* Clerk UserButton popup — username/email visibility */
+/* Clerk UserButton popup — username/email visibility (dark) */
 .cl-userPreviewMainIdentifier,
 .cl-userButtonPopoverUserFullName {
   color: #f1f5f9 !important;
@@ -132,4 +227,24 @@
 .cl-userPreviewSecondaryIdentifier,
 .cl-userButtonPopoverUserEmailAddress {
   color: #cbd5e1 !important;
+}
+
+/* Clerk popup overrides — light mode */
+html.light .cl-userButtonPopoverActionButton:hover {
+  background: #e0e7ff !important;
+  color: #4f46e5 !important;
+}
+html.light .cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonText {
+  color: #4f46e5 !important;
+}
+html.light .cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonIcon {
+  color: #4f46e5 !important;
+}
+html.light .cl-userPreviewMainIdentifier,
+html.light .cl-userButtonPopoverUserFullName {
+  color: #0f172a !important;
+}
+html.light .cl-userPreviewSecondaryIdentifier,
+html.light .cl-userButtonPopoverUserEmailAddress {
+  color: #475569 !important;
 }

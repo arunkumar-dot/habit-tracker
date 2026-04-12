@@ -9,9 +9,13 @@ import { HabitList } from "@/components/habits/habit-list";
 import { HabitFilters } from "@/components/habits/habit-filters";
 import { CreateHabitDialog, EditHabitDialog } from "@/components/habits/habit-dialog";
 import { Progress } from "@/components/ui/progress";
+import { DashboardContentSkeleton } from "@/components/ui/skeleton";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDate } from "@/hooks/use-completions";
+import { useNudges } from "@/hooks/use-nudges";
 import { today, formatDateLabel } from "@/lib/date-utils";
+import { DailyCheckInModal } from "@/components/retention/daily-check-in-modal";
+import { NudgeBanner } from "@/components/retention/nudge-banner";
 import type { Habit } from "@/types";
 
 
@@ -31,6 +35,7 @@ export default function DashboardPage() {
   const [frequencyFilter, setFrequencyFilter] = useState<FrequencyFilter>("all");
 
   const isLoading = habitsLoading || completionsLoading;
+  const { nudges, dismiss } = useNudges();
 
   // Filter habits by search and frequency
   const filteredHabits = useMemo(() => {
@@ -53,7 +58,7 @@ export default function DashboardPage() {
 
   // ⛔ Wait for Clerk to initialize (must be after all hooks)
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <DashboardContentSkeleton />;
   }
   // ⛔ If not logged in → redirect
   if (!isSignedIn) {
@@ -62,6 +67,8 @@ export default function DashboardPage() {
 
   return (
     <>
+      <DailyCheckInModal />
+
       <PageHeader
         title="My Habits"
         description={formatDateLabel(selectedDate)}
@@ -76,6 +83,8 @@ export default function DashboardPage() {
           </Button>
         }
       />
+
+      <NudgeBanner nudges={nudges} onDismiss={dismiss} />
 
       {/* Progress bar */}
       {totalCount > 0 && (

@@ -39,7 +39,7 @@ export function CalendarDayCell({
       onClick={onClick}
       disabled={isFuture || !isCurrentMonth}
       className={cn(
-        "relative aspect-square flex flex-col items-center justify-center rounded-xl text-xs font-medium transition-all",
+        "relative w-8 h-8 flex flex-col items-center justify-center rounded-lg text-[11px] font-medium transition-all mx-auto",
         !isFuture && isCurrentMonth && "hover:scale-105",
         isFuture && "cursor-default",
         !isCurrentMonth && "opacity-30"

@@ -34,7 +34,8 @@ export function HabitForm({
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<HabitFormValues>({
-    resolver: zodResolver(habitSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(habitSchema) as any,
     defaultValues: { ...habitFormDefaults, ...defaultValues },
   });
 
@@ -85,6 +86,17 @@ export function HabitForm({
           {...register("endTime")}
         />
       </div>
+
+      {/* Weekly Goal */}
+      <Input
+        label="Weekly Goal (optional)"
+        type="number"
+        min={1}
+        max={7}
+        placeholder="e.g. 4 times per week"
+        error={errors.weeklyGoal?.message}
+        {...register("weeklyGoal")}
+      />
 
       {/* Color picker */}
       <div className="flex flex-col gap-1.5">
@@ -148,5 +160,6 @@ export function habitToFormValues(habit: Habit): Partial<HabitFormValues> {
     startTime: habit.startTime,
     endTime: habit.endTime ?? "",
     color: habit.color ?? "#6366f1",
+    weeklyGoal: habit.weeklyGoal,
   };
 }

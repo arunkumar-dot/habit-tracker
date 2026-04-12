@@ -4,6 +4,7 @@ import { Flame, Trophy, CheckCircle, TrendingUp } from "lucide-react";
 import { useHabits } from "@/hooks/use-habits";
 import { useStreak } from "@/hooks/use-streaks";
 import { Card } from "@/components/ui/card";
+import { StreakRowSkeleton } from "@/components/ui/skeleton";
 import type { Habit } from "@/types";
 
 interface StatCardProps {
@@ -91,7 +92,24 @@ function HabitStreakRow({ habit }: HabitStreakRowProps) {
 }
 
 export function StreakSummary() {
-  const { habits } = useHabits();
+  const { habits, isLoading } = useHabits();
+
+  if (isLoading) {
+    return (
+      <div>
+        <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--text-secondary)" }}>
+          Streak Leaderboard
+        </h3>
+        <Card variant="default" padding="none">
+          <div className="px-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <StreakRowSkeleton key={i} />
+            ))}
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   if (!habits || habits.length === 0) return null;
 

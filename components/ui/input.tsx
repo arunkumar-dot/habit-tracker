@@ -1,6 +1,16 @@
 import { forwardRef } from "react";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+/**
+ * Input — form input with optional label, error, and helper text.
+ *
+ * Uses Radix Label for proper accessibility association.
+ * Styling uses shadcn/ui design tokens: bg-input, border-border,
+ * text-foreground, ring-ring — all resolved from CSS variables.
+ *
+ * Backward-compatible: all existing props work unchanged.
+ */
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
@@ -13,40 +23,40 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="flex flex-col gap-1.5">
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="text-sm font-medium"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {label}
-          </label>
-        )}
+        {label && <Label htmlFor={inputId}>{label}</Label>}
         <input
           ref={ref}
           id={inputId}
           className={cn(
-            "w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors",
-            "placeholder:text-[color:var(--text-disabled)]",
-            error
-              ? "ring-1 ring-[color:var(--accent-danger)]"
-              : "focus:ring-1 focus:ring-[color:var(--border-focus)]",
+            "w-full rounded-xl border border-border bg-input px-3 py-2.5",
+            "text-sm text-foreground outline-none transition-colors",
+            "placeholder:text-muted-foreground",
+            "focus:ring-1 focus:ring-ring",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            error && "ring-1 ring-destructive focus:ring-destructive",
             className
           )}
-          style={{
-            background: "var(--bg-input)",
-            border: "1px solid var(--border)",
-            color: "var(--text-primary)",
-          }}
+          aria-invalid={!!error}
+          aria-describedby={
+            error
+              ? `${inputId}-error`
+              : helperText
+                ? `${inputId}-helper`
+                : undefined
+          }
           {...props}
         />
         {error && (
-          <p className="text-xs" style={{ color: "var(--accent-danger)" }}>
+          <p
+            id={`${inputId}-error`}
+            className="text-xs text-destructive"
+            role="alert"
+          >
             {error}
           </p>
         )}
         {!error && helperText && (
-          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+          <p id={`${inputId}-helper`} className="text-xs text-muted-foreground">
             {helperText}
           </p>
         )}

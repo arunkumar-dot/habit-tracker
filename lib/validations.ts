@@ -30,6 +30,14 @@ export const habitSchema = z
       .regex(/^#[0-9A-Fa-f]{6}$/, "Must be a valid hex color")
       .optional()
       .or(z.literal("")),
+    weeklyGoal: z.preprocess(
+      (val) => {
+        if (val === "" || val === null || val === undefined) return undefined;
+        const num = Number(val);
+        return isNaN(num) ? undefined : num;
+      },
+      z.number().int().min(1, "Min 1 per week").max(7, "Max 7 per week").optional()
+    ),
   })
   .refine(
     (data) => {
@@ -52,6 +60,7 @@ export const habitFormDefaults: HabitFormValues = {
   startTime: "07:00",
   endTime: "",
   color: "#6366f1",
+  weeklyGoal: undefined,
 };
 
 /** Predefined habit colors for the color picker. */

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,56 +19,76 @@ export function HabitCompletionButton({
   size = "md",
   disabled = false,
 }: HabitCompletionButtonProps) {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
-  async function handleClick() {
-    if (disabled || isAnimating) return;
-    setIsAnimating(true);
-    try {
-      await onToggle();
-    } finally {
-      setTimeout(() => setIsAnimating(false), 300);
-    }
-  }
-
   const sizeClass = size === "sm" ? "w-6 h-6" : "w-8 h-8";
   const iconSize = size === "sm" ? 12 : 16;
 
+  async function handleClick() {
+    if (disabled) return;
+    await onToggle();
+  }
+
   return (
-    <button
+    <motion.button
       onClick={handleClick}
       disabled={disabled}
       aria-label={isCompleted ? "Mark incomplete" : "Mark complete"}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ scale: disabled ? 1 : 1.12 }}
+      whileTap={{ scale: disabled ? 1 : 0.88 }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
       className={cn(
-        "flex-shrink-0 rounded-full flex items-center justify-center transition-all duration-200",
+        "flex-shrink-0 rounded-full flex items-center justify-center",
         sizeClass,
-        isAnimating && "scale-90",
-        disabled && "opacity-50 cursor-not-allowed",
-        !disabled && "hover:scale-110 active:scale-95"
+        disabled && "opacity-50 cursor-not-allowed"
       )}
       style={
         isCompleted
           ? {
               background: color,
               border: `2px solid ${color}`,
-              boxShadow: `0 0 12px ${color}40`,
+              boxShadow: `0 0 14px ${color}55`,
             }
           : {
-              background: isHovered ? `${color}20` : "transparent",
-              border: `2px solid ${isHovered ? color : `${color}60`}`,
+              background: "transparent",
+              border: `2px solid ${color}60`,
             }
       }
     >
-      {isCompleted && (
-        <Check
-          size={iconSize}
-          strokeWidth={2.5}
-          style={{ color: "white" }}
-        />
-      )}
-    </button>
+      {/* Fill animation on complete */}
+      <AnimatePresence>
+        {isCompleted && (
+          <motion.span
+            key="check"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 22 }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+          >
+            <Check size={iconSize} strokeWidth={2.5} style={{ color: "white" }} />
+          </motion.span>
+        )}
+      </AnimatePresence>
+
+      {/* Ripple ring on complete */}
+      <AnimatePresence>
+        {isCompleted && (
+          <motion.span
+            key="ring"
+            initial={{ scale: 0.6, opacity: 0.6 }}
+            animate={{ scale: 2.2, opacity: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+            style={{
+              position: "absolute",
+              borderRadius: "50%",
+              width: "100%",
+              height: "100%",
+              border: `2px solid ${color}`,
+              pointerEvents: "none",
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </motion.button>
   );
 }

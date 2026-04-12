@@ -5,6 +5,15 @@
 
 ---
 
+## ⚠️ Hard Rules — Read Before Every Session
+
+| Rule | Detail |
+|------|--------|
+| **NEVER install axios** | All HTTP is done via the native `fetch` API. Do not add axios under any circumstances — not as a dependency, not as a dev dependency, not as a transitive import. |
+| Use `fetch` for all HTTP | Google OAuth2, FCM, and any future external API calls must use `fetch`. |
+
+---
+
 ## Setup Instructions (First Time)
 
 ### 1. Prerequisites
@@ -219,6 +228,40 @@ Open [http://localhost:3000](http://localhost:3000)
 - [x] `components/layout/sidebar.tsx` — Added Profile nav item (User icon)
 - [x] `components/layout/mobile-nav.tsx` — Added Profile nav item (User icon)
 
+### ✅ Phase 16: Retention System
+
+#### Feature 1 — Daily Check-In System
+- [x] `convex/schema.ts` — Added `dailyCheckIns` table (`userId`, `date`, `completed`, `createdAt`); indexes `by_user_date`, `by_user`
+- [x] `convex/checkIns.ts` — `getDailyCheckIn` query (returns today's record or null) + `upsertDailyCheckIn` mutation (insert-or-update, prevents duplicates) + `getRecentCheckIns` query (for streak-freeze lookback)
+- [x] `hooks/use-daily-check-in.ts` — `useDailyCheckIn()`: wraps query + mutation; distinguishes loading/null/doc states; exposes `submitCheckIn(completed)`
+- [x] `components/retention/daily-check-in-modal.tsx` — Reuses `<Dialog>`; auto-opens once per day when `checkIn === null`; "Yes, I completed" / "Not today" CTA buttons; closes after either action
+
+#### Feature 2 — Habit Goals (Weekly Targets)
+- [x] `convex/schema.ts` — Extended `habits` table with optional `weeklyGoal: v.optional(v.number())` (zero-downtime — all existing docs unaffected)
+- [x] `convex/habits.ts` — `createHabit` and `updateHabit` accept and persist optional `weeklyGoal`
+- [x] `types/index.ts` — Added `weeklyGoal?: number` to `CreateHabitInput`
+- [x] `lib/date-utils.ts` — Added `getWeekStart(dateStr)` — returns Monday of the ISO week
+- [x] `lib/validations.ts` — Added `weeklyGoal` field to `habitSchema` (int 1–7, optional, preprocessed from form string)
+- [x] `hooks/use-weekly-goals.ts` — `useWeeklyGoal(habitId, weeklyGoal)`: reuses existing `useCompletionsForHabit(id, weekStart, weekEnd)` to count this-week completions; skips query when no goal set
+- [x] `components/retention/habit-goal-progress.tsx` — "X / Y this week" label + `<Progress>` bar; green when goal met; only renders when `weeklyGoal` is set
+- [x] `components/habits/habit-form.tsx` — Added "Weekly Goal" number input (1–7); `habitToFormValues` now includes `weeklyGoal`
+- [x] `components/habits/habit-dialog.tsx` — `createHabit` and `updateHabit` calls pass `weeklyGoal`
+- [x] `hooks/use-habit-mutations.ts` — `createHabit` and `updateHabit` forward `weeklyGoal` to Convex mutations
+- [x] `components/habits/habit-card.tsx` — Mounts `<HabitGoalProgress>` below meta row when `habit.weeklyGoal` is set
+
+#### Feature 3 — Smart Nudges
+- [x] `lib/nudges.ts` — Pure `generateNudges()` function (no React deps); 4 rules in priority order: streak-close (6-day streak), time-based (startTime within 1h), missed-yesterday (daily habit), streak-milestone (multiple of 5); returns max 2 nudges
+- [x] `hooks/use-nudges.ts` — `useNudges()`: uses `useHabits()`, `useCompletionsForDate(today)`, `useCompletionsForDate(yesterday)`, `useCompletionsForDateRange(14 days)` to approximate per-habit streaks without per-habit hook calls; session-only dismiss via `useState<Set>`
+- [x] `components/retention/nudge-banner.tsx` — Dismissible nudge cards with accent left-border; renders nothing when nudges array is empty
+- [x] `app/(dashboard)/dashboard/page.tsx` — Mounts `<DailyCheckInModal />` at top; mounts `<NudgeBanner>` between PageHeader and progress bar
+
+### ✅ Phase 17: Light / Dark Mode
+- [x] `app/globals.css` — Added `html.light { ... }` block that overrides all 19 CSS design tokens for light theme (bright backgrounds, dark text, same accent colours); added `html.light` Clerk popup CSS overrides so popover text/hover adapts
+- [x] `components/providers/theme-provider.tsx` — `ThemeProvider` context: reads `localStorage.theme` on mount (defaults to `"dark"`), applies/removes `"light"` class on `<html>`, persists changes; exports `useTheme()` hook
+- [x] `components/layout/theme-toggle.tsx` — `<ThemeToggle />`: Sun icon in dark mode, Moon icon in light mode; uses `useTheme()`; styled with `--text-secondary` to blend with topbar
+- [x] `app/layout.tsx` — Injected inline `<script>` in `<head>` (runs before hydration) to read `localStorage.theme` and add `"light"` class immediately — eliminates flash of wrong theme; added `suppressHydrationWarning` on `<html>`; wrapped children with `<ThemeProvider>`
+- [x] `components/layout/topbar.tsx` — Imported `<ThemeToggle />` (placed left of notification bell); imported `useTheme()` to derive `isLight`; Clerk `<UserButton>` appearance now passes dynamic colors based on `isLight` flag (background, text, borders, icon colours)
+
 ---
 
 ## Verification Checklist
@@ -294,4 +337,280 @@ npx convex deploy --cmd "npm run build"
 - [ ] Bio over 300 chars → validation error shown
 - [ ] Profile nav item (User icon) appears in sidebar and mobile bottom nav
 
-*Last updated: 2026-03-31 (Phase 15 added — User Profile)*
+- [ ] Open dashboard fresh each day → Daily Check-In modal appears automatically
+- [ ] Click "Yes, I completed" → modal closes, does not reappear on same-day page refresh
+- [ ] Click "Not today" → modal closes, records `completed: false`
+- [ ] Open app a second time the same day → modal does NOT appear again (upsert guard)
+- [ ] Create habit with Weekly Goal = 4 → habit card shows "0 / 4 this week" with empty progress bar
+- [ ] Complete habit 3 times this week → card shows "3 / 4 this week" with 75% filled bar
+- [ ] Complete habit 4 times → bar turns green ("4 / 4 this week")
+- [ ] Edit habit → Weekly Goal field pre-filled with saved value; can update or clear
+- [ ] Habit with no weeklyGoal → goal progress bar not shown on card
+- [ ] Build 6-day streak on a habit → nudge "You're 1 day away from a 7-day streak" appears on dashboard
+- [ ] Leave a daily habit undone yesterday → nudge "You missed [Habit] yesterday — try again today" appears
+- [ ] Dismiss a nudge → card disappears; does not return on same session
+- [ ] Reload page → dismissed nudges reappear (dismiss is session-only, not persisted)
+- [ ] Maximum 2 nudges shown at once even when many conditions are triggered
+- [ ] Mobile (375px viewport) → check-in modal, weekly goal bar, nudge banner all render correctly
+
+- [ ] Click Sun/Moon icon in topbar → entire app switches theme instantly (no page reload)
+- [ ] Light mode: backgrounds are white/light-gray, text is near-black, borders are light
+- [ ] Dark mode: backgrounds are near-black, text is light-gray — identical to original
+- [ ] Refresh page in light mode → light mode persists (localStorage)
+- [ ] Refresh page in dark mode → dark mode persists (no flash of light theme)
+- [ ] Open Clerk user popover in both modes → popover colours match current theme
+- [ ] All habit cards, modals, inputs, badges, toasts adapt correctly in both modes
+- [ ] Mobile (375px) → theme toggle visible and functional
+
+*Last updated: 2026-03-31 (Phase 17 added — Light/Dark Mode)*
+
+---
+
+### Phase 18: Intelligence Layer — Insights, Analysis & Recommendations
+
+> Goal: surface actionable analytics so users understand their behaviour and receive smart suggestions.
+
+---
+
+#### Feature 1 — Insights Dashboard (`/insights` route)
+
+**Convex backend** — `convex/insights.ts`
+
+- [ ] `getCompletionStats` query — accepts `{ days: 7 | 30 }`, returns per-day completion counts + total habits for the window; uses `by_user_date` index, grouped by date string
+- [ ] `getPomodoroStats` query — sums `durationSecs` of all focus-mode `pomodoroSessions` for the current user; uses `by_user` index
+- [ ] Both queries are user-scoped (call `getCurrentUser` internally); heavy aggregation happens server-side so the client only receives summary rows
+
+**Analysis logic** — `lib/insights.ts`
+
+Pure TypeScript module (no React, no Convex imports). Receives raw data arrays and returns structured results.
+
+```ts
+// Output shape
+type InsightResult = {
+  type: "pattern" | "recommendation" | "stat";
+  message: string;
+  icon?: string; // e.g. "📊" | "🔥" | "⚡"
+};
+```
+
+Functions to implement:
+
+| Function | Input | Output |
+|----------|-------|--------|
+| `getOverallCompletionRate(rows, days)` | per-day `{ date, completed, total }[]` | `number` (0–100 %) |
+| `getBestDay(rows)` | same | `{ day: string; rate: number }` |
+| `getWorstDay(rows)` | same | `{ day: string; rate: number }` |
+| `getMostConsistentHabit(habitRows)` | per-habit `{ habitId, title, completions, possibleDays }[]` | `{ title: string; rate: number }` |
+| `getMostMissedHabit(habitRows)` | same | `{ title: string; rate: number }` |
+| `getTotalFocusTime(sessions)` | `{ durationSecs: number }[]` | `number` (minutes) |
+| `generateBehaviourInsights(data)` | combined dataset | `InsightResult[]` — patterns e.g. "Most consistent on Mondays" |
+| `generateRecommendations(data)` | combined dataset | `InsightResult[]` — suggestions e.g. "Reduce weekly goal" |
+
+**Rules for recommendations:**
+- `completionRate < 50%` → "Consider reducing your weekly goal for '{habit}' to build consistency."
+- Habit missed on ≥ 3 weekends in last 30 days → "Try moving '{habit}' to a weekday."
+- `currentStreak === 0` and `longestStreak > 5` → "Your longest streak was {n} days — try a smaller daily habit to rebuild momentum."
+- Session focus time < 20 min on average → "Shorter sessions (15 min) may help you stay consistent."
+
+**Hook** — `hooks/use-insights.ts`
+
+```ts
+"use client";
+export function useInsights(window: 7 | 30 = 30) {
+  // 1. useQuery(api.insights.getCompletionStats, { days: window })
+  // 2. useQuery(api.insights.getPomodoroStats)
+  // 3. useQuery(api.habits.listHabits)  ← reuse existing query
+  // 4. For each habit, useCompletionsForHabit → build habitRows[]
+  //    (batch via a single getCompletionsForDateRange call for performance)
+  // 5. useMemo → compute all metrics + insights + recommendations
+  // 6. Return { metrics, insights, recommendations, isLoading }
+}
+```
+
+**Memoization strategy:**
+- All derived values wrapped in `useMemo`; dependencies are the raw query results
+- `window` change resets all memos automatically
+- No `useEffect`-based caching needed — Convex subscriptions handle revalidation
+
+**Page** — `app/(dashboard)/insights/page.tsx`
+
+Layout:
+
+```
+<PageHeader title="Insights" subtitle="Understand your habits" />
+<WindowToggle />          ← "7 days" / "30 days" tab buttons
+<MetricsGrid />           ← 6 stat cards (see below)
+<ChartsRow />             ← bar chart (completions by day-of-week) + line chart (daily rate trend)
+<BehaviourInsights />     ← pattern insight cards
+<Recommendations />       ← recommendation banners
+```
+
+**Stat cards — `components/insights/metric-card.tsx`**
+
+| Card | Icon | Value |
+|------|------|-------|
+| Overall Completion Rate | 📊 | `{n}%` + sparkline |
+| Best Day | 🌟 | Day name + rate |
+| Worst Day | 😓 | Day name + rate |
+| Most Consistent Habit | 🔥 | Habit title + `{n}%` |
+| Most Missed Habit | ⚡ | Habit title + `{n}%` |
+| Total Focus Time | ⏱️ | `{n} min` (hidden if Pomodoro sessions = 0) |
+
+Each card uses the existing `<Card>` component + `<Tooltip>` explaining how the metric is calculated.
+
+**Charts — `components/insights/completion-bar-chart.tsx` & `completion-trend-chart.tsx`**
+
+- Use **Recharts** (already likely a transitive dep; confirm with `npm ls recharts`; install if absent: `npm install recharts`)
+- Bar chart: X = day of week (Mon–Sun), Y = average completion rate
+- Line chart: X = date, Y = daily completion % over the selected window
+- Charts respect light/dark theme via CSS variable colours (`--bg-card`, `--text-primary`)
+- Subtle `animationDuration={600}` entry animation
+
+**Insight cards — `components/insights/insight-card.tsx`**
+
+- Left-accent border coloured by `type`: blue = pattern, amber = recommendation
+- Icon + message text
+- Dismissible per session (same `useState<Set>` pattern used in `NudgeBanner`)
+
+**Navigation:**
+
+- [ ] Add "Insights" nav item (Sparkles icon from `lucide-react`) to `components/layout/sidebar.tsx`
+- [ ] Add "Insights" nav item to `components/layout/mobile-nav.tsx`
+- [ ] Add `/insights` to the Routes table in Architecture Notes
+
+---
+
+#### Feature 2 — Edge Cases
+
+| Scenario | Handling |
+|----------|----------|
+| New user (0 completions) | All metric cards show "—" or "No data yet"; charts render empty state with `<EmptyState>` |
+| Only 1–2 days of data | Best/Worst day cards show "Not enough data"; trend line omitted |
+| Timezone differences | All date strings are already stored in local timezone (`YYYY-MM-DD`); no extra conversion needed |
+| All habits paused/archived | `listHabits` with `isArchived: false` returns empty; dashboard shows empty state |
+
+---
+
+#### Feature 3 — Performance
+
+- [ ] Convex queries aggregate on the server — only summary rows sent to client (not raw completion documents)
+- [ ] `useMemo` on all derived analytics in `use-insights.ts` — recalculates only when raw data changes
+- [ ] Window toggle (7 vs 30 days) is a local `useState` — switches between two already-subscribed query results without a new network round-trip (subscribe to both upfront)
+
+---
+
+#### Verification Checklist (Phase 18)
+
+- [ ] Visit `/insights` → page loads; sidebar and mobile nav show "Insights" item
+- [ ] Default window = 30 days; toggle to 7 days → all metrics update instantly
+- [ ] Overall completion rate matches manual count of completions ÷ (habits × days)
+- [ ] Best Day and Worst Day cards show correct day names
+- [ ] Most Consistent and Most Missed habits reflect actual data
+- [ ] Total Focus Time hidden when user has no Pomodoro sessions; shows correct minutes otherwise
+- [ ] Bar chart renders one bar per day-of-week; hover tooltip shows percentage
+- [ ] Trend line chart renders with one point per day in the selected window
+- [ ] Behaviour insight cards show e.g. "You are most consistent on Mondays"
+- [ ] Recommendation cards appear when completion rate < 50 % for any habit
+- [ ] Dismiss an insight card → it disappears; reappears on page reload (session-only)
+- [ ] New user with zero data → all cards show "No data yet"; no chart crash
+- [ ] Light mode → charts and cards adapt to light theme colours
+- [ ] Mobile (375 px) → metrics grid stacks to 1 column; charts scroll horizontally
+
+*Last updated: 2026-03-31 (Phase 18 added — Intelligence Layer)*
+
+---
+
+### Phase 19: Production Push Notifications (FCM)
+
+> Goal: deliver habit reminders even when the browser tab is closed, using Firebase Cloud Messaging (FCM) with a Convex-scheduled backend cron.
+
+---
+
+#### Step 1 — Firebase Project Setup *(manual — one-time)*
+
+- [ ] Go to [console.firebase.google.com](https://console.firebase.google.com) and create a new project (or reuse an existing one)
+- [ ] In **Project Settings → General → Your apps**, add a **Web app**
+- [ ] Copy the Firebase config object (apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId)
+- [ ] In **Project Settings → Cloud Messaging → Web Push certificates**, click **Generate key pair**; copy the VAPID public key
+- [ ] In **Project Settings → Service accounts**, click **Generate new private key** and download the JSON
+
+---
+
+#### Step 2 — Set Client Env Vars *(`.env.local` already has placeholders)*
+
+- [ ] Fill in `NEXT_PUBLIC_FIREBASE_API_KEY`
+- [ ] Fill in `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- [ ] Fill in `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- [ ] Fill in `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+- [ ] Fill in `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- [ ] Fill in `NEXT_PUBLIC_FIREBASE_APP_ID`
+- [ ] Fill in `NEXT_PUBLIC_FIREBASE_VAPID_KEY`
+
+---
+
+#### Step 3 — Set Server Env Vars in Convex *(Admin SDK credentials — never expose to browser)*
+
+```bash
+npx convex env set FIREBASE_PROJECT_ID   "your-project-id"
+npx convex env set FIREBASE_CLIENT_EMAIL "service-account@your-project.iam.gserviceaccount.com"
+# Paste the private key with literal \n sequences:
+npx convex env set FIREBASE_PRIVATE_KEY  "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n"
+```
+
+---
+
+#### Step 4 — Files Created *(already in codebase)*
+
+- [x] `lib/firebase.ts` — Firebase app + messaging singleton; `isFirebaseConfigured()` guard
+- [x] `app/api/firebase-messaging-sw/route.ts` — Dynamic service worker endpoint; injects env vars; sets `Service-Worker-Allowed: /` header so scope covers entire app
+- [x] `hooks/usePushNotifications.ts` — Requests permission, registers SW, calls `getToken()`, upserts token in Convex, listens for foreground messages via `onMessage()`
+- [x] `convex/schema.ts` — Added `pushTokens` table (`userId`, `token`, `timezone`, `createdAt`); indexes `by_user` and `by_token`
+- [x] `convex/pushTokens.ts` — `upsertToken` mutation (de-duplication); `deleteToken` / `deleteAllTokensForUser` mutations; `getAllTokensWithTimezones` + `getActiveHabitsForUserAtTime` internal queries; `deleteStaleToken` internal mutation
+- [x] `convex/notifications.ts` — `sendHabitReminders` internal action; WebCrypto RS256 JWT auth against Google OAuth2; FCM HTTP v1 API; automatic stale-token cleanup; timezone-aware local time matching
+- [x] `convex/crons.ts` — Fires `sendHabitReminders` every minute
+- [x] `components/notifications/notification-provider.tsx` — Updated to combine in-app (setTimeout) and FCM strategies; foreground FCM messages shown as toasts; single bell-icon toggle controls both
+
+---
+
+#### Step 5 — How the notification flow works
+
+```
+User enables notifications (bell icon)
+  └─ 1. Browser permission requested                (Notification.requestPermission)
+  └─ 2. Service worker registered                   (/api/firebase-messaging-sw)
+  └─ 3. FCM token acquired                          (getToken + VAPID key)
+  └─ 4. Token + timezone stored in Convex           (pushTokens.upsertToken)
+
+Every minute (Convex cron)
+  └─ sendHabitReminders action fires
+       └─ fetches all push tokens
+       └─ for each token: converts timezone → local "HH:MM"
+       └─ queries habits with startTime === localTime
+       └─ exchanges service-account key → Google OAuth2 access token (WebCrypto RS256)
+       └─ POSTs to FCM HTTP v1 API  →  user receives push notification
+       └─ stale tokens (UNREGISTERED) auto-deleted from Convex
+
+App is open (foreground)
+  └─ onMessage() fires → custom DOM event → toast shown via NotificationProvider
+```
+
+---
+
+#### Verification Checklist (Phase 19)
+
+- [ ] Fill in all `NEXT_PUBLIC_FIREBASE_*` env vars and `npx convex env set` the 3 admin vars
+- [ ] `npx convex dev` deploys without errors; cron `send-habit-reminders` visible in Convex dashboard
+- [ ] Open app → click "Enable Reminders" → browser permission prompt appears
+- [ ] Grant permission → bell icon turns green; no console errors
+- [ ] Visit `/api/firebase-messaging-sw` in browser → valid JavaScript returned (not the "not configured" stub)
+- [ ] Convex dashboard → Data → `pushTokens` table → your token row appears with correct `timezone`
+- [ ] Set a habit `startTime` to 1–2 min from now → close the browser tab completely → push notification arrives
+- [ ] Tap notification → browser opens and navigates to `/dashboard`
+- [ ] Leave the tab open → foreground message arrives as a toast instead of a native notification
+- [ ] Click "Enable Reminders" again (toggle off) → `pushTokens` row deleted from Convex
+- [ ] Deny browser notification permission → toast "Notifications blocked" appears; FCM registration skipped
+- [ ] Create account on a second device → enable reminders → both devices receive the notification
+- [ ] Firebase-unconfigured state: leave `NEXT_PUBLIC_FIREBASE_*` vars empty → app works normally; FCM silently skipped; in-app setTimeout notifications still work
+- [ ] Stale token: revoke permission in browser settings → next cron run auto-deletes the stale token from Convex
+
+*Last updated: 2026-03-31 (Phase 19 added — Production Push Notifications)*

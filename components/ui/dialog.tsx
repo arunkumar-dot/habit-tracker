@@ -1,8 +1,121 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+/**
+ * Dialog — Radix UI Dialog wrapped in a backward-compatible API.
+ *
+ * Existing callers using `isOpen`, `onClose`, `title`, `description`,
+ * `maxWidth`, and `children` continue to work without changes.
+ *
+ * Accessibility improvements over the old custom implementation:
+ *  - Focus is trapped inside the dialog when open
+ *  - Screen readers announced via aria-labelledby / aria-describedby
+ *  - Escape key handled natively by Radix
+ *  - Body scroll lock handled natively by Radix
+ *  - Portal rendering prevents z-index stacking issues
+ */
+
+// ─── Low-level primitives (re-exported for compound usage) ───────────────────
+
+export const DialogRoot = DialogPrimitive.Root;
+export const DialogTrigger = DialogPrimitive.Trigger;
+export const DialogPortal = DialogPrimitive.Portal;
+export const DialogClose = DialogPrimitive.Close;
+
+export function DialogOverlay({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>) {
+  return (
+    <DialogPrimitive.Overlay
+      className={cn(
+        "fixed inset-0 z-50 bg-black/70",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export function DialogContent({
+  className,
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>) {
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        className={cn(
+          "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
+          "w-full rounded-2xl border border-border bg-popover shadow-2xl",
+          "data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+          "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
+          "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+          "duration-150",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  );
+}
+
+export function DialogHeader({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "flex items-start justify-between p-6 pb-4 border-b border-border",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export function DialogTitle({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>) {
+  return (
+    <DialogPrimitive.Title
+      className={cn("text-lg font-semibold text-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+export function DialogDescription({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>) {
+  return (
+    <DialogPrimitive.Description
+      className={cn("text-sm text-muted-foreground mt-1", className)}
+      {...props}
+    />
+  );
+}
+
+// ─── High-level convenience wrapper (keeps existing API) ─────────────────────
+
+const maxWidthMap = {
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-lg",
+};
 
 interface DialogProps {
   isOpen: boolean;
@@ -14,12 +127,10 @@ interface DialogProps {
   maxWidth?: "sm" | "md" | "lg";
 }
 
-const maxWidthMap = {
-  sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-lg",
-};
-
+/**
+ * The primary `Dialog` export — maintains the existing API so no call-sites
+ * need updating. Uses Radix primitives internally for full a11y compliance.
+ */
 export function Dialog({
   isOpen,
   onClose,
@@ -29,96 +140,36 @@ export function Dialog({
   className,
   maxWidth = "md",
 }: DialogProps) {
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  // Close on Escape key
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape" && isOpen) onClose();
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  // Prevent body scroll when open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
   return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: "rgba(0,0,0,0.7)" }}
-      onClick={(e) => {
-        if (e.target === overlayRef.current) onClose();
-      }}
-    >
-      <div
-        className={cn(
-          "relative w-full rounded-2xl shadow-2xl",
-          maxWidthMap[maxWidth],
-          className
-        )}
-        style={{
-          background: "var(--bg-elevated)",
-          border: "1px solid var(--border)",
-          animation: "dialogIn 0.15s ease-out",
-        }}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? "dialog-title" : undefined}
+    <DialogRoot open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        className={cn(maxWidthMap[maxWidth], className)}
+        aria-describedby={description ? "dialog-description" : undefined}
       >
-        {/* Header */}
         {(title || description) && (
-          <div
-            className="flex items-start justify-between p-6 pb-4"
-            style={{ borderBottom: "1px solid var(--border)" }}
-          >
-            <div>
-              {title && (
-                <h2
-                  id="dialog-title"
-                  className="text-lg font-semibold"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {title}
-                </h2>
-              )}
+          <DialogHeader>
+            <div className="flex-1">
+              {title && <DialogTitle>{title}</DialogTitle>}
               {description && (
-                <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+                <DialogDescription id="dialog-description">
                   {description}
-                </p>
+                </DialogDescription>
               )}
             </div>
-            <button
-              onClick={onClose}
-              className="flex-shrink-0 ml-4 p-1.5 rounded-lg transition-colors"
-              style={{ color: "var(--text-secondary)" }}
+            <DialogClose
+              className={cn(
+                "flex-shrink-0 ml-4 p-1.5 rounded-lg transition-colors",
+                "text-muted-foreground hover:text-foreground hover:bg-accent",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              )}
               aria-label="Close dialog"
             >
-              <X size={18} />
-            </button>
-          </div>
+              <X size={18} aria-hidden="true" />
+            </DialogClose>
+          </DialogHeader>
         )}
-
-        {/* Content */}
         <div className="p-6">{children}</div>
-      </div>
-
-      <style>{`
-        @keyframes dialogIn {
-          from { opacity: 0; transform: scale(0.95) translateY(4px); }
-          to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-      `}</style>
-    </div>
+      </DialogContent>
+    </DialogRoot>
   );
 }

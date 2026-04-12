@@ -21,6 +21,7 @@ export function useHabitMutations() {
       startTime: input.startTime,
       endTime: input.endTime || undefined,
       color: input.color || undefined,
+      weeklyGoal: input.weeklyGoal || undefined,
     });
   }
 
@@ -34,6 +35,7 @@ export function useHabitMutations() {
       startTime: rest.startTime,
       endTime: rest.endTime,
       color: rest.color,
+      weeklyGoal: rest.weeklyGoal,
     });
   }
 

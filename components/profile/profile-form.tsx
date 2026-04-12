@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import type { ProfileFormValues } from "@/hooks/use-user-profile";
-import type { ProfileUser } from "@/hooks/use-user-profile";
+import { CityAutocomplete } from "./city-autocomplete";
+import type { ProfileFormValues, ProfileUser } from "@/hooks/use-user-profile";
 
 // ============================================
 // Validation schema
@@ -26,7 +25,14 @@ const profileSchema = z.object({
   bio: z.string().max(300, "Bio must be 300 characters or fewer").optional(),
 });
 
-type ProfileSchemaValues = z.infer<typeof profileSchema>;
+// Use z.infer on the output type to avoid the `age: unknown` resolver mismatch
+type ProfileSchemaValues = {
+  name: string;
+  age?: number;
+  sex?: "male" | "female" | "other";
+  location?: string;
+  bio?: string;
+};
 
 // ============================================
 // Component
@@ -53,9 +59,11 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
     watch,
     setValue,
     reset,
+    control,
     formState: { errors },
   } = useForm<ProfileSchemaValues>({
-    resolver: zodResolver(profileSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(profileSchema) as any,
     defaultValues: {
       name: "",
       age: undefined,
@@ -141,20 +149,20 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
         </div>
       </div>
 
-      {/* Location */}
-      <div className="relative">
-        <Input
-          label="Location"
-          placeholder="City or region"
-          error={errors.location?.message}
-          {...register("location")}
-        />
-        <MapPin
-          size={14}
-          className="absolute right-3 top-[38px]"
-          style={{ color: "var(--text-disabled)" }}
-        />
-      </div>
+      {/* Location — city autocomplete */}
+      <Controller
+        name="location"
+        control={control}
+        render={({ field }) => (
+          <CityAutocomplete
+            value={field.value ?? ""}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            error={errors.location?.message}
+            name={field.name}
+          />
+        )}
+      />
 
       {/* Bio */}
       <div className="flex flex-col gap-1.5">
@@ -162,7 +170,10 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
           <label className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
             Bio
           </label>
-          <span className="text-xs" style={{ color: bio.length > 280 ? "var(--accent-danger)" : "var(--text-disabled)" }}>
+          <span
+            className="text-xs"
+            style={{ color: bio.length > 280 ? "var(--accent-danger)" : "var(--text-disabled)" }}
+          >
             {bio.length}/300
           </span>
         </div>

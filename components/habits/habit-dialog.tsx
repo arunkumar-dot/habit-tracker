@@ -25,6 +25,7 @@ export function CreateHabitDialog({ isOpen, onClose }: CreateHabitDialogProps) {
         startTime: values.startTime,
         endTime: values.endTime || undefined,
         color: values.color || undefined,
+        weeklyGoal: values.weeklyGoal || undefined,
       });
       showToast("Habit created!", "success");
       onClose();
@@ -60,6 +61,7 @@ export function EditHabitDialog({ habit, onClose }: EditHabitDialogProps) {
         startTime: values.startTime,
         endTime: values.endTime || undefined,
         color: values.color || undefined,
+        weeklyGoal: values.weeklyGoal || undefined,
       });
       showToast("Habit updated!", "success");
       onClose();

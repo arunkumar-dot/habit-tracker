@@ -1,0 +1,23 @@
+import { cronJobs } from "convex/server";
+import { internal } from "./_generated/api";
+
+const crons = cronJobs();
+
+/**
+ * Fire habit push notifications every minute.
+ *
+ * The action checks all registered FCM tokens, converts each token's stored
+ * timezone to a local "HH:MM" string, and queries for habits whose startTime
+ * matches that local time. Matching habits trigger a FCM push notification.
+ *
+ * This runs every minute so every habit startTime (e.g. "07:30") is caught
+ * within a ±30-second window of the cron tick.
+ */
+crons.interval(
+  "send-habit-reminders",
+  { minutes: 1 },
+  internal.notifications.sendHabitReminders,
+  {}
+);
+
+export default crons;

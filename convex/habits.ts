@@ -96,6 +96,7 @@ export const createHabit = mutation({
     startTime: v.string(),
     endTime: v.optional(v.string()),
     color: v.optional(v.string()),
+    weeklyGoal: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const user = await getAuthUser(ctx);
@@ -109,6 +110,7 @@ export const createHabit = mutation({
       startTime: args.startTime,
       endTime: args.endTime || undefined,
       color: args.color || undefined,
+      weeklyGoal: args.weeklyGoal || undefined,
       isArchived: false,
       createdAt: now,
       updatedAt: now,
@@ -130,6 +132,7 @@ export const updateHabit = mutation({
     startTime: v.optional(v.string()),
     endTime: v.optional(v.string()),
     color: v.optional(v.string()),
+    weeklyGoal: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const user = await getAuthUser(ctx);
@@ -150,6 +153,8 @@ export const updateHabit = mutation({
     if (updates.endTime !== undefined)
       patch.endTime = updates.endTime || undefined;
     if (updates.color !== undefined) patch.color = updates.color || undefined;
+    if (updates.weeklyGoal !== undefined)
+      patch.weeklyGoal = updates.weeklyGoal || undefined;
 
     await ctx.db.patch(habitId, patch);
   },

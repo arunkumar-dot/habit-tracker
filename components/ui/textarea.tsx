@@ -1,6 +1,12 @@
 import { forwardRef } from "react";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+/**
+ * Textarea — multi-line input with optional label, error, and helper text.
+ * Uses shadcn/ui design tokens: bg-input, border-border, text-foreground.
+ * Backward-compatible: all existing props work unchanged.
+ */
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
@@ -13,41 +19,41 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <div className="flex flex-col gap-1.5">
-        {label && (
-          <label
-            htmlFor={textareaId}
-            className="text-sm font-medium"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {label}
-          </label>
-        )}
+        {label && <Label htmlFor={textareaId}>{label}</Label>}
         <textarea
           ref={ref}
           id={textareaId}
           className={cn(
-            "w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-colors resize-none",
-            "placeholder:text-[color:var(--text-disabled)]",
-            error
-              ? "ring-1 ring-[color:var(--accent-danger)]"
-              : "focus:ring-1 focus:ring-[color:var(--border-focus)]",
+            "w-full rounded-xl border border-border bg-input px-3 py-2.5",
+            "text-sm text-foreground outline-none transition-colors resize-none",
+            "placeholder:text-muted-foreground",
+            "focus:ring-1 focus:ring-ring",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            error && "ring-1 ring-destructive focus:ring-destructive",
             className
           )}
-          style={{
-            background: "var(--bg-input)",
-            border: "1px solid var(--border)",
-            color: "var(--text-primary)",
-          }}
           rows={3}
+          aria-invalid={!!error}
+          aria-describedby={
+            error
+              ? `${textareaId}-error`
+              : helperText
+                ? `${textareaId}-helper`
+                : undefined
+          }
           {...props}
         />
         {error && (
-          <p className="text-xs" style={{ color: "var(--accent-danger)" }}>
+          <p
+            id={`${textareaId}-error`}
+            className="text-xs text-destructive"
+            role="alert"
+          >
             {error}
           </p>
         )}
         {!error && helperText && (
-          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+          <p id={`${textareaId}-helper`} className="text-xs text-muted-foreground">
             {helperText}
           </p>
         )}

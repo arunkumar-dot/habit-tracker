@@ -158,3 +158,15 @@ export function getCurrentMinutes(): number {
   const now = new Date();
   return now.getHours() * 60 + now.getMinutes();
 }
+
+/**
+ * Returns the Monday of the ISO week containing the given date string.
+ * e.g. "2026-04-02" (Thursday) → "2026-03-30" (Monday)
+ */
+export function getWeekStart(dateStr: string): string {
+  const date = new Date(dateStr + "T00:00:00");
+  const day = date.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  const diff = day === 0 ? -6 : 1 - day; // Shift back to Monday
+  date.setDate(date.getDate() + diff);
+  return toDateString(date);
+}

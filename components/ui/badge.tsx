@@ -1,28 +1,50 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-type BadgeVariant = "default" | "success" | "warning" | "danger" | "info" | "purple";
+/**
+ * Badge — small labeling component using cva for type-safe variants.
+ *
+ * Variants use inline rgba for tinted backgrounds to avoid needing
+ * opacity utilities on the CSS variable colors.
+ *
+ * Backward-compatible: all existing variant names preserved.
+ */
 
-interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: BadgeVariant;
-}
+const badgeVariants = cva(
+  "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-secondary text-muted-foreground border border-border",
+        success:
+          "bg-[rgba(16,185,129,0.15)] text-[#10b981] border border-[rgba(16,185,129,0.3)]",
+        warning:
+          "bg-[rgba(245,158,11,0.15)] text-[#f59e0b] border border-[rgba(245,158,11,0.3)]",
+        danger:
+          "bg-[rgba(239,68,68,0.15)] text-destructive border border-[rgba(239,68,68,0.3)]",
+        info:
+          "bg-[rgba(99,102,241,0.15)] text-primary border border-[rgba(99,102,241,0.3)]",
+        purple:
+          "bg-[rgba(168,85,247,0.15)] text-[#a855f7] border border-[rgba(168,85,247,0.3)]",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
 
-const variantStyles: Record<BadgeVariant, React.CSSProperties> = {
-  default: { background: "var(--bg-elevated)", color: "var(--text-secondary)", border: "1px solid var(--border)" },
-  success: { background: "rgba(16,185,129,0.15)", color: "var(--accent-success)", border: "1px solid rgba(16,185,129,0.3)" },
-  warning: { background: "rgba(245,158,11,0.15)", color: "var(--accent-warning)", border: "1px solid rgba(245,158,11,0.3)" },
-  danger: { background: "rgba(239,68,68,0.15)", color: "var(--accent-danger)", border: "1px solid rgba(239,68,68,0.3)" },
-  info: { background: "rgba(99,102,241,0.15)", color: "var(--accent-primary)", border: "1px solid rgba(99,102,241,0.3)" },
-  purple: { background: "rgba(168,85,247,0.15)", color: "#a855f7", border: "1px solid rgba(168,85,247,0.3)" },
-};
+interface BadgeProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
+    VariantProps<typeof badgeVariants> {}
 
-export function Badge({ variant = "default", className, style, children, ...props }: BadgeProps) {
+export function Badge({ variant, className, children, ...props }: BadgeProps) {
   return (
-    <span
-      className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", className)}
-      style={{ ...variantStyles[variant], ...style }}
-      {...props}
-    >
+    <span className={cn(badgeVariants({ variant }), className)} {...props}>
       {children}
     </span>
   );
 }
+
+export { badgeVariants };
