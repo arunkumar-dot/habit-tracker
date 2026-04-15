@@ -2,106 +2,178 @@
 @plugin "tailwindcss-animate";
 
 /* ============================================
-   TAILWIND V4 THEME — dark mode defaults
-   Points directly at the project's CSS variable
-   names so bg-background, text-foreground, etc.
-   resolve correctly at runtime in both modes.
+   TAILWIND V4 THEME
+   Maps warm-minimal design tokens to Tailwind
+   utility names. shadcn/ui compat names kept so
+   existing component classes continue to resolve.
    ============================================ */
 @theme inline {
-  /* Backgrounds */
-  --color-background:         var(--bg-base);
-  --color-card:               var(--bg-surface);
-  --color-card-foreground:    var(--text-primary);
-  --color-popover:            var(--bg-elevated);
-  --color-popover-foreground: var(--text-primary);
-  --color-secondary:          var(--bg-elevated);
-  --color-secondary-foreground: var(--text-primary);
-  --color-muted:              var(--bg-elevated);
-  --color-accent:             var(--bg-hover);
-  --color-accent-foreground:  var(--text-primary);
-  --color-input:              var(--bg-input);
+  /* --- shadcn/ui compat mappings --- */
+  --color-background:             var(--bg-base);
+  --color-card:                   var(--bg-elevated);
+  --color-card-foreground:        var(--text-primary);
+  --color-popover:                var(--bg-elevated);
+  --color-popover-foreground:     var(--text-primary);
+  --color-secondary:              var(--bg-sunken);
+  --color-secondary-foreground:   var(--text-primary);
+  --color-muted:                  var(--bg-sunken);
+  --color-accent:                 var(--bg-hover);
+  --color-accent-foreground:      var(--text-primary);
+  --color-input:                  var(--bg-sunken);
 
   /* Text */
-  --color-foreground:         var(--text-primary);
-  --color-muted-foreground:   var(--text-secondary);
+  --color-foreground:             var(--text-primary);
+  --color-muted-foreground:       var(--text-secondary);
 
   /* Brand / semantic */
-  --color-primary:            var(--accent-primary);
-  --color-primary-foreground: #ffffff;
-  --color-destructive:        var(--accent-danger);
+  --color-primary:                var(--accent);
+  --color-primary-foreground:     #ffffff;
+  --color-destructive:            var(--danger);
   --color-destructive-foreground: #ffffff;
-  --color-success:            var(--accent-success);
-  --color-success-foreground: #ffffff;
+  --color-success:                var(--success);
+  --color-success-foreground:     #ffffff;
 
   /* Structural */
-  --color-border:             var(--border);
-  --color-ring:               var(--border-focus);
+  --color-border:                 var(--border-default);
+  --color-ring:                   var(--accent);
+
+  /* --- Direct token utilities ---
+     bg-base, bg-elevated, bg-sunken, bg-hover,
+     text-tertiary, text-disabled,
+     border-subtle, border-default,
+     accent (as terracotta), accent-soft, accent-text,
+     success-soft, warning, warning-soft,
+     danger-soft, habit-1…habit-5               */
+  --color-base:                   var(--bg-base);
+  --color-elevated:               var(--bg-elevated);
+  --color-sunken:                 var(--bg-sunken);
+
+  --color-text-tertiary:          var(--text-tertiary);
+  --color-text-disabled:          var(--text-disabled);
+
+  --color-border-subtle:          var(--border-subtle);
+  --color-border-default:         var(--border-default);
+
+  --color-terracotta:             var(--accent);
+  --color-terracotta-hover:       var(--accent-hover);
+  --color-terracotta-soft:        var(--accent-soft);
+  --color-terracotta-text:        var(--accent-text);
+
+  --color-success-soft:           var(--success-soft);
+  --color-warning:                var(--warning);
+  --color-warning-soft:           var(--warning-soft);
+  --color-danger-soft:            var(--danger-soft);
+
+  --color-habit-1:                var(--habit-1);
+  --color-habit-2:                var(--habit-2);
+  --color-habit-3:                var(--habit-3);
+  --color-habit-4:                var(--habit-4);
+  --color-habit-5:                var(--habit-5);
 
   /* Radius scale */
-  --radius-sm:  0.5rem;
-  --radius-md:  0.625rem;
-  --radius-lg:  0.75rem;
-  --radius-xl:  1rem;
-  --radius-2xl: 1.5rem;
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-2xl: 20px;
 }
 
 /* ============================================
-   DARK MODE DESIGN TOKENS (default)
+   LIGHT MODE DESIGN TOKENS (default)
    ============================================ */
 @layer base {
   :root {
-    --bg-base: #0a0a0f;
-    --bg-surface: #12121a;
-    --bg-elevated: #1a1a28;
-    --bg-input: #1e1e2e;
-    --bg-hover: #252535;
-    --border: #2a2a3e;
-    --border-focus: #6366f1;
-    --text-primary: #e2e8f0;
-    --text-secondary: #94a3b8;
-    --text-disabled: #475569;
-    --accent-primary: #6366f1;
-    --accent-primary-hover: #4f46e5;
-    --accent-success: #10b981;
-    --accent-success-hover: #059669;
-    --accent-warning: #f59e0b;
-    --accent-danger: #ef4444;
-    --accent-danger-hover: #dc2626;
-    --accent-info: #3b82f6;
+    /* Neutrals */
+    --bg-base:      #FAF8F4;
+    --bg-elevated:  #FFFFFF;
+    --bg-sunken:    #F3EFE8;
+    --bg-hover:     #EFEAE1;
+
+    /* Text */
+    --text-primary:   #1C1B18;
+    --text-secondary: #57534E;
+    --text-tertiary:  #8A8680;
+    --text-disabled:  #B8B3AB;
+
+    /* Borders */
+    --border-subtle:  #E8E3DA;
+    --border-default: #D9D3C7;
+
+    /* Accent — terracotta */
+    --accent:       #C2410C;
+    --accent-hover: #9A3412;
+    --accent-soft:  #FEF3EC;
+    --accent-text:  #7C2D12;
+
+    /* Semantic */
+    --success:      #4D7C0F;
+    --success-soft: #F3F7EB;
+    --warning:      #A16207;
+    --warning-soft: #FBF5E7;
+    --danger:       #B91C1C;
+    --danger-soft:  #FBEDED;
+
+    /* Habit category colors */
+    --habit-1: #C2410C; /* terracotta */
+    --habit-2: #7C6F5C; /* mushroom   */
+    --habit-3: #4D7C0F; /* olive      */
+    --habit-4: #1E6091; /* muted teal */
+    --habit-5: #9A3412; /* rust       */
+
+    /* Shadows — warm tint, never cold grey */
+    --shadow-sm: 0 1px 2px rgba(28, 27, 24, 0.04);
+    --shadow-md: 0 4px 12px rgba(28, 27, 24, 0.06);
+    --shadow-lg: 0 12px 32px rgba(28, 27, 24, 0.08);
 
     /* Timeline */
-    --timeline-line: #2a2a3e;
-    --timeline-now: #ef4444;
-
+    --timeline-line: var(--border-default);
+    --timeline-now:  var(--accent);
   }
 
   /* ============================================
-     LIGHT MODE DESIGN TOKENS
-     Applied when <html> has class="light"
+     DARK MODE DESIGN TOKENS — warm dark, not grey-black
+     Applied when <html> has data-theme="dark"
      ============================================ */
-  html.light {
-    --bg-base: #f1f5f9;
-    --bg-surface: #ffffff;
-    --bg-elevated: #f8fafc;
-    --bg-input: #f1f5f9;
-    --bg-hover: #e2e8f0;
-    --border: #e2e8f0;
-    --border-focus: #6366f1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-disabled: #94a3b8;
-    --accent-primary: #6366f1;
-    --accent-primary-hover: #4f46e5;
-    --accent-success: #10b981;
-    --accent-success-hover: #059669;
-    --accent-warning: #f59e0b;
-    --accent-danger: #ef4444;
-    --accent-danger-hover: #dc2626;
-    --accent-info: #3b82f6;
+  [data-theme="dark"] {
+    --bg-base:      #1A1614;
+    --bg-elevated:  #231E1B;
+    --bg-sunken:    #14100E;
+    --bg-hover:     #2A2522;
 
-    /* Timeline */
-    --timeline-line: #e2e8f0;
-    --timeline-now: #ef4444;
+    --text-primary:   #F5F1EA;
+    --text-secondary: #C8C2B8;
+    --text-tertiary:  #8A8680;
+    --text-disabled:  #5A5550;
+
+    --border-subtle:  #2E2825;
+    --border-default: #3D3631;
+
+    --accent:       #E86F3C; /* lifted for dark-mode contrast */
+    --accent-hover: #F08558;
+    --accent-soft:  #3A2419;
+    --accent-text:  #FDB58C;
+
+    /* Semantic stays readable on warm-dark backgrounds */
+    --success:      #7BAF2E;
+    --success-soft: #1E2A0E;
+    --warning:      #D4A017;
+    --warning-soft: #2A2108;
+    --danger:       #E05252;
+    --danger-soft:  #2A0E0E;
+
+    /* Habit category colors — slightly lifted for dark */
+    --habit-1: #E86F3C;
+    --habit-2: #9C8E7A;
+    --habit-3: #7BAF2E;
+    --habit-4: #3A8BC2;
+    --habit-5: #C2513A;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.20);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.28);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.36);
+
+    --timeline-line: var(--border-default);
+    --timeline-now:  var(--accent);
   }
 }
 
@@ -110,7 +182,7 @@
    ============================================ */
 @layer base {
   * {
-    border-color: var(--border);
+    border-color: var(--border-default);
     box-sizing: border-box;
   }
 
@@ -134,10 +206,10 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--bg-surface);
+    background: var(--bg-sunken);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--border);
+    background: var(--border-default);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -149,34 +221,34 @@
    ANIMATION KEYFRAMES
    ============================================ */
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
+  0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
 @keyframes pulse-ring {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(99, 102, 241, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+  0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(194, 65, 12, 0.40); }
+  70%  { transform: scale(1);    box-shadow: 0 0 0 8px rgba(194, 65, 12, 0);  }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(194, 65, 12, 0);   }
 }
 
 @keyframes spin {
   from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to   { transform: rotate(360deg); }
 }
 
 /* Completion ripple — used by HabitCompletionButton */
 @keyframes completion-ripple {
-  0%   { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(2.4); opacity: 0; }
+  0%   { transform: scale(1);   opacity: 0.5; }
+  100% { transform: scale(2.4); opacity: 0;   }
 }
 
 /* Swipe hint fade-in */
 @keyframes fade-in-right {
   from { opacity: 0; transform: translateX(-6px); }
-  to   { opacity: 1; transform: translateX(0); }
+  to   { opacity: 1; transform: translateX(0);    }
 }
 
-/* Card hover lift — for browsers that can't run JS (no framer-motion) */
+/* Card hover lift */
 @media (hover: hover) {
   .habit-card-hover:hover {
     transform: translateY(-2px);
@@ -191,9 +263,9 @@
   animation: shimmer 1.5s infinite;
   background: linear-gradient(
     90deg,
-    var(--bg-surface) 25%,
-    var(--bg-hover) 50%,
-    var(--bg-surface) 75%
+    var(--bg-elevated) 25%,
+    var(--bg-hover)    50%,
+    var(--bg-elevated) 75%
   );
   background-size: 200% 100%;
 }
@@ -206,45 +278,28 @@
   animation: spin 1s linear infinite;
 }
 
-/* Clerk UserButton popup — action button hover */
+/* ============================================
+   CLERK USER BUTTON OVERRIDES
+   ============================================ */
+/* Dark default → warm dark popup */
 .cl-userButtonPopoverActionButton:hover {
-  background: #2a2a4a !important;
-  color: #a5b4fc !important;
+  background: var(--bg-hover) !important;
+  color: var(--accent-text) !important;
 }
 .cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonText {
-  color: #a5b4fc !important;
+  color: var(--accent-text) !important;
 }
 .cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonIcon {
-  color: #a5b4fc !important;
+  color: var(--accent-text) !important;
 }
 
-/* Clerk UserButton popup — username/email visibility (dark) */
+/* Username / email visibility */
 .cl-userPreviewMainIdentifier,
 .cl-userButtonPopoverUserFullName {
-  color: #f1f5f9 !important;
+  color: var(--text-primary) !important;
   font-weight: 600;
 }
 .cl-userPreviewSecondaryIdentifier,
 .cl-userButtonPopoverUserEmailAddress {
-  color: #cbd5e1 !important;
-}
-
-/* Clerk popup overrides — light mode */
-html.light .cl-userButtonPopoverActionButton:hover {
-  background: #e0e7ff !important;
-  color: #4f46e5 !important;
-}
-html.light .cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonText {
-  color: #4f46e5 !important;
-}
-html.light .cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonIcon {
-  color: #4f46e5 !important;
-}
-html.light .cl-userPreviewMainIdentifier,
-html.light .cl-userButtonPopoverUserFullName {
-  color: #0f172a !important;
-}
-html.light .cl-userPreviewSecondaryIdentifier,
-html.light .cl-userButtonPopoverUserEmailAddress {
-  color: #475569 !important;
+  color: var(--text-secondary) !important;
 }

@@ -16,30 +16,30 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: "dark",
+  theme: "light",
   toggleTheme: () => {},
 });
 
 function applyTheme(t: Theme) {
-  if (t === "light") {
-    document.documentElement.classList.add("light");
+  if (t === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
   } else {
-    document.documentElement.classList.remove("light");
+    document.documentElement.removeAttribute("data-theme");
   }
 }
 
 /**
  * Provides theme context to the app.
- * - Reads initial value from localStorage (defaults to "dark").
+ * - Reads initial value from localStorage (defaults to "light").
  * - Persists changes to localStorage.
- * - Applies/removes the "light" class on <html> to activate CSS variable overrides.
+ * - Sets/removes data-theme="dark" on <html> to activate CSS variable overrides.
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Start with dark to match the server render; useEffect syncs with localStorage.
-  const [theme, setTheme] = useState<Theme>("dark");
+  // Start with light to match the server render; useEffect syncs with localStorage.
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const stored = (localStorage.getItem("theme") as Theme | null) ?? "dark";
+    const stored = (localStorage.getItem("theme") as Theme | null) ?? "light";
     setTheme(stored);
     applyTheme(stored);
   }, []);

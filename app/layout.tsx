@@ -14,7 +14,7 @@ export const metadata: Metadata = {
  * Inline script that runs synchronously before React hydration to apply the
  * saved theme class. Prevents a flash of the wrong theme on page load.
  */
-const themeInitScript = `(function(){try{var t=localStorage.getItem('theme')||'dark';if(t==='light')document.documentElement.classList.add('light');}catch(e){}})();`;
+const themeInitScript = `(function(){try{var t=localStorage.getItem('theme')||'light';if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();`;
 
 export default function RootLayout({
   children,

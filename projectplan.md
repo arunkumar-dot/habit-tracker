@@ -5,6 +5,20 @@
 
 ---
 
+## Theme Refactor — Warm Minimal (see THEME_REFACTOR.md)
+
+| Phase | Status | Notes |
+|-------|--------|-------|
+| Phase 1 — Design tokens | ✅ Done | globals.css rewritten; theme-provider & layout anti-flash script updated |
+| Phase 2 — Typography | ⬜ Todo | |
+| Phase 3 — Core components | ⬜ Todo | |
+| Phase 4 — Streak Ribbon | ⬜ Todo | |
+| Phase 5 — Page-specific changes | ⬜ Todo | |
+| Phase 6 — Icon pass | ⬜ Todo | |
+| Phase 7 — Final polish | ⬜ Todo | |
+
+---
+
 ## ⚠️ Hard Rules — Read Before Every Session
 
 | Rule | Detail |
