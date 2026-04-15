@@ -2,10 +2,11 @@
 
 import { DURATIONS, type PomodoroMode } from "@/hooks/use-pomodoro";
 
+// All modes use --accent; the mode label provides semantic distinction
 const MODE_COLORS: Record<PomodoroMode, string> = {
-  focus: "#6366f1",       // --accent-primary
-  shortBreak: "#10b981",  // --accent-success
-  longBreak: "#3b82f6",   // --accent-info
+  focus:      "var(--accent)",
+  shortBreak: "var(--success)",
+  longBreak:  "var(--habit-4)",
 };
 
 interface PomodoroTimerProps {
@@ -40,7 +41,7 @@ export function PomodoroTimer({ mode, remainingSecs, isRunning }: PomodoroTimerP
             cy="100"
             r={radius}
             fill="none"
-            stroke="var(--bg-elevated)"
+            stroke="var(--bg-sunken)"
             strokeWidth="8"
           />
           {/* Progress arc */}
@@ -61,8 +62,14 @@ export function PomodoroTimer({ mode, remainingSecs, isRunning }: PomodoroTimerP
         {/* Center content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
           <span
-            className="text-5xl font-bold tabular-nums tracking-tight"
-            style={{ color: "var(--text-primary)" }}
+            className="tabular-nums"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "96px",
+              fontWeight: 400,
+              lineHeight: 1,
+              color: "var(--text-primary)",
+            }}
           >
             {formatTime(Math.ceil(remainingSecs))}
           </span>

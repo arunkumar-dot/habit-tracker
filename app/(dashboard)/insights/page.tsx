@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { BarChart3, Star, Frown, Flame, Zap, Timer } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCard, MetricCardSkeleton } from "@/components/insights/metric-card";
@@ -51,22 +52,14 @@ export default function InsightsPage() {
         description="Understand your habit patterns and get smart suggestions"
       />
 
-      {/* Window toggle */}
-      <div className="flex gap-2 mb-6">
+      {/* Window toggle — segmented control */}
+      <div className="flex items-end gap-0 mb-6">
         {([7, 30] as Window[]).map((w) => (
           <button
             key={w}
             onClick={() => setWindow(w)}
-            className="px-4 py-1.5 rounded-xl text-sm font-medium transition-colors"
-            style={
-              window === w
-                ? { background: "var(--accent-primary)", color: "#fff" }
-                : {
-                    background: "var(--bg-surface)",
-                    color: "var(--text-secondary)",
-                    border: "1px solid var(--border)",
-                  }
-            }
+            className="seg-btn"
+            data-active={window === w}
           >
             {w} days
           </button>
@@ -79,7 +72,7 @@ export default function InsightsPage() {
           className="rounded-2xl p-8 text-center mb-6"
           style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
         >
-          <p className="text-3xl mb-3">📊</p>
+          <BarChart3 size={32} className="mb-3" style={{ color: "var(--text-tertiary)" }} />
           <p className="font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
             No data yet
           </p>
@@ -96,55 +89,48 @@ export default function InsightsPage() {
         ) : (
           <>
             <MetricCard
-              icon="📊"
+              icon={<BarChart3 size={18} />}
               label="Completion Rate"
               value={metrics ? `${metrics.overallRate}%` : "—"}
               sub={`Last ${window} days`}
-              accent="primary"
             />
             <MetricCard
-              icon="🌟"
+              icon={<Star size={18} />}
               label="Best Day"
               value={metrics?.bestDay?.day ?? "—"}
               sub={metrics?.bestDay ? `${metrics.bestDay.rate}% avg` : "Not enough data"}
-              accent="success"
             />
             <MetricCard
-              icon="😓"
+              icon={<Frown size={18} />}
               label="Worst Day"
               value={metrics?.worstDay?.day ?? "—"}
               sub={metrics?.worstDay ? `${metrics.worstDay.rate}% avg` : "Not enough data"}
-              accent="danger"
             />
             <MetricCard
-              icon="🔥"
+              icon={<Flame size={18} />}
               label="Most Consistent"
               value={metrics?.mostConsistentTitle ?? "—"}
               sub={metrics?.mostConsistentTitle ? `${metrics.mostConsistentRate}%` : undefined}
-              accent="warning"
             />
             <MetricCard
-              icon="⚡"
+              icon={<Zap size={18} />}
               label="Most Missed"
               value={metrics?.mostMissedTitle ?? "—"}
               sub={metrics?.mostMissedTitle ? `${metrics.mostMissedRate}%` : undefined}
-              accent="danger"
             />
             {(metrics?.focusSessionCount ?? 0) > 0 ? (
               <MetricCard
-                icon="⏱️"
+                icon={<Timer size={18} />}
                 label="Focus Time"
                 value={`${metrics!.totalFocusMinutes} min`}
                 sub={`${metrics!.focusSessionCount} sessions`}
-                accent="primary"
               />
             ) : (
               <MetricCard
-                icon="⏱️"
+                icon={<Timer size={18} />}
                 label="Focus Time"
                 value="—"
                 sub="No Pomodoro sessions yet"
-                accent="primary"
               />
             )}
           </>

@@ -11,7 +11,7 @@ export function PageHeader({ title, description, actions, className }: PageHeade
   return (
     <div className={cn("flex items-start justify-between gap-4 mb-6", className)}>
       <div>
-        <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
+        <h1 className="type-page-title" style={{ color: "var(--text-primary)" }}>
           {title}
         </h1>
         {description && (

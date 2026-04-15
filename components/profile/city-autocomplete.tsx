@@ -168,8 +168,8 @@ export const CityAutocomplete = forwardRef<HTMLInputElement, CityAutocompletePro
             }}
             className="w-full rounded-xl px-3 py-2.5 pr-9 text-sm outline-none transition-colors"
             style={{
-              background: "var(--bg-input)",
-              border: `1px solid ${error ? "var(--accent-danger)" : "var(--border)"}`,
+              background: "var(--bg-sunken)",
+              border: `1px solid ${error ? "var(--danger)" : "var(--border-default)"}`,
               color: "var(--text-primary)",
             }}
           />
@@ -185,7 +185,7 @@ export const CityAutocomplete = forwardRef<HTMLInputElement, CityAutocompletePro
 
         {/* Error message */}
         {error && (
-          <p className="mt-1 text-xs" style={{ color: "var(--accent-danger)" }}>
+          <p className="mt-1 text-xs" style={{ color: "var(--danger)" }}>
             {error}
           </p>
         )}
@@ -197,7 +197,7 @@ export const CityAutocomplete = forwardRef<HTMLInputElement, CityAutocompletePro
             className="absolute z-50 left-0 right-0 mt-1.5 rounded-xl overflow-hidden shadow-xl"
             style={{
               background: "var(--bg-elevated)",
-              border: "1px solid var(--border)",
+              border: "1px solid var(--border-subtle)",
             }}
           >
             {results.map((city, i) => (
@@ -216,7 +216,7 @@ export const CityAutocomplete = forwardRef<HTMLInputElement, CityAutocompletePro
                   color: "var(--text-primary)",
                 }}
               >
-                <MapPin size={12} style={{ color: "var(--accent-primary)", flexShrink: 0 }} />
+                <MapPin size={12} style={{ color: "var(--accent)", flexShrink: 0 }} />
                 <span className="font-medium truncate">{city.name}</span>
                 {city.country && (
                   <span className="ml-auto text-xs flex-shrink-0" style={{ color: "var(--text-secondary)" }}>

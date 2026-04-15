@@ -24,31 +24,35 @@ const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2 select-none whitespace-nowrap",
     "text-sm font-medium transition-all duration-150",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2",
     "disabled:pointer-events-none disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
   ],
   {
     variants: {
       variant: {
+        // Solid terracotta — no gradient, no shadow
         primary:
-          "bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.97]",
+          "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] active:scale-[0.97]",
+        // Bordered ghost — no fill, text-primary
         secondary:
-          "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 active:scale-[0.97]",
+          "bg-transparent text-[var(--text-primary)] border border-[var(--border-default)] hover:bg-[var(--bg-hover)] active:scale-[0.97]",
+        // Icon-style ghost — no border, muted text
         ghost:
-          "bg-transparent text-muted-foreground hover:opacity-80 active:scale-[0.97]",
+          "bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] active:scale-[0.97]",
         danger:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:scale-[0.97]",
+          "bg-[var(--danger)] text-white hover:opacity-90 active:scale-[0.97]",
         outline:
-          "bg-transparent text-primary border border-primary hover:bg-primary/10 active:scale-[0.97]",
+          "bg-transparent text-[var(--accent)] border border-[var(--accent)] hover:bg-[var(--accent-soft)] active:scale-[0.97]",
         success:
-          "bg-success text-success-foreground hover:bg-success/90 active:scale-[0.97]",
+          "bg-[var(--success)] text-white hover:opacity-90 active:scale-[0.97]",
       },
       size: {
-        sm: "px-3 py-1.5 text-sm rounded-lg",
-        md: "px-4 py-2 text-sm rounded-xl",
-        lg: "px-6 py-3 text-base rounded-xl",
-        icon: "p-2 rounded-xl aspect-square",
+        sm:   "px-3 py-1.5 text-sm rounded-md",
+        md:   "px-4 py-2 text-sm rounded-md",
+        lg:   "px-6 py-3 text-base rounded-md",
+        // 36×36 icon button — rounded-full per spec
+        icon: "w-9 h-9 rounded-full",
       },
     },
     defaultVariants: {

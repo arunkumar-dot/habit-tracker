@@ -122,7 +122,7 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
           <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
             Sex
           </p>
-          <div className="flex gap-2">
+          <div className="flex items-end gap-0">
             {SEX_OPTIONS.map((opt) => {
               const isActive = selectedSex === opt.value;
               return (
@@ -130,16 +130,8 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
                   key={opt.value}
                   type="button"
                   onClick={() => setValue("sex", opt.value, { shouldValidate: true })}
-                  className="flex-1 py-2 text-xs font-medium rounded-xl transition-colors"
-                  style={
-                    isActive
-                      ? { background: "var(--accent-primary)", color: "white" }
-                      : {
-                          background: "var(--bg-input)",
-                          color: "var(--text-secondary)",
-                          border: "1px solid var(--border)",
-                        }
-                  }
+                  className="seg-btn flex-1"
+                  data-active={isActive}
                 >
                   {opt.label}
                 </button>
@@ -172,7 +164,7 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
           </label>
           <span
             className="text-xs"
-            style={{ color: bio.length > 280 ? "var(--accent-danger)" : "var(--text-disabled)" }}
+            style={{ color: bio.length > 280 ? "var(--danger)" : "var(--text-disabled)" }}
           >
             {bio.length}/300
           </span>

@@ -45,11 +45,13 @@ export function TimelineItem({
         {/* Dot */}
         <div
           className={cn(
-            "w-3 h-3 rounded-full flex-shrink-0 z-10 mt-4 transition-all",
+            "rounded-full flex-shrink-0 z-10 mt-4 transition-all",
             isCurrent && "animate-pulse-ring"
           )}
           style={{
-            background: isCompleted ? color : isPast && !isCompleted ? "var(--text-disabled)" : color,
+            width: "10px",
+            height: "10px",
+            background: color,
             opacity: isPast && !isCompleted ? 0.4 : 1,
             boxShadow: isCurrent ? `0 0 0 4px ${color}30` : undefined,
           }}
@@ -66,18 +68,14 @@ export function TimelineItem({
       {/* Right: habit content */}
       <div
         className={cn(
-          "flex-1 flex items-start justify-between gap-3 mb-4 p-4 rounded-2xl transition-all",
+          "flex-1 flex items-start justify-between gap-3 mb-4 p-4 rounded-lg transition-all shadow-warm-sm",
           isCurrent && "ring-1",
-          isPast && !isCompleted && "opacity-50",
-          !isCompleted && !isCurrent && "hover:brightness-150"
+          isPast && !isCompleted && "opacity-50"
         )}
         style={{
-          background: isCurrent
-            ? `${color}12`
-            : isCompleted
-            ? "var(--bg-surface)"
-            : "var(--bg-surface)",
-          border: `1px solid ${isCurrent ? `${color}40` : "var(--border)"}`,
+          background: isCurrent ? `${color}12` : "var(--bg-elevated)",
+          border: `1px solid ${isCurrent ? `${color}40` : "var(--border-subtle)"}`,
+          opacity: isCompleted ? 0.6 : undefined,
         }}
       >
         {/* Content */}
@@ -85,7 +83,7 @@ export function TimelineItem({
           {/* Time + labels */}
           <div className="flex items-center gap-2 flex-wrap mb-1.5">
             <span
-              className="flex items-center gap-1 text-xs font-mono"
+              className="type-time-data flex items-center gap-1"
               style={{
                 color: isCurrent ? color : "var(--text-secondary)",
               }}
@@ -112,11 +110,10 @@ export function TimelineItem({
 
           {/* Title */}
           <p
-            className="font-semibold text-sm"
+            className="type-habit-name"
             style={{
               color: "var(--text-primary)",
               textDecoration: isCompleted ? "line-through" : "none",
-              opacity: isCompleted ? 0.6 : 1,
             }}
           >
             {habit.title}

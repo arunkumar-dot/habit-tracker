@@ -42,60 +42,37 @@ export function HabitFilters({
           placeholder="Search habits..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-9 pr-3 py-2 rounded-xl text-sm outline-none transition-colors focus:ring-1 focus:ring-[color:var(--border-focus)]"
+          className="w-full pl-9 pr-3 py-3 rounded-md text-sm outline-none transition-colors border border-transparent focus:border-[var(--accent)]"
           style={{
-            background: "var(--bg-input)",
-            border: "1px solid var(--border)",
+            background: "var(--bg-sunken)",
             color: "var(--text-primary)",
           }}
         />
       </div>
 
-      {/* Frequency filter */}
-      <div
-        className="flex rounded-xl p-1 gap-1"
-        style={{ background: "var(--bg-elevated)" }}
-      >
+      {/* Frequency filter — segmented control */}
+      <div className="flex items-end gap-0">
         {filters.map((f) => (
           <button
             key={f.value}
             onClick={() => onFrequencyChange(f.value)}
-            className={cn(
-              "px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
-            )}
-            style={
-              frequencyFilter === f.value
-                ? {
-                    background: "var(--accent-primary)",
-                    color: "white",
-                  }
-                : {
-                    color: "var(--text-secondary)",
-                  }
-            }
+            className={cn("seg-btn")}
+            data-active={frequencyFilter === f.value}
           >
             {f.label}
           </button>
         ))}
       </div>
 
-      {/* Progress summary */}
+      {/* Progress summary — no pill background per spec */}
       <div
-        className="hidden sm:flex items-center gap-1.5 text-sm px-3 py-2 rounded-xl"
-        style={{
-          background: "var(--bg-elevated)",
-          color: "var(--text-secondary)",
-        }}
+        className="hidden sm:flex items-center gap-1 type-meta-label"
+        style={{ color: "var(--text-tertiary)" }}
       >
-        <span
-          className="font-semibold"
-          style={{ color: "var(--accent-success)" }}
-        >
-          {completedCount}
-        </span>
+        <span>{completedCount}</span>
         <span>/</span>
         <span>{totalCount}</span>
-        <span className="text-xs">done</span>
+        <span>done</span>
       </div>
     </div>
   );

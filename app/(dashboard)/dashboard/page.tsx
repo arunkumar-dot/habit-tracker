@@ -71,7 +71,6 @@ export default function DashboardPage() {
 
       <PageHeader
         title="My Habits"
-        description={formatDateLabel(selectedDate)}
         actions={
           <Button
             variant="primary"
@@ -102,7 +101,7 @@ export default function DashboardPage() {
           </div>
           <Progress
             value={progressPct}
-            color={completedCount === totalCount ? "var(--accent-success)" : "var(--accent-primary)"}
+            color={completedCount === totalCount ? "var(--success)" : "var(--accent)"}
           />
         </div>
       )}

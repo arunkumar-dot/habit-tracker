@@ -20,11 +20,11 @@ export function NudgeBanner({ nudges, onDismiss }: NudgeBannerProps) {
       {nudges.map((nudge) => (
         <div
           key={nudge.id}
-          className="flex items-start justify-between gap-3 rounded-xl px-4 py-3"
+          className="flex items-start justify-between gap-3 rounded-lg px-4 py-3"
           style={{
-            background: "var(--bg-surface)",
-            borderLeft: "3px solid var(--accent-primary)",
-            border: "1px solid var(--border)",
+            background: "var(--warning-soft)",
+            borderLeft: "3px solid var(--warning)",
+            border: "1px solid var(--border-subtle)",
             borderLeftWidth: "3px",
           }}
         >

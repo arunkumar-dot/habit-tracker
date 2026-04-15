@@ -21,11 +21,11 @@ export function TimelineGap({ label, gapMinutes }: TimelineGapProps) {
 
       {/* Gap indicator */}
       <div
-        className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs"
         style={{
-          background: "var(--bg-elevated)",
-          color: "var(--text-disabled)",
-          border: "1px dashed var(--border)",
+          background: "var(--bg-sunken)",
+          color: "var(--text-tertiary)",
+          border: "1px dashed var(--border-subtle)",
         }}
       >
         <Clock size={11} />

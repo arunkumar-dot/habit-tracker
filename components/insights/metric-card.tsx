@@ -2,31 +2,21 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 interface MetricCardProps {
-  icon: string;
+  /** Lucide icon element rendered at 18px in --text-tertiary */
+  icon: React.ReactNode;
   label: string;
   value: string;
   sub?: string;
-  accent?: "primary" | "success" | "warning" | "danger";
   className?: string;
 }
-
-const accentColors: Record<string, string> = {
-  primary: "var(--accent-primary)",
-  success: "var(--accent-success)",
-  warning: "var(--accent-warning)",
-  danger: "var(--accent-danger, #ef4444)",
-};
 
 export function MetricCard({
   icon,
   label,
   value,
   sub,
-  accent = "primary",
   className,
 }: MetricCardProps) {
-  const color = accentColors[accent] ?? accentColors.primary;
-
   return (
     <Card variant="default" padding="none" className={cn("flex flex-col gap-1.5 p-4", className)}>
       {/* Icon + label row */}
@@ -34,13 +24,13 @@ export function MetricCard({
         <p className="text-xs font-medium leading-snug" style={{ color: "var(--text-secondary)" }}>
           {label}
         </p>
-        <span className="text-base leading-none shrink-0">{icon}</span>
+        <span className="shrink-0" style={{ color: "var(--text-tertiary)" }}>{icon}</span>
       </div>
       {/* Value — capped at one line with ellipsis */}
       <p
-        className="text-xl font-bold leading-tight truncate"
+        className="type-hero-number leading-tight truncate"
         title={value}
-        style={{ color }}
+        style={{ color: "var(--text-primary)" }}
       >
         {value}
       </p>

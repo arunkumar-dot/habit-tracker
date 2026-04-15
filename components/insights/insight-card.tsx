@@ -9,8 +9,8 @@ interface InsightCardProps {
 }
 
 const borderColors: Record<InsightResult["type"], string> = {
-  pattern: "var(--accent-primary, #6366f1)",
-  recommendation: "var(--accent-warning, #f59e0b)",
+  pattern: "var(--accent)",
+  recommendation: "var(--warning)",
 };
 
 export function InsightCard({ insight, onDismiss }: InsightCardProps) {
@@ -20,8 +20,8 @@ export function InsightCard({ insight, onDismiss }: InsightCardProps) {
     <div
       className="flex items-start gap-3 rounded-xl px-4 py-3"
       style={{
-        background: "var(--bg-surface)",
-        border: "1px solid var(--border)",
+        background: "var(--bg-elevated)",
+        border: "1px solid var(--border-subtle)",
         borderLeft: `3px solid ${accentColor}`,
       }}
     >

@@ -1,9 +1,10 @@
 "use client";
 
-import { Flame, Trophy, CheckCircle, TrendingUp } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { useHabits } from "@/hooks/use-habits";
 import { useStreak } from "@/hooks/use-streaks";
 import { Card } from "@/components/ui/card";
+import { StreakRibbon } from "@/components/ui/streak-ribbon";
 import { StreakRowSkeleton } from "@/components/ui/skeleton";
 import type { Habit } from "@/types";
 
@@ -25,10 +26,10 @@ function StatCard({ icon, label, value, color }: StatCardProps) {
           {icon}
         </div>
         <div>
-          <p className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "64px", fontWeight: 400, lineHeight: 1, color: "var(--text-primary)" }}>
             {value}
           </p>
-          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+          <p className="type-meta-label mt-1" style={{ color: "var(--text-tertiary)" }}>
             {label}
           </p>
         </div>
@@ -50,7 +51,7 @@ function HabitStreakRow({ habit }: HabitStreakRowProps) {
   return (
     <div
       className="flex items-center justify-between py-3"
-      style={{ borderBottom: "1px solid var(--border)" }}
+      style={{ borderBottom: "1px solid var(--border-subtle)" }}
     >
       <div className="flex items-center gap-3 min-w-0">
         <div
@@ -62,24 +63,26 @@ function HabitStreakRow({ habit }: HabitStreakRowProps) {
         </span>
       </div>
       <div className="flex items-center gap-4 flex-shrink-0 ml-4">
-        <div className="text-right">
-          <p className="text-sm font-semibold" style={{ color: "var(--accent-warning)" }}>
-            🔥 {currentStreak}
-          </p>
-          <p className="text-[10px]" style={{ color: "var(--text-disabled)" }}>
+        <div className="flex flex-col items-end gap-1">
+          <StreakRibbon
+            count={currentStreak}
+            title={`Current streak: ${currentStreak} day${currentStreak !== 1 ? "s" : ""}`}
+          />
+          <p className="type-meta-label" style={{ color: "var(--text-disabled)" }}>
             current
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-sm font-semibold" style={{ color: "var(--accent-primary)" }}>
-            🏆 {longestStreak}
-          </p>
-          <p className="text-[10px]" style={{ color: "var(--text-disabled)" }}>
+        <div className="flex flex-col items-end gap-1">
+          <span className="flex items-center gap-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+            <Trophy size={13} style={{ color: "var(--text-tertiary)" }} />
+            {longestStreak}
+          </span>
+          <p className="type-meta-label" style={{ color: "var(--text-disabled)" }}>
             best
           </p>
         </div>
         <div className="text-right hidden sm:block">
-          <p className="text-sm font-semibold" style={{ color: "var(--accent-success)" }}>
+          <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
             {totalCompletions}
           </p>
           <p className="text-[10px]" style={{ color: "var(--text-disabled)" }}>

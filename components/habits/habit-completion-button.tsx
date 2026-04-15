@@ -15,11 +15,12 @@ interface HabitCompletionButtonProps {
 export function HabitCompletionButton({
   isCompleted,
   onToggle,
-  color = "#6366f1",
+  color = "var(--border-default)",
   size = "md",
   disabled = false,
 }: HabitCompletionButtonProps) {
-  const sizeClass = size === "sm" ? "w-6 h-6" : "w-8 h-8";
+  // 28px (md) / 22px (sm) per spec
+  const sizeClass = size === "sm" ? "w-[22px] h-[22px]" : "w-7 h-7";
   const iconSize = size === "sm" ? 12 : 16;
 
   async function handleClick() {
@@ -43,13 +44,13 @@ export function HabitCompletionButton({
       style={
         isCompleted
           ? {
-              background: color,
-              border: `2px solid ${color}`,
-              boxShadow: `0 0 14px ${color}55`,
+              background: "var(--accent)",
+              border: "1.5px solid var(--accent)",
             }
           : {
               background: "transparent",
-              border: `2px solid ${color}60`,
+              // habit color as a subtle tint on the border
+              border: `1.5px solid ${color}80`,
             }
       }
     >
@@ -83,7 +84,7 @@ export function HabitCompletionButton({
               borderRadius: "50%",
               width: "100%",
               height: "100%",
-              border: `2px solid ${color}`,
+              border: "1.5px solid var(--accent)",
               pointerEvents: "none",
             }}
           />

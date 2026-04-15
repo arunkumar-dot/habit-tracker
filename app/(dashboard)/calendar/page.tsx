@@ -52,18 +52,25 @@ export default function CalendarPage() {
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         {/* Calendar — fixed width so cells stay compact */}
         <div
-          className="w-full lg:w-80 shrink-0 rounded-2xl p-4"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
+          className="w-full lg:w-80 shrink-0 rounded-lg p-4 shadow-warm-sm"
+          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
         >
           {/* Month navigation */}
           <div className="flex items-center justify-between mb-3">
-            <button onClick={prevMonth} className="p-1.5 rounded-lg transition-colors hover:bg-[color:var(--bg-hover)]" style={{ color: "var(--text-secondary)" }}>
+            <button onClick={prevMonth} className="p-1.5 rounded-md transition-colors hover:bg-[var(--bg-hover)]" style={{ color: "var(--text-secondary)" }}>
               <ChevronLeft size={16} />
             </button>
-            <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "20px",
+                fontWeight: 400,
+                color: "var(--text-primary)",
+              }}
+            >
               {monthLabel}
             </h2>
-            <button onClick={nextMonth} className="p-1.5 rounded-lg transition-colors hover:bg-[color:var(--bg-hover)]" style={{ color: "var(--text-secondary)" }}>
+            <button onClick={nextMonth} className="p-1.5 rounded-md transition-colors hover:bg-[var(--bg-hover)]" style={{ color: "var(--text-secondary)" }}>
               <ChevronRight size={16} />
             </button>
           </div>

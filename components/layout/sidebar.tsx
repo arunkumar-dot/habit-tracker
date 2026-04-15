@@ -30,23 +30,31 @@ export function Sidebar({ collapsed }: SidebarProps) {
         collapsed ? "w-16" : "w-60"
       )}
       style={{
-        background: "var(--bg-surface)",
-        borderRight: "1px solid var(--border)",
+        background: "var(--bg-elevated)",
+        borderRight: "1px solid var(--border-subtle)",
       }}
     >
       {/* Logo */}
       <div
         className="flex items-center h-[72px] px-4 gap-2.5 flex-shrink-0"
-        style={{ borderBottom: "1px solid var(--border)" }}
+        style={{ borderBottom: "1px solid var(--border-subtle)" }}
       >
         <div
-          className="w-8 h-8 flex-shrink-0 rounded-xl flex items-center justify-center"
-          style={{ background: "var(--accent-primary)" }}
+          className="w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center"
+          style={{ background: "var(--accent)" }}
         >
           <Zap size={16} fill="white" style={{ color: "white" }} />
         </div>
         {!collapsed && (
-          <span className="font-bold text-base truncate" style={{ color: "var(--text-primary)" }}>
+          <span
+            className="truncate"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "22px",
+              fontWeight: 400,
+              color: "var(--text-primary)",
+            }}
+          >
             HabitFlow
           </span>
         )}
@@ -62,13 +70,21 @@ export function Sidebar({ collapsed }: SidebarProps) {
               href={item.href}
               title={collapsed ? item.label : undefined}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors rounded-md",
                 collapsed && "justify-center px-2"
               )}
               style={
                 isActive
-                  ? { background: "var(--accent-primary)", color: "white" }
-                  : { color: "var(--text-secondary)" }
+                  ? {
+                      color: "var(--accent)",
+                      borderLeft: "2px solid var(--accent)",
+                      paddingLeft: collapsed ? undefined : "10px",
+                    }
+                  : {
+                      color: "var(--text-secondary)",
+                      borderLeft: "2px solid transparent",
+                      paddingLeft: collapsed ? undefined : "10px",
+                    }
               }
             >
               <item.icon size={18} className="flex-shrink-0" />
@@ -78,14 +94,7 @@ export function Sidebar({ collapsed }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer */}
-      {!collapsed && (
-        <div className="px-3 py-4" style={{ borderTop: "1px solid var(--border)" }}>
-          <p className="text-xs px-3" style={{ color: "var(--text-disabled)" }}>
-            HabitFlow v1.0
-          </p>
-        </div>
-      )}
+      {/* Footer removed — version moved to Profile page */}
     </aside>
   );
 }

@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useTheme } from "@/components/providers/theme-provider";
 import type { WeeklyData } from "@/types";
 
 interface WeeklyChartProps {
@@ -16,18 +17,33 @@ interface WeeklyChartProps {
 }
 
 export function WeeklyChart({ data }: WeeklyChartProps) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  // Use design tokens resolved to hex for Recharts (SVG attributes, not CSS)
+  const accent      = isDark ? "#E86F3C" : "#C2410C";
+  const gridColor   = isDark ? "#2E2825" : "#E8E3DA";
+  const axisColor   = isDark ? "#8A8680" : "#8A8680";
+  const tooltipBg   = isDark ? "#231E1B" : "#FFFFFF";
+  const tooltipBorder = isDark ? "#2E2825" : "#E8E3DA";
+  const tooltipText = isDark ? "#F5F1EA" : "#1C1B18";
+
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} barCategoryGap="30%">
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(42,42,62,0.8)" vertical={false} />
+        <CartesianGrid
+          strokeDasharray="3 3"
+          stroke={gridColor}
+          vertical={false}
+        />
         <XAxis
           dataKey="label"
-          tick={{ fill: "#94a3b8", fontSize: 11 }}
+          tick={{ fill: axisColor, fontSize: 11 }}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
-          tick={{ fill: "#94a3b8", fontSize: 11 }}
+          tick={{ fill: axisColor, fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           allowDecimals={false}
@@ -35,18 +51,18 @@ export function WeeklyChart({ data }: WeeklyChartProps) {
         />
         <Tooltip
           contentStyle={{
-            background: "#1a1a28",
-            border: "1px solid #2a2a3e",
-            borderRadius: 12,
-            color: "#e2e8f0",
+            background: tooltipBg,
+            border: `1px solid ${tooltipBorder}`,
+            borderRadius: 10,
+            color: tooltipText,
             fontSize: 12,
           }}
-          cursor={{ fill: "rgba(99,102,241,0.08)" }}
+          cursor={{ fill: `${accent}10` }}
         />
         <Bar
           dataKey="completed"
           name="Completed"
-          fill="#6366f1"
+          fill={accent}
           radius={[6, 6, 0, 0]}
           maxBarSize={40}
         />

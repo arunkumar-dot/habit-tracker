@@ -4,14 +4,14 @@ import { UserButton } from "@clerk/nextjs";
 import { PanelLeft } from "lucide-react";
 import { NotificationToggle } from "@/components/notifications/notification-toggle";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { useTheme } from "@/components/providers/theme-provider";
 
-function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 17) return "Good afternoon";
-  return "Good evening";
+function getTodayLabel() {
+  return new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 interface TopbarProps {
@@ -19,16 +19,13 @@ interface TopbarProps {
 }
 
 export function Topbar({ onToggleSidebar }: TopbarProps) {
-  const { user } = useCurrentUser();
   const { theme } = useTheme();
   const isLight = theme === "light";
-  const firstName = user?.name?.split(" ")[0] ?? "";
-  const greeting = `${getGreeting()}${firstName ? `, ${firstName}` : ""} 👋`;
 
   return (
     <header
       className="flex items-center justify-between px-4 lg:px-6 flex-shrink-0 h-[72px]"
-      style={{ borderBottom: "1px solid var(--border)", background: "var(--bg-surface)" }}
+      style={{ borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-elevated)" }}
     >
       {/* Left: toggle button (desktop) + app name (mobile) */}
       <div className="flex-1 flex items-center gap-3">
@@ -55,10 +52,17 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
         </div>
       </div>
 
-      {/* Center: greeting */}
+      {/* Center: today's date */}
       <div className="hidden lg:flex flex-1 justify-center">
-        <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-          {greeting}
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontStyle: "italic",
+            fontSize: "16px",
+            color: "var(--text-secondary)",
+          }}
+        >
+          {getTodayLabel()}
         </p>
       </div>
 
@@ -71,39 +75,39 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
         <UserButton
           appearance={{
             variables: {
-              colorPrimary: "#6366f1",
-              colorBackground: isLight ? "#ffffff" : "#12121a",
-              colorText: isLight ? "#0f172a" : "#f1f5f9",
-              colorTextSecondary: isLight ? "#475569" : "#cbd5e1",
-              borderRadius: "0.75rem",
+              colorPrimary: isLight ? "#C2410C" : "#E86F3C",
+              colorBackground: isLight ? "#FFFFFF" : "#231E1B",
+              colorText: isLight ? "#1C1B18" : "#F5F1EA",
+              colorTextSecondary: isLight ? "#57534E" : "#C8C2B8",
+              borderRadius: "10px",
             },
             elements: {
               userButtonPopoverCard: {
-                background: isLight ? "#f8fafc" : "#1a1a28",
-                border: isLight ? "1px solid #e2e8f0" : "1px solid #2a2a3e",
+                background: isLight ? "#FFFFFF" : "#231E1B",
+                border: isLight ? "1px solid #E8E3DA" : "1px solid #2E2825",
               },
               userButtonPopoverActionButton: {
-                color: isLight ? "#0f172a" : "#f1f5f9",
-                borderRadius: "0.5rem",
+                color: isLight ? "#1C1B18" : "#F5F1EA",
+                borderRadius: "8px",
               },
               userButtonPopoverActionButtonText: {
-                color: isLight ? "#0f172a" : "#f1f5f9",
+                color: isLight ? "#1C1B18" : "#F5F1EA",
               },
               userButtonPopoverActionButtonIcon: {
-                color: isLight ? "#4f46e5" : "#a5b4fc",
+                color: isLight ? "#C2410C" : "#E86F3C",
               },
               userButtonPopoverUserFullName: {
-                color: isLight ? "#0f172a" : "#f1f5f9",
+                color: isLight ? "#1C1B18" : "#F5F1EA",
               },
               userButtonPopoverUserEmailAddress: {
-                color: isLight ? "#475569" : "#cbd5e1",
+                color: isLight ? "#57534E" : "#C8C2B8",
               },
               userPreviewMainIdentifier: {
-                color: isLight ? "#0f172a" : "#f1f5f9",
+                color: isLight ? "#1C1B18" : "#F5F1EA",
                 fontWeight: "600",
               },
               userPreviewSecondaryIdentifier: {
-                color: isLight ? "#475569" : "#cbd5e1",
+                color: isLight ? "#57534E" : "#C8C2B8",
               },
             },
           }}

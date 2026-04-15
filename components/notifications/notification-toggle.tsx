@@ -28,27 +28,26 @@ export function NotificationToggle() {
     <button
       onClick={handleToggle}
       title={title}
-      className="relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors"
+      className="relative flex items-center justify-center w-8 h-8 rounded-lg transition-colors hover:bg-[var(--bg-hover)]"
       style={{
-        color: enabled ? "var(--accent-primary)" : "var(--text-secondary)",
-        background: enabled ? "color-mix(in srgb, var(--accent-primary) 10%, transparent)" : "transparent",
-        border: "1px solid",
-        borderColor: enabled ? "color-mix(in srgb, var(--accent-primary) 30%, transparent)" : "var(--border)",
+        color: enabled ? "var(--text-primary)" : "var(--text-secondary)",
         opacity: isBlocked ? 0.5 : 1,
         cursor: isBlocked ? "not-allowed" : "pointer",
       }}
+      aria-label={label}
     >
-      <span className="relative">
-        <Bell size={14} />
-        {/* Green dot indicator when enabled */}
-        {enabled && (
-          <span
-            className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full"
-            style={{ background: "var(--accent-success)", border: "1.5px solid var(--bg-surface)" }}
-          />
-        )}
-      </span>
-      <span className="hidden sm:inline">{label}</span>
+      <Bell size={18} />
+      {/* 6px --accent dot when reminders are on */}
+      {enabled && (
+        <span
+          className="absolute top-1 right-1 rounded-full"
+          style={{
+            width: "6px",
+            height: "6px",
+            background: "var(--accent)",
+          }}
+        />
+      )}
     </button>
   );
 }

@@ -44,25 +44,17 @@ export default function MilestonesPage() {
         />
       ) : (
         <div className="space-y-6">
-          {/* Habit selector */}
+          {/* Habit selector — segmented control */}
           {habits && habits.length > 1 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-end gap-0">
               {habits.map((habit) => {
                 const isActive = habit._id === selectedHabitId;
                 return (
                   <button
                     key={habit._id}
                     onClick={() => setSelectedHabitId(habit._id)}
-                    className="px-3 py-1.5 rounded-xl text-sm font-medium transition-colors"
-                    style={
-                      isActive
-                        ? { background: "var(--accent-primary)", color: "white" }
-                        : {
-                            background: "var(--bg-surface)",
-                            color: "var(--text-secondary)",
-                            border: "1px solid var(--border)",
-                          }
-                    }
+                    className="seg-btn"
+                    data-active={isActive}
                   >
                     {habit.color && (
                       <span

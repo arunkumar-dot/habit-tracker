@@ -59,8 +59,8 @@ export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
       // Hover lift
       whileHover={{ y: -2, transition: { duration: 0.15 } }}
-      className="relative rounded-2xl overflow-hidden"
-      style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
+      className="relative rounded-lg overflow-hidden shadow-warm-sm card-hoverable"
+      style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
     >
       {/* Swipe hint background */}
       <motion.div
@@ -102,28 +102,25 @@ export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
             onEdit(habit);
           }
         }}
-        className="relative flex items-start gap-3 p-4"
+        className="relative flex items-start gap-2.5 px-4 py-3.5"
       >
-        {/* Color accent bar */}
+        {/* 8px category color dot — replaces the left color bar */}
         <div
-          className="absolute left-0 top-3 bottom-3 w-1 rounded-r-full"
-          style={{ background: color }}
+          className="flex-shrink-0 mt-[7px]"
+          style={{
+            width: "8px",
+            height: "8px",
+            borderRadius: "50%",
+            background: color,
+          }}
         />
-
-        {/* Icon */}
-        <div
-          className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg mt-0.5 ml-2"
-          style={{ background: `${color}20` }}
-        >
-          <span style={{ color }}>●</span>
-        </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
               <motion.p
-                className="font-medium text-sm leading-snug"
+                className="type-habit-name leading-snug"
                 animate={{
                   opacity: isCompleted ? 0.55 : 1,
                 }}
@@ -150,7 +147,7 @@ export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
           {/* Meta row */}
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             <span
-              className="flex items-center gap-1 text-xs"
+              className="type-time-data flex items-center gap-1"
               style={{ color: "var(--text-secondary)" }}
             >
               <Clock size={11} />

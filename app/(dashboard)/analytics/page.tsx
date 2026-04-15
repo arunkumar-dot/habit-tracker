@@ -81,26 +81,26 @@ export default function AnalyticsPage() {
         ) : (
           <>
             <Card variant="default" padding="md">
-              <p className="text-2xl font-bold" style={{ color: "var(--accent-primary)" }}>
+              <p className="type-hero-number" style={{ color: "var(--text-primary)" }}>
                 {totalHabits}
               </p>
-              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+              <p className="type-meta-label mt-2" style={{ color: "var(--text-tertiary)" }}>
                 Active Habits
               </p>
             </Card>
             <Card variant="default" padding="md">
-              <p className="text-2xl font-bold" style={{ color: "var(--accent-success)" }}>
+              <p className="type-hero-number" style={{ color: "var(--text-primary)" }}>
                 {totalCompletionsThisWeek}
               </p>
-              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+              <p className="type-meta-label mt-2" style={{ color: "var(--text-tertiary)" }}>
                 This Week
               </p>
             </Card>
             <Card variant="default" padding="md" className="col-span-2 sm:col-span-1">
-              <p className="text-2xl font-bold" style={{ color: "var(--accent-warning)" }}>
+              <p className="type-hero-number" style={{ color: "var(--text-primary)" }}>
                 {avgCompletionRate}%
               </p>
-              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+              <p className="type-meta-label mt-2" style={{ color: "var(--text-tertiary)" }}>
                 Avg Completion
               </p>
             </Card>

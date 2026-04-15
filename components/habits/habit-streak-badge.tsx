@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame } from "lucide-react";
+import { StreakRibbon } from "@/components/ui/streak-ribbon";
 import { useStreak } from "@/hooks/use-streaks";
 import type { HabitId } from "@/types";
 
@@ -13,36 +13,20 @@ export function HabitStreakBadge({ habitId, frequency }: HabitStreakBadgeProps) 
   const { currentStreak, isLoading } = useStreak(habitId, frequency);
 
   if (isLoading) {
+    // Skeleton sized to match StreakRibbon dimensions (56×28)
     return (
       <span
-        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs animate-shimmer"
-        style={{ width: 48, height: 20 }}
+        className="inline-block rounded-md animate-shimmer"
+        style={{ width: 56, height: 28, flexShrink: 0 }}
+        aria-hidden="true"
       />
     );
   }
 
-  if (currentStreak === 0) return null;
-
-  // Color gradient: 1-6 days = amber, 7-29 days = orange, 30+ = red
-  const flameColor =
-    currentStreak >= 30
-      ? "#ef4444"
-      : currentStreak >= 7
-      ? "#f97316"
-      : "#f59e0b";
-
   return (
-    <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
-      style={{
-        background: `${flameColor}20`,
-        color: flameColor,
-        border: `1px solid ${flameColor}40`,
-      }}
+    <StreakRibbon
+      count={currentStreak}
       title={`Current streak: ${currentStreak} ${frequency === "weekly" ? "week" : "day"}${currentStreak !== 1 ? "s" : ""}`}
-    >
-      <Flame size={11} fill={flameColor} />
-      {currentStreak}
-    </span>
+    />
   );
 }

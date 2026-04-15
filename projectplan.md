@@ -10,10 +10,10 @@
 | Phase | Status | Notes |
 |-------|--------|-------|
 | Phase 1 — Design tokens | ✅ Done | globals.css rewritten; theme-provider & layout anti-flash script updated |
-| Phase 2 — Typography | ⬜ Todo | |
-| Phase 3 — Core components | ⬜ Todo | |
-| Phase 4 — Streak Ribbon | ⬜ Todo | |
-| Phase 5 — Page-specific changes | ⬜ Todo | |
+| Phase 2 — Typography | ✅ Done | Fonts loaded via next/font; type-scale utilities added; PageHeader, analytics stats, pomodoro timer, habit names, time labels updated |
+| Phase 3 — Core components | ✅ Done | Button, Card, Input, Progress, HabitCompletionButton, HabitCard (color bar → dot), HabitFilters, Insights toggle, Topbar Clerk colors all updated |
+| Phase 4 — Streak Ribbon | ✅ Done | Created components/ui/streak-ribbon.tsx; HabitStreakBadge and StreakSummary leaderboard updated |
+| Phase 5 — Page-specific changes | ✅ Done | Milestones, Insights, Calendar, Dashboard, Profile, Pomodoro, Timeline pages updated; StreakSummary, InsightCard, MilestoneCard, ProfileForm, CityAutocomplete token cleanup |
 | Phase 6 — Icon pass | ⬜ Todo | |
 | Phase 7 — Final polish | ⬜ Todo | |
 

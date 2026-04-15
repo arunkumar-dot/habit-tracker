@@ -45,33 +45,29 @@ export function CalendarDayCell({
         !isCurrentMonth && "opacity-30"
       )}
       style={{
-        background:
-          isSelected
-            ? "var(--accent-primary)"
-            : completedCount > 0 && !isFuture
-            ? `rgba(16, 185, 129, ${bgOpacity})`
-            : isToday
-            ? "var(--bg-elevated)"
-            : "transparent",
+        background: isSelected ? "var(--accent)" : isToday ? "var(--bg-sunken)" : "transparent",
         color: isSelected
           ? "white"
           : isToday
-          ? "var(--accent-primary)"
+          ? "var(--accent)"
           : isCurrentMonth
           ? "var(--text-primary)"
           : "var(--text-disabled)",
-        border: isToday && !isSelected ? `1px solid var(--accent-primary)` : "1px solid transparent",
+        border: isToday && !isSelected ? `1px solid var(--accent)` : "1px solid transparent",
       }}
     >
       <span>{day}</span>
-      {/* Completion dots */}
+      {/* 4px completion dot */}
       {completedCount > 0 && !isFuture && !isSelected && (
-        <div className="absolute bottom-1 flex gap-0.5">
-          {completedCount >= totalCount ? (
-            <div className="w-1 h-1 rounded-full" style={{ background: "var(--accent-success)" }} />
-          ) : (
-            <div className="w-1 h-1 rounded-full" style={{ background: "var(--accent-warning)" }} />
-          )}
+        <div className="absolute bottom-0.5 flex gap-0.5">
+          <div
+            style={{
+              width: "4px",
+              height: "4px",
+              borderRadius: "50%",
+              background: completedCount >= totalCount ? "var(--success)" : "var(--warning)",
+            }}
+          />
         </div>
       )}
     </button>

@@ -20,14 +20,14 @@ export function Progress({
   return (
     <div className={cn("w-full", className)}>
       <div
-        className="w-full h-2 rounded-full overflow-hidden"
-        style={{ background: "var(--bg-hover)" }}
+        className="w-full overflow-hidden rounded-full"
+        style={{ height: "3px", background: "var(--bg-sunken)" }}
       >
         <div
-          className="h-full rounded-full transition-all duration-500"
+          className="h-full rounded-full transition-all duration-150"
           style={{
             width: `${percentage}%`,
-            background: color ?? "var(--accent-primary)",
+            background: color ?? "var(--accent)",
           }}
         />
       </div>

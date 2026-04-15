@@ -25,11 +25,11 @@ export function MilestoneCard({ milestone }: MilestoneCardProps) {
 
   return (
     <div
-      className="relative rounded-2xl p-4 flex flex-col gap-3 transition-all"
+      className="relative rounded-lg p-4 flex flex-col gap-3 transition-all"
       style={{
-        background: milestone.isUnlocked ? bg : "var(--bg-surface)",
-        border: `1.5px solid ${milestone.isUnlocked ? border : "var(--border)"}`,
-        opacity: milestone.isUnlocked ? 1 : 0.75,
+        background: milestone.isUnlocked ? bg : "var(--bg-elevated)",
+        border: `1.5px solid ${milestone.isUnlocked ? border : "var(--border-subtle)"}`,
+        opacity: milestone.isUnlocked ? 1 : 0.4,
       }}
     >
       {/* Lock overlay for locked milestones */}
@@ -50,10 +50,7 @@ export function MilestoneCard({ milestone }: MilestoneCardProps) {
         >
           {milestone.icon}
         </span>
-        <span
-          className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
-          style={{ color: text, background: bg, border: `1px solid ${border}` }}
-        >
+        <span className="type-meta-label" style={{ color: "var(--text-tertiary)" }}>
           {milestone.tier}
         </span>
       </div>

@@ -17,8 +17,8 @@ export default function ProfilePage() {
       <div className="max-w-lg mx-auto space-y-6">
         {/* Avatar card */}
         <div
-          className="rounded-2xl p-6 flex flex-col items-center"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
+          className="rounded-lg p-6 flex flex-col items-center shadow-warm-sm"
+          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
         >
           {isLoading ? (
             <div className="flex flex-col items-center gap-3">
@@ -45,7 +45,7 @@ export default function ProfilePage() {
               </p>
               {user.location && (
                 <p className="text-xs mt-1" style={{ color: "var(--text-disabled)" }}>
-                  📍 {user.location}
+                  {user.location}
                 </p>
               )}
             </div>
@@ -54,8 +54,8 @@ export default function ProfilePage() {
 
         {/* Profile form card */}
         <div
-          className="rounded-2xl p-6"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
+          className="rounded-lg p-6 shadow-warm-sm"
+          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
         >
           {isLoading ? (
             <div className="space-y-5">
