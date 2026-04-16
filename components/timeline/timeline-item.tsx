@@ -27,7 +27,7 @@ export function TimelineItem({
   isLast,
 }: TimelineItemProps) {
   const { isCompleted, toggle } = useOptimisticCompletion(habit._id, date);
-  const color = habit.color ?? "#6366f1";
+  const color = habit.color ?? "#C2410C";
 
   const timeDisplay = habit.endTime
     ? formatTimeRange(habit.startTime, habit.endTime)

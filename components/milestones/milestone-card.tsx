@@ -1,9 +1,15 @@
 "use client";
 
-import { Lock } from "lucide-react";
+import { Lock, Check, Sprout, Flame, Zap, Medal, Trophy, Star, Gem, type LucideProps } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { TIER_COLORS } from "@/lib/milestone-config";
+import { TIER_COLORS, type MilestoneIconName } from "@/lib/milestone-config";
 import type { MilestoneProgress } from "@/hooks/use-milestones";
+
+type IconComponent = React.FC<LucideProps>;
+
+const MILESTONE_ICONS: Record<MilestoneIconName, IconComponent> = {
+  Sprout, Flame, Zap, Medal, Trophy, Star, Gem,
+};
 
 interface MilestoneCardProps {
   milestone: MilestoneProgress;
@@ -11,6 +17,7 @@ interface MilestoneCardProps {
 
 export function MilestoneCard({ milestone }: MilestoneCardProps) {
   const { border, bg, text } = TIER_COLORS[milestone.tier];
+  const MilestoneIcon = MILESTONE_ICONS[milestone.icon as MilestoneIconName] ?? Sprout;
   const pct = Math.round((milestone.progress / milestone.daysRequired) * 100);
 
   const achievedDate = milestone.achievedAt
@@ -45,10 +52,10 @@ export function MilestoneCard({ milestone }: MilestoneCardProps) {
       {/* Icon + tier badge */}
       <div className="flex items-center gap-2">
         <span
-          className="text-2xl leading-none"
-          style={{ filter: milestone.isUnlocked ? "none" : "grayscale(1)" }}
+          className="leading-none"
+          style={{ color: milestone.isUnlocked ? border : "var(--text-disabled)" }}
         >
-          {milestone.icon}
+          <MilestoneIcon size={22} />
         </span>
         <span className="type-meta-label" style={{ color: "var(--text-tertiary)" }}>
           {milestone.tier}
@@ -75,8 +82,8 @@ export function MilestoneCard({ milestone }: MilestoneCardProps) {
             {milestone.progress} / {milestone.daysRequired} days
           </span>
           {milestone.isUnlocked ? (
-            <span className="text-xs font-medium" style={{ color: text }}>
-              ✓ Unlocked
+            <span className="text-xs font-medium flex items-center gap-1" style={{ color: text }}>
+              <Check size={11} /> Unlocked
             </span>
           ) : (
             <span className="text-xs" style={{ color: "var(--text-disabled)" }}>

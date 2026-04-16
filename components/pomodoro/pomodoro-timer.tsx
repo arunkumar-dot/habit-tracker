@@ -55,7 +55,7 @@ export function PomodoroTimer({ mode, remainingSecs, isRunning }: PomodoroTimerP
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
-            style={{ transition: "stroke-dashoffset 0.5s linear, stroke 0.4s ease" }}
+            style={{ transition: "stroke-dashoffset 200ms ease, stroke 200ms ease" }}
           />
         </svg>
 

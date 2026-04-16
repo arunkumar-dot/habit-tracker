@@ -24,9 +24,9 @@ const badgeVariants = cva(
         danger:
           "bg-[rgba(239,68,68,0.15)] text-destructive border border-[rgba(239,68,68,0.3)]",
         info:
-          "bg-[rgba(99,102,241,0.15)] text-primary border border-[rgba(99,102,241,0.3)]",
+          "bg-[rgba(30,96,145,0.12)] text-[#1E6091] border border-[rgba(30,96,145,0.25)]",
         purple:
-          "bg-[rgba(168,85,247,0.15)] text-[#a855f7] border border-[rgba(168,85,247,0.3)]",
+          "bg-[rgba(124,111,92,0.12)] text-[#7C6F5C] border border-[rgba(124,111,92,0.25)]",
       },
     },
     defaultVariants: {

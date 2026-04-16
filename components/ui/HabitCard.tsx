@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
  *   <HabitCard
  *     title="Morning Run"
  *     description="30 minutes outside"
- *     accentColor="#6366f1"
+ *     accentColor="#C2410C"
  *     badge={<Badge variant="info">Daily</Badge>}
  *     meta={<span>07:00</span>}
  *     trailing={<CompletionButton />}
@@ -38,7 +38,7 @@ interface HabitCardProps {
 export function HabitCard({
   title,
   description,
-  accentColor = "#6366f1",
+  accentColor = "#C2410C",
   badge,
   meta,
   trailing,

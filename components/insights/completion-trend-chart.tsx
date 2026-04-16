@@ -41,8 +41,8 @@ function NoActiveDot(props: DotProps & { value?: number }) {
       cx={props.cx}
       cy={props.cy}
       r={4}
-      fill="#6366f1"
-      stroke="var(--bg-elevated, #1a1a28)"
+      fill="#C2410C"
+      stroke="var(--bg-elevated, #FFFFFF)"
       strokeWidth={2}
     />
   );
@@ -59,12 +59,12 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
       <LineChart data={chartData}>
         <CartesianGrid
           strokeDasharray="3 3"
-          stroke="rgba(99,102,241,0.1)"
+          stroke="var(--border-subtle, #E8E3DA)"
           vertical={false}
         />
         <XAxis
           dataKey="label"
-          tick={{ fill: "#94a3b8", fontSize: 11 }}
+          tick={{ fill: "#8A8680", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           interval={tickInterval}
@@ -72,7 +72,7 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
         <YAxis
           domain={[0, 100]}
           tickFormatter={(v: number) => `${v}%`}
-          tick={{ fill: "#94a3b8", fontSize: 11 }}
+          tick={{ fill: "#8A8680", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           width={36}
@@ -81,17 +81,17 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           formatter={(value: any) => [`${value}%`, "Completion"]}
           contentStyle={{
-            background: "var(--bg-elevated, #1a1a28)",
-            border: "1px solid var(--border, #2a2a3e)",
+            background: "var(--bg-elevated, #FFFFFF)",
+            border: "1px solid var(--border-subtle, #E8E3DA)",
             borderRadius: 12,
-            color: "var(--text-primary, #e2e8f0)",
+            color: "var(--text-primary, #1C1B18)",
             fontSize: 12,
           }}
         />
         <Line
           type="monotone"
           dataKey="rate"
-          stroke="#6366f1"
+          stroke="#C2410C"
           strokeWidth={2}
           dot={false}
           activeDot={<NoActiveDot />}

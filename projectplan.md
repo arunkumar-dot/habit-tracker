@@ -14,8 +14,8 @@
 | Phase 3 — Core components | ✅ Done | Button, Card, Input, Progress, HabitCompletionButton, HabitCard (color bar → dot), HabitFilters, Insights toggle, Topbar Clerk colors all updated |
 | Phase 4 — Streak Ribbon | ✅ Done | Created components/ui/streak-ribbon.tsx; HabitStreakBadge and StreakSummary leaderboard updated |
 | Phase 5 — Page-specific changes | ✅ Done | Milestones, Insights, Calendar, Dashboard, Profile, Pomodoro, Timeline pages updated; StreakSummary, InsightCard, MilestoneCard, ProfileForm, CityAutocomplete token cleanup |
-| Phase 6 — Icon pass | ⬜ Todo | |
-| Phase 7 — Final polish | ⬜ Todo | |
+| Phase 6 — Icon pass | ✅ Done | Milestone emoji icons → lucide (Sprout/Flame/Zap/Medal/Trophy/Star/Gem); habit-card swipe hints ✓/✏️ → Check/Pencil; milestone-card ✓ → Check; profile-form ✓ → Check; habit-milestone-hint updated |
+| Phase 7 — Final polish | ✅ Done | Paper-grain texture on body; cap-first utility; pomodoro ring transition → 200ms; all indigo purged (charts, auth pages, badge variants, fallback colors, confetti, auth layout) |
 
 ---
 

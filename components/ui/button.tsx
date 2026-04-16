@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  * Button — shadcn/ui-style with cva, Radix Slot support.
  *
  * Variants map to the project's design tokens via @theme inline:
- *   primary  → bg-primary  (--accent-primary / indigo-500)
+ *   primary  → bg-primary  (--accent / terracotta #C2410C)
  *   secondary→ bg-secondary (--bg-elevated)
  *   ghost    → transparent  (--text-secondary)
  *   danger   → bg-destructive (--accent-danger / red-500)

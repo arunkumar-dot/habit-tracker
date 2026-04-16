@@ -56,9 +56,9 @@ function HabitStreakRow({ habit }: HabitStreakRowProps) {
       <div className="flex items-center gap-3 min-w-0">
         <div
           className="w-3 h-3 rounded-full flex-shrink-0"
-          style={{ background: habit.color ?? "#6366f1" }}
+          style={{ background: habit.color ?? "#C2410C" }}
         />
-        <span className="text-sm truncate" style={{ color: "var(--text-primary)" }}>
+        <span className="text-sm truncate cap-first" style={{ color: "var(--text-primary)" }}>
           {habit.title}
         </span>
       </div>

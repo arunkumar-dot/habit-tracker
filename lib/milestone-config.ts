@@ -1,10 +1,12 @@
 export type MilestoneTier = "bronze" | "silver" | "gold" | "platinum";
 
+export type MilestoneIconName = "Sprout" | "Flame" | "Zap" | "Medal" | "Trophy" | "Star" | "Gem";
+
 export interface MilestoneConfig {
   daysRequired: number;
   name: string;
   description: string;
-  icon: string;
+  icon: MilestoneIconName;
   tier: MilestoneTier;
 }
 
@@ -13,49 +15,49 @@ export const MILESTONES: MilestoneConfig[] = [
     daysRequired: 3,
     name: "Getting Started",
     description: "3 days in a row!",
-    icon: "🌱",
+    icon: "Sprout",
     tier: "bronze",
   },
   {
     daysRequired: 7,
     name: "First Week",
     description: "A full week streak!",
-    icon: "🔥",
+    icon: "Flame",
     tier: "bronze",
   },
   {
     daysRequired: 14,
     name: "Building Momentum",
     description: "Two weeks of consistency!",
-    icon: "⚡",
+    icon: "Zap",
     tier: "silver",
   },
   {
     daysRequired: 21,
     name: "Habit Forming",
     description: "21 days — science says it sticks!",
-    icon: "🏅",
+    icon: "Medal",
     tier: "silver",
   },
   {
     daysRequired: 30,
     name: "Strong Habit",
     description: "One full month streak!",
-    icon: "🏆",
+    icon: "Trophy",
     tier: "gold",
   },
   {
     daysRequired: 45,
     name: "Lifestyle Change",
     description: "45 days of daily dedication!",
-    icon: "⭐",
+    icon: "Star",
     tier: "gold",
   },
   {
     daysRequired: 66,
     name: "Habit Mastery",
     description: "66 days — research-backed mastery!",
-    icon: "💎",
+    icon: "Gem",
     tier: "platinum",
   },
 ];

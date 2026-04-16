@@ -17,7 +17,7 @@ export default function AuthLayout({
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.12) 0%, transparent 70%)",
+            "radial-gradient(ellipse at 50% 0%, rgba(194,65,12,0.08) 0%, transparent 70%)",
         }}
       />
 
@@ -26,7 +26,7 @@ export default function AuthLayout({
         <div className="text-center mb-8">
           <div
             className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4"
-            style={{ background: "var(--accent-primary)" }}
+            style={{ background: "var(--accent)" }}
           >
             <span className="text-white text-xl font-bold">H</span>
           </div>

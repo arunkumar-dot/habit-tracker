@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { Clock, Repeat } from "lucide-react";
+import { Clock, Repeat, Check, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { HabitCompletionButton } from "./habit-completion-button";
 import { HabitStreakBadge } from "./habit-streak-badge";
@@ -23,7 +23,7 @@ const SWIPE_THRESHOLD = 72;
 
 export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
   const { isCompleted, toggle } = useOptimisticCompletion(habit._id, date);
-  const color = habit.color ?? "#6366f1";
+  const color = habit.color ?? "#C2410C";
   const dragX = useMotionValue(0);
   const isSwiping = useRef(false);
 
@@ -74,7 +74,7 @@ export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
         style={{ opacity: rightOpacity }}
       >
         <span className="text-xs font-semibold" style={{ color: "#10b981" }}>Complete</span>
-        <span className="text-lg">✓</span>
+        <Check size={16} style={{ color: "#10b981" }} />
       </motion.div>
 
       {/* Left swipe hint — Edit */}
@@ -82,7 +82,7 @@ export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
         className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center gap-1"
         style={{ opacity: leftOpacity }}
       >
-        <span className="text-lg">✏️</span>
+        <Pencil size={16} style={{ color: "#f59e0b" }} />
         <span className="text-xs font-semibold" style={{ color: "#f59e0b" }}>Edit</span>
       </motion.div>
 

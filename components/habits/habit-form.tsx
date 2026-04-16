@@ -159,7 +159,7 @@ export function habitToFormValues(habit: Habit): Partial<HabitFormValues> {
     frequency: habit.frequency,
     startTime: habit.startTime,
     endTime: habit.endTime ?? "",
-    color: habit.color ?? "#6366f1",
+    color: habit.color ?? "#C2410C",
     weeklyGoal: habit.weeklyGoal,
   };
 }

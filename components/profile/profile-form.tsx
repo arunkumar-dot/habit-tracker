@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Check } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -185,7 +186,7 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
         isLoading={isSaving}
         className="w-full"
       >
-        {savedRecently ? "✓ Saved!" : isSaving ? "Saving…" : "Save Profile"}
+        {savedRecently ? <><Check size={16} className="inline mr-1" />Saved!</> : isSaving ? "Saving…" : "Save Profile"}
       </Button>
     </form>
   );
