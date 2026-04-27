@@ -1,5 +1,6 @@
 import { internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { withSentry } from "./lib/sentry";
 
 // ============================================
 // HELPERS — WebCrypto JWT for Google OAuth2
@@ -192,6 +193,7 @@ function localTimeString(timezone: string): string {
 export const sendHabitReminders = internalAction({
   args: {},
   handler: async (ctx) => {
+    return withSentry("notifications.sendHabitReminders", "action", ctx, async () => {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
     const rawKey = process.env.FIREBASE_PRIVATE_KEY;
@@ -281,5 +283,6 @@ export const sendHabitReminders = internalAction({
         }
       }
     }
+    });
   },
 });

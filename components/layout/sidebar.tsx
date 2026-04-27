@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Clock, CalendarDays, BarChart3, Zap, Timer, Trophy, User, Sparkles } from "lucide-react";
+import { LayoutDashboard, ListChecks, Clock, CalendarDays, BarChart3, Zap, Timer, Trophy, User, Sparkles, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/habits", icon: ListChecks, label: "Habits" },
   { href: "/timeline", icon: Clock, label: "Timeline" },
   { href: "/calendar", icon: CalendarDays, label: "Calendar" },
   { href: "/analytics", icon: BarChart3, label: "Analytics" },
   { href: "/insights", icon: Sparkles, label: "Insights" },
+  { href: "/journal", icon: BookOpen, label: "Journal" },
   { href: "/pomodoro", icon: Timer, label: "Pomodoro" },
   { href: "/milestones", icon: Trophy, label: "Milestones" },
   { href: "/profile", icon: User, label: "Profile" },
@@ -30,14 +32,12 @@ export function Sidebar({ collapsed }: SidebarProps) {
         collapsed ? "w-16" : "w-60"
       )}
       style={{
-        background: "var(--bg-elevated)",
-        borderRight: "1px solid var(--border-subtle)",
+        background: "var(--bg-base)",
       }}
     >
       {/* Logo */}
       <div
         className="flex items-center h-[72px] px-4 gap-2.5 flex-shrink-0"
-        style={{ borderBottom: "1px solid var(--border-subtle)" }}
       >
         <div
           className="w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center"

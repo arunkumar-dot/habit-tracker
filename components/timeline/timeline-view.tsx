@@ -8,7 +8,7 @@ import { TimelineNowIndicator } from "./timeline-now-indicator";
 import { TimelineItemSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useTimeline } from "@/hooks/use-timeline";
-import { parseTimeToMinutes } from "@/lib/date-utils";
+import { parseTimeToMinutes } from "@/lib/time-utils";
 
 interface TimelineViewProps {
   date: string;

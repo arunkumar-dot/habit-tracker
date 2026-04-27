@@ -13,6 +13,8 @@ import type * as completions from "../completions.js";
 import type * as crons from "../crons.js";
 import type * as habits from "../habits.js";
 import type * as insights from "../insights.js";
+import type * as journal from "../journal.js";
+import type * as lib_sentry from "../lib/sentry.js";
 import type * as milestones from "../milestones.js";
 import type * as notifications from "../notifications.js";
 import type * as pomodoro from "../pomodoro.js";
@@ -31,6 +33,8 @@ declare const fullApi: ApiFromModules<{
   crons: typeof crons;
   habits: typeof habits;
   insights: typeof insights;
+  journal: typeof journal;
+  "lib/sentry": typeof lib_sentry;
   milestones: typeof milestones;
   notifications: typeof notifications;
   pomodoro: typeof pomodoro;

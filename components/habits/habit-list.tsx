@@ -48,7 +48,8 @@ export function HabitList({
   }
 
   return (
-    <div className="space-y-3">
+    // Top border opens the list; each row closes itself with a bottom border
+    <div style={{ borderTop: "1px solid var(--border-default)" }}>
       {habits.map((habit) => (
         <HabitCard
           key={habit._id}

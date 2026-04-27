@@ -235,7 +235,17 @@
     --accent-danger:        var(--danger);
     --accent-danger-hover:  var(--danger);
     --accent-info:          var(--habit-4);
+
+    /* Semantic aliases used by component specs */
+    --text:          var(--text-primary);
+    --text-muted:    var(--text-secondary);
+    --text-subtle:   var(--text-tertiary);
+    --surface-alt:   var(--bg-hover);
+    /* --border-strong is mode-sensitive; defined per theme below */
   }
+
+  :root            { --border-strong: #C5BDB0; } /* warm mid-gray, visible on cream/white */
+  [data-theme="dark"] { --border-strong: #5A5550; } /* visible on warm-dark surfaces     */
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
@@ -463,4 +473,52 @@
 .cl-userPreviewSecondaryIdentifier,
 .cl-userButtonPopoverUserEmailAddress {
   color: var(--text-secondary) !important;
+}
+
+/* ── Clerk auth form — custom class injected via appearance.elements ─── */
+/*
+ * We set appearance.elements.formFieldInput = "habit-clerk-input" and
+ * appearance.elements.badge = "habit-clerk-badge" so Clerk adds these class
+ * names directly to the DOM nodes. This is the only reliable way to style
+ * ::placeholder and badge elements because inline-style objects can't reach
+ * pseudo-elements, and Clerk's runtime <style> injection wins specificity races.
+ */
+
+/* Input field */
+.habit-clerk-input {
+  background:   #14100E !important;
+  border:       1px solid #3D3631 !important;
+  color:        #F5F1EA !important;
+  font-size:    0.9375rem !important;
+  border-radius: 0.625rem !important;
+}
+.habit-clerk-input:focus {
+  border-color: #E86F3C !important;
+  outline:      none !important;
+  box-shadow:   0 0 0 2px rgba(232, 111, 60, 0.2) !important;
+}
+.habit-clerk-input::placeholder {
+  color:   #8A8680 !important;
+  opacity: 1 !important;
+}
+
+/* "Last used" badge */
+.habit-clerk-badge {
+  background:    #3A2419 !important;
+  color:         #FDB58C !important;
+  border:        1px solid #5A3020 !important;
+  border-radius: 0.375rem !important;
+  font-weight:   500 !important;
+}
+
+/* Fallback: target Clerk's own class names in case the above doesn't fire */
+.cl-badge {
+  background: #3A2419 !important;
+  color:      #FDB58C !important;
+  border:     1px solid #5A3020 !important;
+}
+.cl-formFieldInput::placeholder,
+.cl-rootBox input::placeholder {
+  color:   #8A8680 !important;
+  opacity: 1 !important;
 }

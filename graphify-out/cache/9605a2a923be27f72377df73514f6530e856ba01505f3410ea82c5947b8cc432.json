@@ -1,0 +1,1 @@
+{"nodes": [{"id": "habit_tracker_proxy_ts", "label": "proxy.ts", "file_type": "code", "source_file": "habit-tracker/proxy.ts", "source_location": "L1"}], "edges": [{"source": "habit_tracker_proxy_ts", "target": "server", "relation": "imports_from", "confidence": "EXTRACTED", "source_file": "habit-tracker/proxy.ts", "source_location": "L1", "weight": 1.0}], "raw_calls": []}

@@ -23,80 +23,6 @@ export function addDays(dateStr: string, n: number): string {
 }
 
 /**
- * Parses "HH:MM" time string into minutes since midnight.
- */
-export function parseTimeToMinutes(time: string): number {
-  const [hours, minutes] = time.split(":").map(Number);
-  return (hours ?? 0) * 60 + (minutes ?? 0);
-}
-
-/**
- * Converts minutes since midnight to "HH:MM" string.
- */
-export function minutesToTime(minutes: number): string {
-  const h = Math.floor(minutes / 60)
-    .toString()
-    .padStart(2, "0");
-  const m = (minutes % 60).toString().padStart(2, "0");
-  return `${h}:${m}`;
-}
-
-/**
- * Formats "HH:MM" (24-hour) to human-readable "h:MM AM/PM".
- * e.g. "14:30" → "2:30 PM", "06:05" → "6:05 AM"
- */
-export function formatDisplayTime(time: string): string {
-  const [hoursStr, minutesStr] = time.split(":");
-  const hours = parseInt(hoursStr ?? "0", 10);
-  const minutes = minutesStr ?? "00";
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const displayHours = hours % 12 || 12;
-  return `${displayHours}:${minutes} ${ampm}`;
-}
-
-/**
- * Formats a time range "HH:MM – HH:MM" to "h:MM – h:MM AM/PM".
- * e.g. "06:20", "06:35" → "6:20–6:35 AM"
- */
-export function formatTimeRange(startTime: string, endTime: string): string {
-  const startMins = parseTimeToMinutes(startTime);
-  const endMins = parseTimeToMinutes(endTime);
-
-  const [startH, startM] = startTime.split(":").map(Number);
-  const [endH, endM] = endTime.split(":").map(Number);
-  const startAmpm = (startH ?? 0) >= 12 ? "PM" : "AM";
-  const endAmpm = (endH ?? 0) >= 12 ? "PM" : "AM";
-
-  const startDisplay = `${(startH ?? 0) % 12 || 12}:${String(startM ?? 0).padStart(2, "0")}`;
-  const endDisplay = `${(endH ?? 0) % 12 || 12}:${String(endM ?? 0).padStart(2, "0")}`;
-
-  if (startAmpm === endAmpm) {
-    return `${startDisplay}–${endDisplay} ${endAmpm}`;
-  }
-  return `${startDisplay} ${startAmpm}–${endDisplay} ${endAmpm}`;
-}
-
-/**
- * Returns the duration in minutes between two "HH:MM" times.
- */
-export function getDurationMinutes(startTime: string, endTime: string): number {
-  return parseTimeToMinutes(endTime) - parseTimeToMinutes(startTime);
-}
-
-/**
- * Formats duration minutes into human-readable string.
- * e.g. 90 → "1h 30m", 45 → "45m"
- */
-export function formatDuration(minutes: number): string {
-  if (minutes <= 0) return "0m";
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  if (h === 0) return `${m}m`;
-  if (m === 0) return `${h}h`;
-  return `${h}h ${m}m`;
-}
-
-/**
  * Formats a date string "YYYY-MM-DD" to a display label.
  * e.g. "Today", "Yesterday", or "Mon, Mar 27"
  */
@@ -149,14 +75,6 @@ export function getISOWeekYear(dateStr: string): number {
  */
 export function getWeekId(dateStr: string): string {
   return `${getISOWeekYear(dateStr)}-W${String(getISOWeek(dateStr)).padStart(2, "0")}`;
-}
-
-/**
- * Returns current minutes since midnight (for timeline positioning).
- */
-export function getCurrentMinutes(): number {
-  const now = new Date();
-  return now.getHours() * 60 + now.getMinutes();
 }
 
 /**

@@ -25,7 +25,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
   return (
     <header
       className="flex items-center justify-between px-4 lg:px-6 flex-shrink-0 h-[72px]"
-      style={{ borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-elevated)" }}
+      style={{ background: "var(--bg-base)" }}
     >
       {/* Left: toggle button (desktop) + app name (mobile) */}
       <div className="flex-1 flex items-center gap-3">

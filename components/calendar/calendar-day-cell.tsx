@@ -22,48 +22,41 @@ export function CalendarDayCell({
   onClick,
 }: CalendarDayCellProps) {
   const day = parseInt(dateStr.split("-")[2]!);
-  const completionRate = totalCount > 0 ? completedCount / totalCount : 0;
 
-  // Color intensity based on completion rate
-  const bgOpacity =
-    completedCount === 0 || isFuture
-      ? 0
-      : completionRate >= 1
-      ? 0.9
-      : completionRate >= 0.5
-      ? 0.5
-      : 0.2;
+  // Today and selected both use accent fill + white number.
+  // Today: always a perfect circle (per spec: 28px diameter).
+  // Selected non-today: rounded-full too for visual consistency.
+  const isHighlighted = isToday || isSelected;
 
   return (
     <button
       onClick={onClick}
       disabled={isFuture || !isCurrentMonth}
       className={cn(
-        "relative w-8 h-8 flex flex-col items-center justify-center rounded-lg text-[11px] font-medium transition-all mx-auto",
-        !isFuture && isCurrentMonth && "hover:scale-105",
+        "relative w-7 h-7 flex flex-col items-center justify-center text-[11px] font-medium transition-colors mx-auto",
+        isHighlighted ? "rounded-full" : "rounded-md",
+        !isFuture && isCurrentMonth && !isHighlighted && "hover:bg-[var(--bg-hover)]",
         isFuture && "cursor-default",
         !isCurrentMonth && "opacity-30"
       )}
       style={{
-        background: isSelected ? "var(--accent)" : isToday ? "var(--bg-sunken)" : "transparent",
-        color: isSelected
+        background: isHighlighted ? "var(--accent)" : "transparent",
+        color: isHighlighted
           ? "white"
-          : isToday
-          ? "var(--accent)"
           : isCurrentMonth
           ? "var(--text-primary)"
           : "var(--text-disabled)",
-        border: isToday && !isSelected ? `1px solid var(--accent)` : "1px solid transparent",
       }}
     >
       <span>{day}</span>
-      {/* 4px completion dot */}
-      {completedCount > 0 && !isFuture && !isSelected && (
-        <div className="absolute bottom-0.5 flex gap-0.5">
+
+      {/* 3px completion dot, 2px below the number, hidden when day is highlighted */}
+      {completedCount > 0 && !isFuture && !isHighlighted && (
+        <div className="absolute" style={{ bottom: 2 }}>
           <div
             style={{
-              width: "4px",
-              height: "4px",
+              width: 3,
+              height: 3,
               borderRadius: "50%",
               background: completedCount >= totalCount ? "var(--success)" : "var(--warning)",
             }}

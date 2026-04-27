@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import type { QueryCtx, MutationCtx } from "./_generated/server";
+import { withSentry } from "./lib/sentry";
 
 // ============================================
 // INTERNAL HELPER
@@ -99,24 +100,26 @@ export const createHabit = mutation({
     weeklyGoal: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const user = await getAuthUser(ctx);
-    const now = Date.now();
+    return withSentry("habits.createHabit", "mutation", ctx, async () => {
+      const user = await getAuthUser(ctx);
+      const now = Date.now();
 
-    const habitId = await ctx.db.insert("habits", {
-      userId: user._id,
-      title: args.title.trim(),
-      description: args.description?.trim() || undefined,
-      frequency: args.frequency,
-      startTime: args.startTime,
-      endTime: args.endTime || undefined,
-      color: args.color || undefined,
-      weeklyGoal: args.weeklyGoal || undefined,
-      isArchived: false,
-      createdAt: now,
-      updatedAt: now,
+      const habitId = await ctx.db.insert("habits", {
+        userId: user._id,
+        title: args.title.trim(),
+        description: args.description?.trim() || undefined,
+        frequency: args.frequency,
+        startTime: args.startTime,
+        endTime: args.endTime || undefined,
+        color: args.color || undefined,
+        weeklyGoal: args.weeklyGoal || undefined,
+        isArchived: false,
+        createdAt: now,
+        updatedAt: now,
+      });
+
+      return habitId;
     });
-
-    return habitId;
   },
 });
 
@@ -135,28 +138,30 @@ export const updateHabit = mutation({
     weeklyGoal: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const user = await getAuthUser(ctx);
-    const { habitId, ...updates } = args;
+    return withSentry("habits.updateHabit", "mutation", ctx, async () => {
+      const user = await getAuthUser(ctx);
+      const { habitId, ...updates } = args;
 
-    const habit = await ctx.db.get(habitId);
-    if (!habit || habit.userId !== user._id) {
-      throw new Error("Habit not found or access denied.");
-    }
+      const habit = await ctx.db.get(habitId);
+      if (!habit || habit.userId !== user._id) {
+        throw new Error("Habit not found or access denied.");
+      }
 
-    // Build patch object — only include defined fields
-    const patch: Record<string, unknown> = { updatedAt: Date.now() };
-    if (updates.title !== undefined) patch.title = updates.title.trim();
-    if (updates.description !== undefined)
-      patch.description = updates.description.trim() || undefined;
-    if (updates.frequency !== undefined) patch.frequency = updates.frequency;
-    if (updates.startTime !== undefined) patch.startTime = updates.startTime;
-    if (updates.endTime !== undefined)
-      patch.endTime = updates.endTime || undefined;
-    if (updates.color !== undefined) patch.color = updates.color || undefined;
-    if (updates.weeklyGoal !== undefined)
-      patch.weeklyGoal = updates.weeklyGoal || undefined;
+      // Build patch object — only include defined fields
+      const patch: Record<string, unknown> = { updatedAt: Date.now() };
+      if (updates.title !== undefined) patch.title = updates.title.trim();
+      if (updates.description !== undefined)
+        patch.description = updates.description.trim() || undefined;
+      if (updates.frequency !== undefined) patch.frequency = updates.frequency;
+      if (updates.startTime !== undefined) patch.startTime = updates.startTime;
+      if (updates.endTime !== undefined)
+        patch.endTime = updates.endTime || undefined;
+      if (updates.color !== undefined) patch.color = updates.color || undefined;
+      if (updates.weeklyGoal !== undefined)
+        patch.weeklyGoal = updates.weeklyGoal || undefined;
 
-    await ctx.db.patch(habitId, patch);
+      await ctx.db.patch(habitId, patch);
+    });
   },
 });
 
@@ -167,23 +172,73 @@ export const updateHabit = mutation({
 export const deleteHabit = mutation({
   args: { habitId: v.id("habits") },
   handler: async (ctx, args) => {
+    return withSentry("habits.deleteHabit", "mutation", ctx, async () => {
+      const user = await getAuthUser(ctx);
+
+      const habit = await ctx.db.get(args.habitId);
+      if (!habit || habit.userId !== user._id) {
+        throw new Error("Habit not found or access denied.");
+      }
+
+      // Delete all completions for this habit
+      const completions = await ctx.db
+        .query("habitCompletions")
+        .withIndex("by_habit", (q) => q.eq("habitId", args.habitId))
+        .collect();
+
+      await Promise.all(completions.map((c) => ctx.db.delete(c._id)));
+
+      // Delete the habit itself
+      await ctx.db.delete(args.habitId);
+    });
+  },
+});
+
+// ============================================
+// DEV-ONLY — E2E TEST CLEANUP
+// ============================================
+
+/**
+ * Bulk-deletes every habit (and its completions) whose title starts with
+ * "E2E_" for the currently authenticated user.
+ *
+ * Safety note: Convex bundles functions with NODE_ENV="production" for ALL
+ * deployment types (dev and prod alike), so a NODE_ENV guard always throws.
+ * Instead we gate on the "E2E_" prefix itself — no real user will ever have
+ * habits named that way — and on Clerk authentication (getAuthUser throws for
+ * unauthenticated callers). The mutation is also only callable via the
+ * /api/dev/cleanup-test-data route which checks NODE_ENV server-side.
+ *
+ * Called by /api/dev/cleanup-test-data during Playwright afterEach hooks.
+ */
+export const deleteTestHabits = mutation({
+  args: {},
+  handler: async (ctx) => {
+
     const user = await getAuthUser(ctx);
 
-    const habit = await ctx.db.get(args.habitId);
-    if (!habit || habit.userId !== user._id) {
-      throw new Error("Habit not found or access denied.");
-    }
-
-    // Delete all completions for this habit
-    const completions = await ctx.db
-      .query("habitCompletions")
-      .withIndex("by_habit", (q) => q.eq("habitId", args.habitId))
+    const habits = await ctx.db
+      .query("habits")
+      .withIndex("by_user_archived", (q) =>
+        q.eq("userId", user._id).eq("isArchived", false)
+      )
       .collect();
 
-    await Promise.all(completions.map((c) => ctx.db.delete(c._id)));
+    const testHabits = habits.filter((h) => h.title.startsWith("E2E_"));
 
-    // Delete the habit itself
-    await ctx.db.delete(args.habitId);
+    await Promise.all(
+      testHabits.map(async (habit) => {
+        // Delete all completions for this habit first
+        const completions = await ctx.db
+          .query("habitCompletions")
+          .withIndex("by_habit", (q) => q.eq("habitId", habit._id))
+          .collect();
+        await Promise.all(completions.map((c) => ctx.db.delete(c._id)));
+        await ctx.db.delete(habit._id);
+      })
+    );
+
+    return { deleted: testHabits.length };
   },
 });
 

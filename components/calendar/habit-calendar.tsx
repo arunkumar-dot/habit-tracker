@@ -75,8 +75,13 @@ export function HabitCalendar({
         {WEEKDAYS.map((day) => (
           <div
             key={day}
-            className="text-center text-[10px] font-medium py-1"
-            style={{ color: "var(--text-disabled)" }}
+            className="text-center py-1"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              textTransform: "uppercase",
+              color: "var(--text-tertiary)",
+            }}
           >
             {day[0]}
           </div>

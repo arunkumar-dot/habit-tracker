@@ -2,6 +2,7 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import type { QueryCtx, MutationCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { withSentry } from "./lib/sentry";
 
 // ============================================
 // INTERNAL HELPER
@@ -142,43 +143,45 @@ export const toggleCompletion = mutation({
     date: v.string(),
   },
   handler: async (ctx, args) => {
-    const user = await getAuthUser(ctx);
+    return withSentry("completions.toggleCompletion", "mutation", ctx, async () => {
+      const user = await getAuthUser(ctx);
 
-    // Verify habit ownership
-    const habit = await ctx.db.get(args.habitId);
-    if (!habit || habit.userId !== user._id) {
-      throw new Error("Habit not found or access denied.");
-    }
+      // Verify habit ownership
+      const habit = await ctx.db.get(args.habitId);
+      if (!habit || habit.userId !== user._id) {
+        throw new Error("Habit not found or access denied.");
+      }
 
-    // Check if already completed
-    const existing = await ctx.db
-      .query("habitCompletions")
-      .withIndex("by_habit_date", (q) =>
-        q.eq("habitId", args.habitId).eq("date", args.date)
-      )
-      .unique();
+      // Check if already completed
+      const existing = await ctx.db
+        .query("habitCompletions")
+        .withIndex("by_habit_date", (q) =>
+          q.eq("habitId", args.habitId).eq("date", args.date)
+        )
+        .unique();
 
-    if (existing) {
-      // Remove completion (mark incomplete)
-      await ctx.db.delete(existing._id);
-      return { action: "uncompleted" as const, newMilestones: [] as number[] };
-    } else {
-      // Add completion (mark complete)
-      await ctx.db.insert("habitCompletions", {
-        habitId: args.habitId,
-        userId: user._id,
-        date: args.date,
-        completedAt: Date.now(),
-      });
+      if (existing) {
+        // Remove completion (mark incomplete)
+        await ctx.db.delete(existing._id);
+        return { action: "uncompleted" as const, newMilestones: [] as number[] };
+      } else {
+        // Add completion (mark complete)
+        await ctx.db.insert("habitCompletions", {
+          habitId: args.habitId,
+          userId: user._id,
+          date: args.date,
+          completedAt: Date.now(),
+        });
 
-      // Check for newly unlocked milestones
-      const newMilestones: number[] = await ctx.runMutation(
-        internal.milestones.checkAndAwardMilestones,
-        { habitId: args.habitId, userId: user._id }
-      );
+        // Check for newly unlocked milestones
+        const newMilestones: number[] = await ctx.runMutation(
+          internal.milestones.checkAndAwardMilestones,
+          { habitId: args.habitId, userId: user._id }
+        );
 
-      return { action: "completed" as const, newMilestones };
-    }
+        return { action: "completed" as const, newMilestones };
+      }
+    });
   },
 });
 
@@ -217,6 +220,37 @@ export const markComplete = mutation({
       date: args.date,
       completedAt: Date.now(),
     });
+  },
+});
+
+/**
+ * Aggregate completion counts per day for the heatmap view.
+ * Returns [{ date, count }] sorted ascending — one entry per day that has ≥1 completion.
+ * Days with zero completions are omitted (the component fills them as empty).
+ */
+export const getHeatmapStats = query({
+  args: {
+    startDate: v.string(),
+    endDate: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await getAuthUser(ctx);
+
+    const completions = await ctx.db
+      .query("habitCompletions")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+
+    const countByDate = new Map<string, number>();
+    for (const c of completions) {
+      if (c.date >= args.startDate && c.date <= args.endDate) {
+        countByDate.set(c.date, (countByDate.get(c.date) ?? 0) + 1);
+      }
+    }
+
+    return Array.from(countByDate.entries())
+      .sort(([a], [b]) => (a < b ? -1 : 1))
+      .map(([date, count]) => ({ date, count }));
   },
 });
 

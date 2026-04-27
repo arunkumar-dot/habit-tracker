@@ -3,6 +3,7 @@ import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { SentryUserContext } from "@/components/providers/sentry-user-context";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -57,6 +58,7 @@ export default function RootLayout({
       </head>
       <body className="h-full antialiased" suppressHydrationWarning>
         <ClerkProvider>
+          <SentryUserContext />
           <ConvexClientProvider>
             <ThemeProvider>{children}</ThemeProvider>
           </ConvexClientProvider>

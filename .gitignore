@@ -13,6 +13,12 @@
 # testing
 /coverage
 
+# Playwright — keep e2e/ committed; ignore generated output
+/test-results/
+/playwright-report/
+/blob-report/
+/e2e/.auth/
+
 # next.js
 /.next/
 /out/
@@ -44,3 +50,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Sentry Config File
+.env.sentry-build-plugin

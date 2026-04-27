@@ -5,7 +5,7 @@ import { HabitCompletionButton } from "@/components/habits/habit-completion-butt
 import { HabitStreakBadge } from "@/components/habits/habit-streak-badge";
 import { Badge } from "@/components/ui/badge";
 import { useOptimisticCompletion } from "@/hooks/use-optimistic-completion";
-import { formatTimeRange, formatDisplayTime, formatDuration, getDurationMinutes } from "@/lib/date-utils";
+import { formatTimeRange, formatDisplayTime, formatDuration, getDurationMinutes } from "@/lib/time-utils";
 import type { Habit } from "@/types";
 import { cn } from "@/lib/utils";
 

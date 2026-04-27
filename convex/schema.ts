@@ -122,4 +122,20 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_token", ["token"]),
+
+  /**
+   * Journal entries — one per user per day.
+   * Created from the Dashboard quick-reflection prompt or the Journal page.
+   * Writing from either surface upserts the same row (enforced in mutation).
+   */
+  journalEntries: defineTable({
+    userId: v.id("users"),
+    date: v.string(),    // "YYYY-MM-DD" in user's local timezone (NOT DateTime)
+    content: v.string(), // Plain text, max 5000 chars
+    source: v.union(v.literal("journal"), v.literal("dashboard")),
+    createdAt: v.number(),  // Unix timestamp ms
+    updatedAt: v.number(),  // Unix timestamp ms (managed manually)
+  })
+    // Primary lookup: one entry per (user, date) — use .unique() to enforce
+    .index("by_user_date", ["userId", "date"]),
 });

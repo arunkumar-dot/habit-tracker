@@ -1,5 +1,5 @@
 import type { Habit } from "@/types";
-import { formatDisplayTime } from "./date-utils";
+import { formatDisplayTime } from "./time-utils";
 
 export interface Nudge {
   id: string;

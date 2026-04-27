@@ -26,11 +26,17 @@ export function MetricCard({
         </p>
         <span className="shrink-0" style={{ color: "var(--text-tertiary)" }}>{icon}</span>
       </div>
-      {/* Value — capped at one line with ellipsis */}
+      {/* Value — display font, sized to fit one line */}
       <p
-        className="type-hero-number leading-tight truncate"
+        className="truncate"
         title={value}
-        style={{ color: "var(--text-primary)" }}
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: 22,
+          fontWeight: 400,
+          lineHeight: 1.2,
+          color: "var(--text-primary)",
+        }}
       >
         {value}
       </p>

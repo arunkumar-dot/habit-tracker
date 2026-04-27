@@ -7,8 +7,8 @@ import {
   computeTimelineGaps,
   getCurrentHabitIndex,
   getUpcomingHabitIndex,
+  getCurrentMinutes,
 } from "@/lib/time-utils";
-import { getCurrentMinutes } from "@/lib/date-utils";
 import type { TimelineEntry } from "@/types";
 
 /**

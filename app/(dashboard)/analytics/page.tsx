@@ -1,21 +1,16 @@
 "use client";
 
 import { useMemo } from "react";
-import dynamic from "next/dynamic";
 import { PageHeader } from "@/components/layout/page-header";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { StatCardSkeleton } from "@/components/ui/skeleton";
 import { StreakSummary } from "@/components/analytics/streak-summary";
+import { StreakThread } from "@/components/StreakThread";
+import { getMockMonthDays } from "@/lib/streaks";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDateRange } from "@/hooks/use-completions";
-import { today, addDays, formatDateLabel } from "@/lib/date-utils";
+import { today, addDays } from "@/lib/date-utils";
 import type { WeeklyData } from "@/types";
-
-// Lazy-load Recharts to prevent SSR issues
-const WeeklyChart = dynamic(
-  () => import("@/components/analytics/weekly-chart").then((m) => m.WeeklyChart),
-  { ssr: false, loading: () => <div className="h-[200px] animate-shimmer rounded-xl" /> }
-);
 
 export default function AnalyticsPage() {
   const { habits } = useHabits();
@@ -108,13 +103,21 @@ export default function AnalyticsPage() {
         )}
       </div>
 
-      {/* Weekly chart */}
-      <Card variant="default" padding="md" className="mb-6">
-        <CardHeader>
-          <CardTitle>Completions (Last 7 Days)</CardTitle>
-        </CardHeader>
-        <WeeklyChart data={weeklyData} />
-      </Card>
+      {/* 30-day streak thread */}
+      <div className="mb-6">
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontStyle: "italic",
+            fontSize: 20,
+            color: "var(--text-primary)",
+            marginBottom: 8,
+          }}
+        >
+          Last 30 days
+        </p>
+        <StreakThread variant="month" days={getMockMonthDays()} />
+      </div>
 
       {/* Streak summary */}
       <StreakSummary />
