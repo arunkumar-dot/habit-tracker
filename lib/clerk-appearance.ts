@@ -49,27 +49,9 @@ export const clerkDarkAppearance = {
       justifyContent: "center",
     },
 
-    // ── Social buttons ─────────────────────────────────────────────────────
-    socialButtonsBlockButton: {
-      background:   "#14100E",
-      border:       "1px solid #3D3631",
-      color:        "#F5F1EA",
-    },
-    socialButtonsBlockButtonText: {
-      color: "#F5F1EA",
-    },
-    socialButtonsIconButton: {
-      background: "#14100E",
-      border:     "1px solid #3D3631",
-    },
-
-    // ── Divider ────────────────────────────────────────────────────────────
-    dividerLine: {
-      background: "#3D3631",
-    },
-    dividerText: {
-      color: "#8A8680",
-    },
+    // ── Social buttons — hidden (email/password only) ──────────────────────
+    socialButtonsRoot:         { display: "none" },
+    dividerRow:                { display: "none" },
 
     // ── Form labels ────────────────────────────────────────────────────────
     formFieldLabel: {

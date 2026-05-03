@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ListChecks, Clock, CalendarDays, BarChart3, Zap, Timer, Trophy, User, Sparkles, BookOpen, Settings } from "lucide-react";
+import Image from "next/image";
+import { LayoutDashboard, ListChecks, Clock, CalendarDays, BarChart3, Timer, Trophy, User, Sparkles, BookOpen, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -40,12 +41,13 @@ export function Sidebar({ collapsed }: SidebarProps) {
       <div
         className="flex items-center h-[72px] px-4 gap-2.5 flex-shrink-0"
       >
-        <div
-          className="w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center"
-          style={{ background: "var(--accent)" }}
-        >
-          <Zap size={16} fill="white" style={{ color: "white" }} />
-        </div>
+        <Image
+          src="/logo.svg"
+          alt="HabitFlow"
+          width={32}
+          height={32}
+          className="flex-shrink-0"
+        />
         {!collapsed && (
           <span
             className="truncate"
