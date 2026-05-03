@@ -1,3 +1,256 @@
+# HabitFlow
+
+> Build better habits, one day at a time.
+
+HabitFlow is a personal habit tracking and journaling web application designed to help people build consistent routines, track progress over time, and reflect on their growth. Live at **[tryhabitflow.com](https://tryhabitflow.com)**.
+
+---
+
+## Features
+
+### Core
+- **Habit tracking** with daily completion, streaks, and progress visualization
+- **Customizable habits** with frequency, time slots, weekly goals, and color coding
+- **Push notifications** via Firebase Cloud Messaging for habit reminders
+- **Pomodoro timer** for focused work sessions linked to habits
+- **Journal** for daily reflections and notes
+- **Milestones** that celebrate streak achievements automatically
+
+### Visualization & Insights
+- **Dashboard** with state-aware "up next" card, today's habits, and weekly heatmap
+- **Calendar view** with monthly heatmap, day-detail panel, and statistics
+- **Analytics page** with completion charts, streak summaries, and habit comparisons
+- **Timeline** of habit history and milestone unlocks
+
+### Account & Privacy
+- **Secure authentication** via Clerk (email + Google OAuth)
+- **Data export** — download all your data as JSON anytime
+- **Account deletion** — full data removal across Convex and Clerk
+- **Privacy Policy** and **Terms of Service** built into the app
+- **Production-ready monitoring** via Sentry for error tracking
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 16 (App Router), React 19, TypeScript |
+| Styling | Tailwind CSS, shadcn/ui components |
+| Backend | Convex (database + serverless functions + real-time sync) |
+| Auth | Clerk (with custom JWT integration to Convex) |
+| Notifications | Firebase Cloud Messaging |
+| Monitoring | Sentry (error tracking + session replay) |
+| Hosting | Vercel (frontend), Convex Cloud (backend) |
+| Domain & DNS | Cloudflare |
+| Testing | Playwright (e2e), 33+ tests covering auth, habits, calendar, journal, pomodoro |
+
+---
+
+## Architecture
+
+```
+┌─────────────────────┐
+│   Next.js Client    │  React UI, server components, MDX legal pages
+│   (Vercel)          │
+└──────────┬──────────┘
+           │ WebSocket (real-time)
+           ▼
+┌─────────────────────┐
+│   Convex Backend    │  Serverless functions, document DB, real-time sync
+│   (Convex Cloud)    │
+└──────────┬──────────┘
+           │ JWT validation
+           ▼
+┌─────────────────────┐
+│   Clerk Auth        │  User management, JWT issuance, OAuth providers
+└─────────────────────┘
+
+┌─────────────────────┐
+│   Firebase FCM      │  Push notifications (called from Convex cron)
+└─────────────────────┘
+
+┌─────────────────────┐
+│   Sentry            │  Error tracking + session replay
+└─────────────────────┘
+```
+
+### Data flow example: marking a habit complete
+
+1. User clicks the completion button in the UI
+2. React component calls a Convex mutation via WebSocket
+3. Convex validates the user's Clerk JWT
+4. Mutation writes a row to `habitCompletions` and updates streak in `userMilestones`
+5. Convex pushes the update to all connected clients in real-time
+6. UI updates instantly without a full page reload
+
+---
+
+## Database schema
+
+Convex tables (defined in `convex/schema.ts`):
+
+- `users` — Clerk user mapping with profile data
+- `habits` — habit definitions (title, frequency, color, time slots)
+- `habitCompletions` — completion records per habit per date
+- `userMilestones` — streak achievements and best streaks
+- `dailyCheckIns` — daily reflection prompts
+- `pomodoroSessions` — pomodoro timer records linked to habits
+- `journalEntries` — daily journal text
+- `pushTokens` — FCM device tokens
+- `reminderLog` — audit log for push notifications (idempotency)
+
+All tables are scoped per-user via indexes (`by_user`, `by_user_date`, etc.) — data isolation is enforced at the query layer, not just in application logic.
+
+---
+
+## Local development
+
+### Prerequisites
+
+- Node.js 20+
+- npm or pnpm
+- A Clerk account (free tier)
+- A Convex account (free tier)
+- A Firebase project (for push notifications, optional for basic dev)
+
+### Setup
+
+```bash
+# Clone and install
+git clone https://github.com/<your-username>/habit-tracker.git
+cd habit-tracker
+npm install
+
+# Set up Convex (creates dev deployment)
+npx convex dev
+
+# Set up environment variables
+cp .env.local.example .env.local
+# Fill in your Clerk and Convex keys
+
+# Run the dev server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+### Required environment variables
+
+```bash
+# Convex
+NEXT_PUBLIC_CONVEX_URL=
+
+# Clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+
+# Sentry (optional in dev)
+NEXT_PUBLIC_SENTRY_DSN=
+```
+
+Server-side env vars (set via `npx convex env set`):
+
+```bash
+CLERK_JWT_ISSUER_DOMAIN=    # Clerk Frontend API URL
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
+```
+
+---
+
+## Testing
+
+Playwright e2e suite covers auth flows, habit lifecycle, calendar, journal, pomodoro, and account management.
+
+```bash
+# Run all e2e tests
+npm run test:e2e
+
+# Run a specific spec
+npx playwright test e2e/habit-lifecycle.spec.ts
+
+# Open the Playwright UI
+npx playwright test --ui
+```
+
+Tests use a dedicated Clerk test user and real Convex dev deployment. Test data is auto-cleaned between runs via a dev-only cleanup endpoint.
+
+---
+
+## Deployment
+
+### Production stack
+
+- **Frontend** auto-deploys to Vercel from the `main` branch
+- **Backend** deploys via `npx convex deploy` (one-time push to production Convex)
+- **Custom domain** routed through Cloudflare DNS to Vercel
+
+### Deploy command
+
+```bash
+# Deploy Convex production functions
+npx convex deploy
+
+# Vercel auto-deploys on `main` push
+git push origin main
+```
+
+---
+
+## Project structure
+
+```
+habit-tracker/
+├── app/                          # Next.js App Router
+│   ├── (auth)/                   # Sign-in/sign-up pages
+│   ├── (dashboard)/              # Authenticated app pages
+│   ├── legal/                    # Public privacy/terms pages
+│   └── api/                      # Server routes (FCM, dev cleanup)
+├── components/                   # React components
+│   ├── dashboard/                # Dashboard UI (up-next, today's habits)
+│   ├── calendar/                 # Calendar grid, day panel, stats
+│   ├── habits/                   # Habit forms, list, completion UI
+│   ├── legal/                    # Legal page renderer (MDX)
+│   ├── layout/                   # App shell, footer, nav
+│   └── ui/                       # shadcn/ui primitives
+├── convex/                       # Convex backend
+│   ├── schema.ts                 # Database schema
+│   ├── habits.ts                 # Habit mutations and queries
+│   ├── notifications.ts          # FCM cron logic
+│   ├── deleteAccount.ts          # Account deletion flow
+│   ├── export.ts                 # Data export HTTP action
+│   └── auth.config.ts            # Clerk JWT configuration
+├── content/legal/                # Privacy/terms MDX content
+├── e2e/                          # Playwright tests
+├── lib/                          # Shared utilities
+└── public/                       # Static assets
+```
+
+---
+
+## Roadmap
+
+- AI habit coach with personalized insights based on user data
+- Stripe billing for Pro tier (unlimited habits, AI features)
+- PWA support for installable mobile experience
+- Capacitor wrapper for App Store and Play Store presence
+
+---
+
+## License
+
+This project is currently private. Licensing terms TBD.
+
+---
+
+## Contact
+
+Built by **Arun Kumar Kulkarni** — [arunkulkarni2000@gmail.com](mailto:arunkulkarni2000@gmail.com)
+
+For questions about HabitFlow as a product, see the [Privacy Policy](https://tryhabitflow.com/legal/privacy) and [Terms of Service](https://tryhabitflow.com/legal/terms).
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
