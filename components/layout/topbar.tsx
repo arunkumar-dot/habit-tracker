@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
 import { PanelLeft } from "lucide-react";
 import { NotificationToggle } from "@/components/notifications/notification-toggle";
@@ -40,12 +41,12 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
         </button>
 
         <div className="lg:hidden flex items-center gap-2">
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white"
-            style={{ background: "var(--accent-primary)" }}
-          >
-            H
-          </div>
+          <Image
+            src="/logo.svg"
+            alt="HabitFlow"
+            width={28}
+            height={28}
+          />
           <span className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>
             HabitFlow
           </span>

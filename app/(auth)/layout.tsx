@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Footer } from "@/components/layout/footer";
 
 export const metadata: Metadata = {
@@ -29,12 +30,13 @@ export default function AuthLayout({
         <div className="w-full max-w-md">
           {/* Logo / App name */}
           <div className="text-center mb-8">
-            <div
-              className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4"
-              style={{ background: "var(--accent)" }}
-            >
-              <span className="text-white text-xl font-bold">H</span>
-            </div>
+            <Image
+              src="/logo.svg"
+              alt="HabitFlow"
+              width={48}
+              height={48}
+              className="mx-auto mb-4"
+            />
             <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
               HabitFlow
             </h1>
