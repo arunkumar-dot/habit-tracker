@@ -69,13 +69,11 @@ export function TimelineItem({
       <div
         className={cn(
           "flex-1 flex items-start justify-between gap-3 mb-4 p-4 rounded-lg transition-all shadow-warm-sm",
-          isCurrent && "ring-1",
-          isPast && !isCompleted && "opacity-50"
+          isCurrent && "ring-1"
         )}
         style={{
           background: isCurrent ? `${color}12` : "var(--bg-elevated)",
           border: `1px solid ${isCurrent ? `${color}40` : "var(--border-subtle)"}`,
-          opacity: isCompleted ? 0.6 : undefined,
         }}
       >
         {/* Content */}

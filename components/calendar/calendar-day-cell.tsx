@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { cellStyle } from "@/lib/heatmap";
 
 interface CalendarDayCellProps {
   dateStr: string;
@@ -6,8 +7,8 @@ interface CalendarDayCellProps {
   isToday: boolean;
   isSelected: boolean;
   isFuture: boolean;
-  completedCount: number;
-  totalCount: number;
+  /** 0 = no fill, 1–4 = increasing saturation (matches heatmap palette) */
+  saturationLevel: 0 | 1 | 2 | 3 | 4;
   onClick: () => void;
 }
 
@@ -17,30 +18,39 @@ export function CalendarDayCell({
   isToday,
   isSelected,
   isFuture,
-  completedCount,
-  totalCount,
+  saturationLevel,
   onClick,
 }: CalendarDayCellProps) {
   const day = parseInt(dateStr.split("-")[2]!);
 
-  // Today and selected both use accent fill + white number.
-  // Today: always a perfect circle (per spec: 28px diameter).
-  // Selected non-today: rounded-full too for visual consistency.
+  // Today: orange accent circle. Selected (non-today): blue-ish sidebar active style.
+  // Both override saturation fill.
   const isHighlighted = isToday || isSelected;
+
+  const highlightBackground = isToday
+    ? "var(--accent)"
+    : "var(--bg-active, color-mix(in srgb, var(--accent) 18%, transparent))";
+
+  const cellFill = isHighlighted
+    ? highlightBackground
+    : saturationLevel > 0
+    ? cellStyle(saturationLevel).background
+    : "transparent";
 
   return (
     <button
       onClick={onClick}
       disabled={isFuture || !isCurrentMonth}
+      data-date={dateStr}
       className={cn(
-        "relative w-7 h-7 flex flex-col items-center justify-center text-[11px] font-medium transition-colors mx-auto",
+        "relative w-7 h-7 flex items-center justify-center text-[11px] font-medium transition-colors mx-auto",
         isHighlighted ? "rounded-full" : "rounded-md",
-        !isFuture && isCurrentMonth && !isHighlighted && "hover:bg-[var(--bg-hover)]",
+        !isFuture && isCurrentMonth && !isHighlighted && "hover:brightness-95 cursor-pointer",
         isFuture && "cursor-default",
         !isCurrentMonth && "opacity-30"
       )}
       style={{
-        background: isHighlighted ? "var(--accent)" : "transparent",
+        background: cellFill as string,
         color: isHighlighted
           ? "white"
           : isCurrentMonth
@@ -49,20 +59,6 @@ export function CalendarDayCell({
       }}
     >
       <span>{day}</span>
-
-      {/* 3px completion dot, 2px below the number, hidden when day is highlighted */}
-      {completedCount > 0 && !isFuture && !isHighlighted && (
-        <div className="absolute" style={{ bottom: 2 }}>
-          <div
-            style={{
-              width: 3,
-              height: 3,
-              borderRadius: "50%",
-              background: completedCount >= totalCount ? "var(--success)" : "var(--warning)",
-            }}
-          />
-        </div>
-      )}
     </button>
   );
 }

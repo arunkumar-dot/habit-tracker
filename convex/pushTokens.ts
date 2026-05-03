@@ -130,6 +130,19 @@ export const deleteStaleToken = internalMutation({
 });
 
 /**
+ * Bulk-deletes multiple stale push tokens in a single Convex mutation.
+ * Prefer this over looping deleteStaleToken to avoid serializing many round-trips.
+ */
+export const deleteStaleTokens = internalMutation({
+  args: { tokenIds: v.array(v.id("pushTokens")) },
+  handler: async (ctx, args) => {
+    for (const tokenId of args.tokenIds) {
+      await ctx.db.delete(tokenId);
+    }
+  },
+});
+
+/**
  * Returns habits for a specific user that match the given startTime string
  * and are not archived. Used by the cron to find habits due right now.
  */

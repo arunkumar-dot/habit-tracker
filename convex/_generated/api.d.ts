@@ -11,7 +11,10 @@
 import type * as checkIns from "../checkIns.js";
 import type * as completions from "../completions.js";
 import type * as crons from "../crons.js";
+import type * as deleteAccount from "../deleteAccount.js";
+import type * as export_ from "../export.js";
 import type * as habits from "../habits.js";
+import type * as http from "../http.js";
 import type * as insights from "../insights.js";
 import type * as journal from "../journal.js";
 import type * as lib_sentry from "../lib/sentry.js";
@@ -19,6 +22,8 @@ import type * as milestones from "../milestones.js";
 import type * as notifications from "../notifications.js";
 import type * as pomodoro from "../pomodoro.js";
 import type * as pushTokens from "../pushTokens.js";
+import type * as reminderLog from "../reminderLog.js";
+import type * as userData from "../userData.js";
 import type * as users from "../users.js";
 
 import type {
@@ -31,7 +36,10 @@ declare const fullApi: ApiFromModules<{
   checkIns: typeof checkIns;
   completions: typeof completions;
   crons: typeof crons;
+  deleteAccount: typeof deleteAccount;
+  export: typeof export_;
   habits: typeof habits;
+  http: typeof http;
   insights: typeof insights;
   journal: typeof journal;
   "lib/sentry": typeof lib_sentry;
@@ -39,6 +47,8 @@ declare const fullApi: ApiFromModules<{
   notifications: typeof notifications;
   pomodoro: typeof pomodoro;
   pushTokens: typeof pushTokens;
+  reminderLog: typeof reminderLog;
+  userData: typeof userData;
   users: typeof users;
 }>;
 

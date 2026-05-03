@@ -6,6 +6,7 @@ import { Topbar } from "@/components/layout/topbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { UserSync } from "@/components/layout/user-sync";
 import { PageTransition } from "@/components/layout/page-transition";
+import { Footer } from "@/components/layout/footer";
 import { ToastProvider } from "@/components/ui/toast";
 import { ConfettiProvider } from "@/components/ui/confetti";
 import { NotificationProvider } from "@/components/notifications/notification-provider";
@@ -38,6 +39,9 @@ export default function DashboardLayout({
               >
                 <div className="max-w-3xl mx-auto px-4 lg:px-6 py-6">
                   <PageTransition>{children}</PageTransition>
+                </div>
+                <div className="max-w-3xl mx-auto px-4 lg:px-6">
+                  <Footer />
                 </div>
               </main>
             </div>

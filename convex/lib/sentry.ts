@@ -93,7 +93,13 @@ function parseStackFrames(stack: string): StackFrame[] {
 
 // ─── Core envelope sender ─────────────────────────────────────────────────────
 
-async function sendToSentry(
+/**
+ * Send an error to Sentry directly (without rethrowing).
+ * Use this when you want to report a non-fatal error that should not surface
+ * to the caller — e.g., a best-effort cleanup step after the main operation
+ * has already completed successfully.
+ */
+export async function sendToSentry(
   error: unknown,
   context: {
     tags?: Record<string, string>;

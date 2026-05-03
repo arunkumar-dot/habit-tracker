@@ -5,6 +5,16 @@ import { CalendarDayCell } from "./calendar-day-cell";
 import { addDays, toDateString } from "@/lib/date-utils";
 import type { HabitCompletion, Habit } from "@/types";
 
+function ratioToLevel(completed: number, total: number): 0 | 1 | 2 | 3 | 4 {
+  if (total === 0) return 0;
+  const r = completed / total;
+  if (r === 0) return 0;
+  if (r <= 0.33) return 1;
+  if (r <= 0.66) return 2;
+  if (r < 1) return 3;
+  return 4;
+}
+
 interface HabitCalendarProps {
   year: number;
   month: number; // 0-indexed
@@ -103,9 +113,8 @@ export function HabitCalendar({
               isToday={dateStr === todayStr}
               isSelected={dateStr === selectedDate}
               isFuture={isFuture}
-              completedCount={isFuture ? 0 : completedCount}
-              totalCount={totalDailyHabits}
-              onClick={() => !isFuture && onSelectDate(dateStr)}
+              saturationLevel={isFuture ? 0 : ratioToLevel(completedCount, totalDailyHabits)}
+              onClick={() => { if (!isFuture) onSelectDate(dateStr); }}
             />
           );
         })}

@@ -20,4 +20,15 @@ crons.interval(
   {}
 );
 
+/**
+ * Purge reminderLog entries older than 7 days.
+ * Runs at 3 AM UTC (low-traffic window) so the table doesn't grow unbounded.
+ */
+crons.daily(
+  "cleanup-reminder-logs",
+  { hourUTC: 3, minuteUTC: 0 },
+  internal.reminderLog.cleanupOldReminderLogs,
+  {}
+);
+
 export default crons;

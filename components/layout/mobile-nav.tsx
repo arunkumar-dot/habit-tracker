@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ListChecks, Clock, CalendarDays, BarChart3, Timer, Trophy, User, Sparkles, BookOpen } from "lucide-react";
+import { LayoutDashboard, ListChecks, Clock, CalendarDays, BarChart3, Timer, Trophy, User, Sparkles, BookOpen, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
   { href: "/pomodoro", icon: Timer, label: "Pomodoro" },
   { href: "/milestones", icon: Trophy, label: "Milestones" },
   { href: "/profile", icon: User, label: "Profile" },
+  { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
 export function MobileNav() {

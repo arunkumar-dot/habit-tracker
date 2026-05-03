@@ -53,3 +53,7 @@ next-env.d.ts
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Legal reference files — Termly/FreePrivacyPolicy source HTML; not for version control
+habitflow-privacy.html
+habitflow-terms.html

@@ -124,6 +124,32 @@ export default defineSchema({
     .index("by_token", ["token"]),
 
   /**
+   * Idempotency log for FCM push reminders.
+   * One row per (habit × date × timeSlot × pushToken) triple.
+   * Written immediately after each send attempt (success, stale token, or error)
+   * so a second cron tick in the same minute skips already-attempted sends.
+   */
+  reminderLog: defineTable({
+    habitId: v.id("habits"),
+    userId: v.id("users"),
+    // "YYYY-MM-DD" in the user's local timezone — matches habitCompletions.date convention
+    date: v.string(),
+    // "HH:MM" slot the reminder fired for — matches habits.startTime
+    timeSlot: v.string(),
+    // Token-specific so a user with phone + laptop each gets a record
+    pushTokenId: v.id("pushTokens"),
+    sentAt: v.number(), // Unix timestamp ms
+    outcome: v.union(
+      v.literal("sent"),
+      v.literal("stale_token"),
+      v.literal("error")
+    ),
+  })
+    .index("by_habit_date_slot_token", ["habitId", "date", "timeSlot", "pushTokenId"])
+    .index("by_date", ["date"])
+    .index("by_user", ["userId"]),
+
+  /**
    * Journal entries — one per user per day.
    * Created from the Dashboard quick-reflection prompt or the Journal page.
    * Writing from either surface upserts the same row (enforced in mutation).
