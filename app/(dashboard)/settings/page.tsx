@@ -39,6 +39,10 @@ export default function SettingsPage() {
     }
   }
 
+  const displayName = user
+    ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.name
+    : "";
+
   return (
     <>
       <PageHeader title="Settings" description="Manage your account and data" />
@@ -57,7 +61,7 @@ export default function SettingsPage() {
           ) : (
             <ProfileAvatar
               imageUrl={user?.resolvedImageUrl}
-              name={user?.name}
+              name={displayName}
               isUploading={isUploading}
               onFileSelect={uploadProfileImage}
             />
@@ -65,7 +69,7 @@ export default function SettingsPage() {
           {!isLoading && user && (
             <div className="mt-4 text-center">
               <p className="font-semibold text-base" style={{ color: "var(--text-primary)" }}>
-                {user.name}
+                {displayName}
               </p>
               <p className="text-sm mt-0.5" style={{ color: "var(--text-secondary)" }}>
                 {user.email}
