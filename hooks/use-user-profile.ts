@@ -38,8 +38,16 @@ export function useUserProfile(): {
     api.users.getCurrentUser,
     !authLoading && isAuthenticated ? {} : "skip"
   );
-  const user = raw as ProfileUser | null | undefined;
   const isLoading = authLoading || (isAuthenticated && raw === undefined);
+
+  // Merge Clerk's name fields as fallbacks so the form always reflects Clerk's current name
+  const user: ProfileUser | null | undefined = raw
+    ? {
+        ...(raw as ProfileUser),
+        firstName: (raw as ProfileUser).firstName ?? clerkUser?.firstName ?? undefined,
+        lastName: (raw as ProfileUser).lastName ?? clerkUser?.lastName ?? undefined,
+      }
+    : (raw as null | undefined);
 
   const updateProfileMutation = useMutation(api.users.updateProfile);
   const generateUploadUrlMutation = useMutation(api.users.generateUploadUrl);
