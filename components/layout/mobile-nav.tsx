@@ -1,52 +1,146 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ListChecks, Clock, CalendarDays, BarChart3, Timer, Trophy, User, Sparkles, BookOpen, Settings } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/habits", icon: ListChecks, label: "Habits" },
-  { href: "/timeline", icon: Clock, label: "Timeline" },
-  { href: "/calendar", icon: CalendarDays, label: "Calendar" },
-  { href: "/analytics", icon: BarChart3, label: "Analytics" },
-  { href: "/insights", icon: Sparkles, label: "Insights" },
-  { href: "/journal", icon: BookOpen, label: "Journal" },
-  { href: "/pomodoro", icon: Timer, label: "Pomodoro" },
-  { href: "/milestones", icon: Trophy, label: "Milestones" },
-  { href: "/profile", icon: User, label: "Profile" },
-  { href: "/settings", icon: Settings, label: "Settings" },
-];
+import { MoreHorizontal, X } from "lucide-react";
+import { Drawer } from "vaul";
+import { PRIMARY_NAV, MORE_NAV } from "@/lib/nav-config";
 
 export function MobileNav() {
   const pathname = usePathname();
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const isMoreActive = MORE_NAV.some(
+    (item) => pathname === item.href || pathname.startsWith(item.href + "/")
+  );
 
   return (
-    <nav
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex"
-      style={{
-        background: "var(--bg-surface)",
-        borderTop: "1px solid var(--border)",
-        paddingBottom: "env(safe-area-inset-bottom)",
-      }}
-    >
-      {navItems.map((item) => {
-        const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="flex-1 flex flex-col items-center justify-center gap-1 py-3 transition-colors"
+    <>
+      {/* ── Bottom tab bar ───────────────────────────────────────────────────── */}
+      <nav
+        aria-label="Mobile navigation"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex"
+        style={{
+          background: "var(--bg-surface)",
+          borderTop: "1px solid var(--border)",
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}
+      >
+        {PRIMARY_NAV.map((item) => {
+          const isActive =
+            pathname === item.href || pathname.startsWith(item.href + "/");
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex-1 flex flex-col items-center justify-center gap-1 py-3"
+              style={{
+                minHeight: 44,
+                color: isActive ? "var(--accent-primary)" : "var(--text-disabled)",
+              }}
+            >
+              <item.icon size={20} aria-hidden="true" />
+              <span className="text-[10px] font-medium leading-none">
+                {item.mobileLabel ?? item.label}
+              </span>
+            </Link>
+          );
+        })}
+
+        {/* More tab */}
+        <button
+          type="button"
+          onClick={() => setMoreOpen(true)}
+          className="flex-1 flex flex-col items-center justify-center gap-1 py-3 transition-colors"
+          style={{
+            minHeight: 44,
+            color: isMoreActive ? "var(--accent-primary)" : "var(--text-disabled)",
+          }}
+          aria-label="More navigation options"
+          aria-haspopup="dialog"
+          aria-expanded={moreOpen}
+        >
+          <MoreHorizontal size={20} aria-hidden="true" />
+          <span className="text-[10px] font-medium leading-none">More</span>
+        </button>
+      </nav>
+
+      {/* ── More drawer ──────────────────────────────────────────────────────── */}
+      <Drawer.Root open={moreOpen} onOpenChange={setMoreOpen}>
+        <Drawer.Portal>
+          <Drawer.Overlay
+            className="fixed inset-0 z-50"
+            style={{ background: "rgba(0,0,0,0.4)" }}
+          />
+          <Drawer.Content
+            aria-label="More navigation"
+            className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl"
             style={{
-              color: isActive ? "var(--accent-primary)" : "var(--text-disabled)",
+              background: "var(--bg-surface)",
+              borderTop: "1px solid var(--border)",
+              paddingBottom: "env(safe-area-inset-bottom)",
             }}
           >
-            <item.icon size={20} />
-            <span className="text-[10px] font-medium">{item.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+            <Drawer.Handle
+              className="mx-auto mt-3 mb-2 rounded-full"
+              style={{ width: 48, height: 6, background: "var(--text-disabled)", opacity: 0.4 }}
+            />
+
+            {/* Sheet header */}
+            <div
+              className="flex items-center justify-between px-5 py-3"
+              style={{ borderBottom: "1px solid var(--border)" }}
+            >
+              <Drawer.Title
+                className="text-base font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
+                More
+              </Drawer.Title>
+              <Drawer.Close
+                className="p-1.5 rounded-lg transition-colors"
+                style={{ color: "var(--text-secondary)" }}
+                aria-label="Close"
+              >
+                <X size={18} aria-hidden="true" />
+              </Drawer.Close>
+            </div>
+
+            {/* Grid of secondary destinations */}
+            <div className="grid grid-cols-3 gap-2 p-4">
+              {MORE_NAV.map((item) => {
+                const isActive =
+                  pathname === item.href || pathname.startsWith(item.href + "/");
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMoreOpen(false)}
+                    className="flex flex-col items-center justify-center gap-2 rounded-xl transition-colors"
+                    style={{
+                      minHeight: 80,
+                      padding: "12px 8px",
+                      color: isActive ? "var(--accent-primary)" : "var(--text-secondary)",
+                      background: isActive
+                        ? "color-mix(in srgb, var(--accent-primary) 10%, transparent)"
+                        : "var(--bg-hover)",
+                    }}
+                  >
+                    <item.icon size={22} aria-hidden="true" />
+                    <span
+                      className="text-xs font-medium text-center leading-tight"
+                      style={{ color: "inherit" }}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    </>
   );
 }

@@ -240,34 +240,63 @@ export function UpNextCard() {
     const color = targetHabit.color ?? "#C2410C";
     return (
       <Card variant="default" padding="lg" className="mb-5" data-testid="up-next-card">
-        <div className="flex items-center justify-between gap-4">
+        {/*
+          Mobile  (default): flex-col — info row, then actions row
+          Desktop (md+):     flex-row — info column left, ring right (current layout)
+        */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between md:gap-4">
+          {/* Info block */}
           <div className="min-w-0 flex-1">
-            <p className="type-meta-label mb-1" style={{ color: "var(--text-tertiary)" }}>
+            <p
+              className="text-[10px] md:text-xs font-medium uppercase tracking-[0.05em] mb-0.5 md:mb-1"
+              style={{ color: "var(--text-tertiary)" }}
+            >
               Up next
             </p>
+            {/* Name + inline time on mobile; name only on desktop */}
             <div className="flex items-center gap-2 min-w-0">
               <div
-                className="flex-shrink-0"
-                style={{ width: 8, height: 8, borderRadius: "50%", background: color }}
+                className="flex-shrink-0 rounded-full"
+                style={{ width: 8, height: 8, background: color }}
               />
               <p
-                className="text-base font-semibold truncate"
+                className="text-sm md:text-base font-semibold truncate flex-1"
                 style={{ color: "var(--text-primary)" }}
               >
                 {targetHabit.title}
               </p>
+              <span
+                className="md:hidden text-[10px] flex-shrink-0"
+                style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
+              >
+                · {formatDisplayTime(targetHabit.startTime)} · {relativeTime(diffMinutes)}
+              </span>
             </div>
+            {/* Desktop: time on its own line */}
             <p
-              className="text-xs mt-1"
+              className="hidden md:block text-xs mt-1"
               style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
             >
               at {formatDisplayTime(targetHabit.startTime)} · {relativeTime(diffMinutes)}
             </p>
-            <div className="mt-3">
+            {/* Desktop: button sits under the time */}
+            <div className="hidden md:block mt-3">
               <MarkCompleteButton habitId={targetHabit._id} date={dateStr} />
             </div>
           </div>
-          <CompletionRing completed={completedCount} total={totalCount} size={56} />
+
+          {/* Mobile: button + ring on one compact row */}
+          <div className="md:hidden flex items-center gap-3 mt-2">
+            <div className="flex-1">
+              <MarkCompleteButton habitId={targetHabit._id} date={dateStr} />
+            </div>
+            <CompletionRing completed={completedCount} total={totalCount} size={40} />
+          </div>
+
+          {/* Desktop: ring at far right */}
+          <div className="hidden md:block flex-shrink-0">
+            <CompletionRing completed={completedCount} total={totalCount} size={56} />
+          </div>
         </div>
       </Card>
     );
@@ -279,34 +308,56 @@ export function UpNextCard() {
     const color = targetHabit.color ?? "#C2410C";
     return (
       <Card variant="default" padding="lg" className="mb-5" data-testid="up-next-card">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between md:gap-4">
+          {/* Info block */}
           <div className="min-w-0 flex-1">
-            <p className="type-meta-label mb-1" style={{ color: "var(--text-tertiary)" }}>
+            <p
+              className="text-[10px] md:text-xs font-medium uppercase tracking-[0.05em] mb-0.5 md:mb-1"
+              style={{ color: "var(--text-tertiary)" }}
+            >
               Behind today
             </p>
             <div className="flex items-center gap-2 min-w-0">
               <div
-                className="flex-shrink-0"
-                style={{ width: 8, height: 8, borderRadius: "50%", background: color }}
+                className="flex-shrink-0 rounded-full"
+                style={{ width: 8, height: 8, background: color }}
               />
               <p
-                className="text-base font-semibold truncate"
+                className="text-sm md:text-base font-semibold truncate flex-1"
                 style={{ color: "var(--text-primary)" }}
               >
                 {targetHabit.title}
               </p>
+              <span
+                className="md:hidden text-[10px] flex-shrink-0"
+                style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
+              >
+                · {Math.abs(diffMinutes)}m late
+              </span>
             </div>
             <p
-              className="text-xs mt-1"
+              className="hidden md:block text-xs mt-1"
               style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
             >
               {Math.abs(diffMinutes)} minutes late
             </p>
-            <div className="mt-3">
+            <div className="hidden md:block mt-3">
               <MarkCompleteButton habitId={targetHabit._id} date={dateStr} />
             </div>
           </div>
-          <CompletionRing completed={completedCount} total={totalCount} size={56} />
+
+          {/* Mobile: button + ring on one compact row */}
+          <div className="md:hidden flex items-center gap-3 mt-2">
+            <div className="flex-1">
+              <MarkCompleteButton habitId={targetHabit._id} date={dateStr} />
+            </div>
+            <CompletionRing completed={completedCount} total={totalCount} size={40} />
+          </div>
+
+          {/* Desktop: ring at far right */}
+          <div className="hidden md:block flex-shrink-0">
+            <CompletionRing completed={completedCount} total={totalCount} size={56} />
+          </div>
         </div>
       </Card>
     );

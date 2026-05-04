@@ -1,0 +1,51 @@
+{
+  "communities": {
+    "0": [
+      "components_habits_habit_dialog_tsx",
+      "habit_dialog_createhabitdialog",
+      "habit_dialog_edithabitdialog"
+    ],
+    "1": [
+      "components_habits_habit_completion_button_tsx",
+      "habit_completion_button_handleclick"
+    ],
+    "2": [
+      "components_habits_habit_form_tsx",
+      "habit_form_handleformsubmit"
+    ],
+    "3": [
+      "components_habits_habit_menu_tsx",
+      "habit_menu_handledelete"
+    ],
+    "4": [
+      "components_habits_habit_streak_badge_tsx",
+      "habit_streak_badge_habitstreakbadge"
+    ],
+    "5": [
+      "components_habits_habit_milestone_hint_tsx",
+      "habit_milestone_hint_habitmilestonehint"
+    ],
+    "6": [
+      "components_habits_habit_list_tsx"
+    ],
+    "7": [
+      "components_habits_habit_filters_tsx"
+    ],
+    "8": [
+      "components_habits_habit_card_tsx"
+    ]
+  },
+  "cohesion": {
+    "0": 0.67,
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0
+  },
+  "gods": [],
+  "surprises": []
+}

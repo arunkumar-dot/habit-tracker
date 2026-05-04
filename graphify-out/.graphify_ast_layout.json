@@ -1,0 +1,349 @@
+{
+  "nodes": [
+    {
+      "id": "components_layout_topbar_tsx",
+      "label": "topbar.tsx",
+      "file_type": "code",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "topbar_gettodaylabel",
+      "label": "getTodayLabel()",
+      "file_type": "code",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L10"
+    },
+    {
+      "id": "components_layout_footer_tsx",
+      "label": "footer.tsx",
+      "file_type": "code",
+      "source_file": "components/layout/footer.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_layout_user_sync_tsx",
+      "label": "user-sync.tsx",
+      "file_type": "code",
+      "source_file": "components/layout/user-sync.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "user_sync_usersync",
+      "label": "UserSync()",
+      "file_type": "code",
+      "source_file": "components/layout/user-sync.tsx",
+      "source_location": "L9"
+    },
+    {
+      "id": "components_layout_sidebar_tsx",
+      "label": "sidebar.tsx",
+      "file_type": "code",
+      "source_file": "components/layout/sidebar.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_layout_page_transition_tsx",
+      "label": "page-transition.tsx",
+      "file_type": "code",
+      "source_file": "components/layout/page-transition.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "page_transition_pagetransition",
+      "label": "PageTransition()",
+      "file_type": "code",
+      "source_file": "components/layout/page-transition.tsx",
+      "source_location": "L10"
+    },
+    {
+      "id": "components_layout_page_header_tsx",
+      "label": "page-header.tsx",
+      "file_type": "code",
+      "source_file": "components/layout/page-header.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "page_header_pageheader",
+      "label": "PageHeader()",
+      "file_type": "code",
+      "source_file": "components/layout/page-header.tsx",
+      "source_location": "L10"
+    },
+    {
+      "id": "components_layout_mobile_nav_tsx",
+      "label": "mobile-nav.tsx",
+      "file_type": "code",
+      "source_file": "components/layout/mobile-nav.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "mobile_nav_mobilenav",
+      "label": "MobileNav()",
+      "file_type": "code",
+      "source_file": "components/layout/mobile-nav.tsx",
+      "source_location": "L22"
+    },
+    {
+      "id": "components_layout_theme_toggle_tsx",
+      "label": "theme-toggle.tsx",
+      "file_type": "code",
+      "source_file": "components/layout/theme-toggle.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "theme_toggle_themetoggle",
+      "label": "ThemeToggle()",
+      "file_type": "code",
+      "source_file": "components/layout/theme-toggle.tsx",
+      "source_location": "L10"
+    }
+  ],
+  "edges": [
+    {
+      "source": "components_layout_topbar_tsx",
+      "target": "image",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_topbar_tsx",
+      "target": "nextjs",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_topbar_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_topbar_tsx",
+      "target": "notification_toggle",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_topbar_tsx",
+      "target": "theme_toggle",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_topbar_tsx",
+      "target": "theme_provider",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_topbar_tsx",
+      "target": "topbar_gettodaylabel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/topbar.tsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_footer_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/footer.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_user_sync_tsx",
+      "target": "use_current_user",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/user-sync.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_user_sync_tsx",
+      "target": "user_sync_usersync",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/user-sync.tsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_sidebar_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/sidebar.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_sidebar_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/sidebar.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_sidebar_tsx",
+      "target": "image",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/sidebar.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_sidebar_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/sidebar.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_sidebar_tsx",
+      "target": "utils",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/sidebar.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_page_transition_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/page-transition.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_page_transition_tsx",
+      "target": "page_transition_pagetransition",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/page-transition.tsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_page_header_tsx",
+      "target": "utils",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/page-header.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_page_header_tsx",
+      "target": "page_header_pageheader",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/page-header.tsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_mobile_nav_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/mobile-nav.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_mobile_nav_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/mobile-nav.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_mobile_nav_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/mobile-nav.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_mobile_nav_tsx",
+      "target": "utils",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/mobile-nav.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_mobile_nav_tsx",
+      "target": "mobile_nav_mobilenav",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/mobile-nav.tsx",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_theme_toggle_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/theme-toggle.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_theme_toggle_tsx",
+      "target": "theme_provider",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/theme-toggle.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "components_layout_theme_toggle_tsx",
+      "target": "theme_toggle_themetoggle",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/layout/theme-toggle.tsx",
+      "source_location": "L10",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

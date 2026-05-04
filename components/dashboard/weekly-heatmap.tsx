@@ -5,11 +5,16 @@ import { Card } from "@/components/ui/card";
 import { Heatmap } from "@/components/Heatmap";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDateRange } from "@/hooks/use-completions";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { today, addDays } from "@/lib/date-utils";
 
 export function WeeklyHeatmap() {
+  const isMobile = useIsMobile();
   const dateStr = today();
   const sevenDaysAgo = addDays(dateStr, -6);
+  const year = new Date().getFullYear();
+  const yearStart = `${year}-01-01`;
+  const yearEnd = `${year}-12-31`;
 
   const { habits } = useHabits();
   const { completions } = useCompletionsForDateRange(sevenDaysAgo, dateStr);
@@ -36,8 +41,11 @@ export function WeeklyHeatmap() {
           </p>
         )}
       </div>
-      {/* days=14 keeps the grid alive even early in a week; falls back gracefully if sparse */}
-      <Heatmap days={14} />
+      <Heatmap
+        startDate={yearStart}
+        endDate={yearEnd}
+        cellSize={isMobile ? 16 : 12}
+      />
     </Card>
   );
 }

@@ -1,0 +1,130 @@
+{
+  "communities": {
+    "0": [
+      "card_card",
+      "card_cardcontent",
+      "card_carddescription",
+      "card_cardfooter",
+      "card_cardheader",
+      "card_cardtitle",
+      "components_ui_card_tsx"
+    ],
+    "1": [
+      "components_ui_dialog_tsx",
+      "dialog_dialogdescription",
+      "dialog_dialogheader",
+      "dialog_dialogoverlay",
+      "dialog_dialogtitle"
+    ],
+    "2": [
+      "avatar_avatar",
+      "avatar_avatarfallback",
+      "avatar_avatarimage",
+      "components_ui_avatar_tsx"
+    ],
+    "3": [
+      "components_ui_tabs_tsx",
+      "tabs_cn",
+      "tabs_tabslist"
+    ],
+    "4": [
+      "components_ui_streak_ribbon_tsx",
+      "streak_ribbon_flamesvg",
+      "streak_ribbon_streakribbon"
+    ],
+    "5": [
+      "components_ui_confetti_tsx",
+      "confetti_useconfetti"
+    ],
+    "6": [
+      "components_ui_progress_tsx",
+      "progress_progress"
+    ],
+    "7": [
+      "components_ui_pagecontainer_tsx",
+      "pagecontainer_pagecontainer"
+    ],
+    "8": [
+      "components_ui_label_tsx",
+      "label_label"
+    ],
+    "9": [
+      "components_ui_switch_tsx",
+      "switch_switch"
+    ],
+    "10": [
+      "badge_badge",
+      "components_ui_badge_tsx"
+    ],
+    "11": [
+      "components_ui_toast_tsx",
+      "toast_usetoast"
+    ],
+    "12": [
+      "components_ui_spinner_tsx",
+      "spinner_spinner"
+    ],
+    "13": [
+      "components_ui_dropdown_menu_tsx",
+      "dropdown_menu_dropdownmenucontent"
+    ],
+    "14": [
+      "components_ui_skeleton_tsx",
+      "skeleton_skeleton"
+    ],
+    "15": [
+      "components_ui_empty_state_tsx"
+    ],
+    "16": [
+      "components_ui_sectionheader_tsx"
+    ],
+    "17": [
+      "components_ui_button_tsx"
+    ],
+    "18": [
+      "components_ui_habitcard_tsx"
+    ],
+    "19": [
+      "components_ui_select_tsx"
+    ],
+    "20": [
+      "components_ui_textarea_tsx"
+    ],
+    "21": [
+      "components_ui_input_tsx"
+    ]
+  },
+  "cohesion": {
+    "0": 0.29,
+    "1": 0.4,
+    "2": 0.5,
+    "3": 0.67,
+    "4": 0.67,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0
+  },
+  "gods": [],
+  "surprises": [],
+  "questions": [
+    {
+      "type": "no_signal",
+      "question": null,
+      "why": "Not enough signal to generate questions. This usually means the corpus has no AMBIGUOUS edges, no bridge nodes, no INFERRED relationships, and all communities are tightly cohesive. Add more files or run with --mode deep to extract richer edges."
+    }
+  ]
+}

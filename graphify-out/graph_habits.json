@@ -1,0 +1,238 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "habit-completion-button.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-completion-button.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_completion_button_tsx",
+      "community": 1,
+      "norm_label": "habit-completion-button.tsx"
+    },
+    {
+      "label": "handleClick()",
+      "file_type": "code",
+      "source_file": "components/habits/habit-completion-button.tsx",
+      "source_location": "L26",
+      "id": "habit_completion_button_handleclick",
+      "community": 1,
+      "norm_label": "handleclick()"
+    },
+    {
+      "label": "habit-form.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-form.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_form_tsx",
+      "community": 2,
+      "norm_label": "habit-form.tsx"
+    },
+    {
+      "label": "handleFormSubmit()",
+      "file_type": "code",
+      "source_file": "components/habits/habit-form.tsx",
+      "source_location": "L44",
+      "id": "habit_form_handleformsubmit",
+      "community": 2,
+      "norm_label": "handleformsubmit()"
+    },
+    {
+      "label": "habit-menu.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-menu.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_menu_tsx",
+      "community": 3,
+      "norm_label": "habit-menu.tsx"
+    },
+    {
+      "label": "handleDelete()",
+      "file_type": "code",
+      "source_file": "components/habits/habit-menu.tsx",
+      "source_location": "L18",
+      "id": "habit_menu_handledelete",
+      "community": 3,
+      "norm_label": "handledelete()"
+    },
+    {
+      "label": "habit-streak-badge.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-streak-badge.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_streak_badge_tsx",
+      "community": 4,
+      "norm_label": "habit-streak-badge.tsx"
+    },
+    {
+      "label": "HabitStreakBadge()",
+      "file_type": "code",
+      "source_file": "components/habits/habit-streak-badge.tsx",
+      "source_location": "L12",
+      "id": "habit_streak_badge_habitstreakbadge",
+      "community": 4,
+      "norm_label": "habitstreakbadge()"
+    },
+    {
+      "label": "habit-list.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-list.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_list_tsx",
+      "community": 6,
+      "norm_label": "habit-list.tsx"
+    },
+    {
+      "label": "habit-filters.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-filters.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_filters_tsx",
+      "community": 7,
+      "norm_label": "habit-filters.tsx"
+    },
+    {
+      "label": "habit-dialog.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-dialog.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_dialog_tsx",
+      "community": 0,
+      "norm_label": "habit-dialog.tsx"
+    },
+    {
+      "label": "CreateHabitDialog()",
+      "file_type": "code",
+      "source_file": "components/habits/habit-dialog.tsx",
+      "source_location": "L15",
+      "id": "habit_dialog_createhabitdialog",
+      "community": 0,
+      "norm_label": "createhabitdialog()"
+    },
+    {
+      "label": "EditHabitDialog()",
+      "file_type": "code",
+      "source_file": "components/habits/habit-dialog.tsx",
+      "source_location": "L49",
+      "id": "habit_dialog_edithabitdialog",
+      "community": 0,
+      "norm_label": "edithabitdialog()"
+    },
+    {
+      "label": "habit-card.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-card.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_card_tsx",
+      "community": 8,
+      "norm_label": "habit-card.tsx"
+    },
+    {
+      "label": "habit-milestone-hint.tsx",
+      "file_type": "code",
+      "source_file": "components/habits/habit-milestone-hint.tsx",
+      "source_location": "L1",
+      "id": "components_habits_habit_milestone_hint_tsx",
+      "community": 5,
+      "norm_label": "habit-milestone-hint.tsx"
+    },
+    {
+      "label": "HabitMilestoneHint()",
+      "file_type": "code",
+      "source_file": "components/habits/habit-milestone-hint.tsx",
+      "source_location": "L24",
+      "id": "habit_milestone_hint_habitmilestonehint",
+      "community": 5,
+      "norm_label": "habitmilestonehint()"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/habits/habit-completion-button.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "components_habits_habit_completion_button_tsx",
+      "_tgt": "habit_completion_button_handleclick",
+      "source": "components_habits_habit_completion_button_tsx",
+      "target": "habit_completion_button_handleclick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/habits/habit-form.tsx",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "components_habits_habit_form_tsx",
+      "_tgt": "habit_form_handleformsubmit",
+      "source": "components_habits_habit_form_tsx",
+      "target": "habit_form_handleformsubmit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/habits/habit-menu.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "components_habits_habit_menu_tsx",
+      "_tgt": "habit_menu_handledelete",
+      "source": "components_habits_habit_menu_tsx",
+      "target": "habit_menu_handledelete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/habits/habit-streak-badge.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "components_habits_habit_streak_badge_tsx",
+      "_tgt": "habit_streak_badge_habitstreakbadge",
+      "source": "components_habits_habit_streak_badge_tsx",
+      "target": "habit_streak_badge_habitstreakbadge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/habits/habit-dialog.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "components_habits_habit_dialog_tsx",
+      "_tgt": "habit_dialog_createhabitdialog",
+      "source": "components_habits_habit_dialog_tsx",
+      "target": "habit_dialog_createhabitdialog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/habits/habit-dialog.tsx",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_src": "components_habits_habit_dialog_tsx",
+      "_tgt": "habit_dialog_edithabitdialog",
+      "source": "components_habits_habit_dialog_tsx",
+      "target": "habit_dialog_edithabitdialog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/habits/habit-milestone-hint.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_src": "components_habits_habit_milestone_hint_tsx",
+      "_tgt": "habit_milestone_hint_habitmilestonehint",
+      "source": "components_habits_habit_milestone_hint_tsx",
+      "target": "habit_milestone_hint_habitmilestonehint",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": []
+}
