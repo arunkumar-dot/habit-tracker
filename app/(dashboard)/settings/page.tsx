@@ -1,42 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Check, Download, Smartphone, Trash2 } from "lucide-react";
+import { Download, Smartphone, Trash2 } from "lucide-react";
 import { usePWAInstall } from "@/hooks/use-pwa-install";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteAccountDialog } from "@/components/delete-account-dialog";
 import { ProfileAvatar } from "@/components/profile/profile-avatar";
-import { CityAutocomplete } from "@/components/profile/city-autocomplete";
+import { ProfileForm } from "@/components/profile/profile-form";
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { useToast } from "@/components/ui/toast";
 import { downloadUserDataExport } from "@/lib/export-client";
 import * as Sentry from "@sentry/nextjs";
-
-// ── Profile details schema (Age, Sex, Location only) ─────────────────────────
-
-const profileSchema = z.object({
-  age: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined ? undefined : Number(val)),
-    z.number().min(1).max(150).optional()
-  ),
-  sex: z.enum(["male", "female", "other"]).optional(),
-  location: z.string().optional(),
-});
-
-type ProfileFields = { age?: number; sex?: "male" | "female" | "other"; location?: string };
-
-const SEX_OPTIONS: { value: "male" | "female" | "other"; label: string }[] = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-  { value: "other", label: "Other" },
-];
 
 export default function SettingsPage() {
   const { getToken } = useAuth();
@@ -47,32 +24,6 @@ export default function SettingsPage() {
   const { state: installState, promptInstall } = usePWAInstall();
   const [isExporting, setIsExporting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [savedRecently, setSavedRecently] = useState(false);
-
-  const { register, handleSubmit, watch, setValue, reset, control, formState: { errors } } =
-    useForm<ProfileFields>({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      resolver: zodResolver(profileSchema) as any,
-      defaultValues: { age: undefined, sex: undefined, location: "" },
-    });
-
-  useEffect(() => {
-    if (user) {
-      reset({
-        age: user.age ?? undefined,
-        sex: user.sex ?? undefined,
-        location: user.location ?? "",
-      });
-    }
-  }, [user, reset]);
-
-  const selectedSex = watch("sex");
-
-  async function handleProfileSubmit(values: ProfileFields) {
-    await updateProfile({ name: user?.name ?? "", ...values });
-    setSavedRecently(true);
-    setTimeout(() => setSavedRecently(false), 2000);
-  }
 
   async function handleExport() {
     setIsExporting(true);
@@ -123,83 +74,24 @@ export default function SettingsPage() {
           )}
         </div>
 
-        {/* ── Profile details ──────────────────────────────────────────────── */}
+        {/* ── Profile form ─────────────────────────────────────────────────── */}
         <div
           className="rounded-lg p-6 shadow-warm-sm"
           style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
         >
-          <h2 className="text-base font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
-            Profile details
-          </h2>
-
           {isLoading ? (
-            <div className="space-y-4">
+            <div className="space-y-5">
+              <Skeleton height={56} className="rounded-xl" />
               <div className="grid grid-cols-2 gap-4">
                 <Skeleton height={56} className="rounded-xl" />
                 <Skeleton height={56} className="rounded-xl" />
               </div>
               <Skeleton height={56} className="rounded-xl" />
+              <Skeleton height={88} className="rounded-xl" />
               <Skeleton height={48} className="rounded-xl" />
             </div>
           ) : (
-            <form onSubmit={handleSubmit(handleProfileSubmit)} className="space-y-4">
-              {/* Age + Sex */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input
-                  label="Age"
-                  type="number"
-                  placeholder="e.g. 28"
-                  min={1}
-                  max={150}
-                  error={errors.age?.message}
-                  {...register("age")}
-                />
-
-                <div className="flex flex-col gap-1.5">
-                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-                    Sex
-                  </p>
-                  <div className="flex items-end gap-0">
-                    {SEX_OPTIONS.map((opt) => (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => setValue("sex", opt.value, { shouldValidate: true })}
-                        className="seg-btn flex-1"
-                        data-active={selectedSex === opt.value}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Location */}
-              <Controller
-                name="location"
-                control={control}
-                render={({ field }) => (
-                  <CityAutocomplete
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    error={errors.location?.message}
-                    name={field.name}
-                  />
-                )}
-              />
-
-              <Button
-                type="submit"
-                variant={savedRecently ? "success" : "primary"}
-                size="lg"
-                isLoading={isSaving}
-                className="w-full"
-              >
-                {savedRecently ? <><Check size={16} className="inline mr-1" />Saved!</> : isSaving ? "Saving…" : "Save"}
-              </Button>
-            </form>
+            <ProfileForm user={user} onSubmit={updateProfile} isSaving={isSaving} />
           )}
         </div>
 
@@ -229,7 +121,7 @@ export default function SettingsPage() {
         </div>
 
         {/* ── Install app ──────────────────────────────────────────────────── */}
-        {installState !== 'unavailable' && (
+        {installState !== "unavailable" && (
           <div
             className="rounded-lg p-6 shadow-warm-sm space-y-4"
             style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
@@ -239,13 +131,13 @@ export default function SettingsPage() {
                 Install app
               </h2>
               <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
-                {installState === 'installed'
+                {installState === "installed"
                   ? "HabitFlow is installed on this device."
                   : "Add HabitFlow to your home screen for quick access and offline support."}
               </p>
             </div>
 
-            {installState === 'ready' && (
+            {installState === "ready" && (
               <Button
                 variant="secondary"
                 size="md"
@@ -257,7 +149,7 @@ export default function SettingsPage() {
               </Button>
             )}
 
-            {installState === 'installed' && (
+            {installState === "installed" && (
               <p className="text-sm font-medium" style={{ color: "var(--success)" }}>
                 ✓ Installed
               </p>
