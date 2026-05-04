@@ -90,10 +90,6 @@ export default function SettingsPage() {
                 <Skeleton height={56} className="rounded-xl" />
                 <Skeleton height={56} className="rounded-xl" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Skeleton height={56} className="rounded-xl" />
-                <Skeleton height={56} className="rounded-xl" />
-              </div>
               <Skeleton height={56} className="rounded-xl" />
               <Skeleton height={88} className="rounded-xl" />
               <Skeleton height={48} className="rounded-xl" />
