@@ -3,22 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { LayoutDashboard, ListChecks, Clock, CalendarDays, BarChart3, Timer, Trophy, User, Sparkles, BookOpen, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/habits", icon: ListChecks, label: "Habits" },
-  { href: "/timeline", icon: Clock, label: "Timeline" },
-  { href: "/calendar", icon: CalendarDays, label: "Calendar" },
-  { href: "/analytics", icon: BarChart3, label: "Analytics" },
-  { href: "/insights", icon: Sparkles, label: "Insights" },
-  { href: "/journal", icon: BookOpen, label: "Journal" },
-  { href: "/pomodoro", icon: Timer, label: "Pomodoro" },
-  { href: "/milestones", icon: Trophy, label: "Milestones" },
-  { href: "/profile", icon: User, label: "Profile" },
-  { href: "/settings", icon: Settings, label: "Settings" },
-];
+import { NAV_ITEMS } from "@/lib/nav-config";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -65,7 +51,7 @@ export function Sidebar({ collapsed }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 px-2 py-4 space-y-1">
-        {navItems.map((item) => {
+        {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link

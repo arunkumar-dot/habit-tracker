@@ -1,11 +1,15 @@
 "use client";
 
-import { Dialog } from "@/components/ui/dialog";
+import { useRef, useState } from "react";
+import { ResponsiveDialog } from "@/components/ui/responsive-dialog";
+import { Button } from "@/components/ui/button";
 import { HabitForm, habitToFormValues } from "./habit-form";
 import { useHabitMutations } from "@/hooks/use-habit-mutations";
 import { useToast } from "@/components/ui/toast";
-import type { Habit, HabitId } from "@/types";
+import type { Habit } from "@/types";
 import type { HabitFormValues } from "@/lib/validations";
+
+// ─── Create ───────────────────────────────────────────────────────────────────
 
 interface CreateHabitDialogProps {
   isOpen: boolean;
@@ -15,6 +19,8 @@ interface CreateHabitDialogProps {
 export function CreateHabitDialog({ isOpen, onClose }: CreateHabitDialogProps) {
   const { createHabit } = useHabitMutations();
   const { showToast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(values: HabitFormValues) {
     try {
@@ -35,11 +41,47 @@ export function CreateHabitDialog({ isOpen, onClose }: CreateHabitDialogProps) {
   }
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose} title="New Habit" description="Build a new routine and track your progress.">
-      <HabitForm onSubmit={handleSubmit} onCancel={onClose} />
-    </Dialog>
+    <ResponsiveDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title="New Habit"
+      description="Build a new routine and track your progress."
+      footer={
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            className="flex-1"
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            className="flex-1"
+            onClick={() => formRef.current?.requestSubmit()}
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+          >
+            Create Habit
+          </Button>
+        </div>
+      }
+    >
+      <HabitForm
+        ref={formRef}
+        onSubmit={handleSubmit}
+        onCancel={onClose}
+        hideActions
+        onSubmittingChange={setIsSubmitting}
+      />
+    </ResponsiveDialog>
   );
 }
+
+// ─── Edit ─────────────────────────────────────────────────────────────────────
 
 interface EditHabitDialogProps {
   habit: Habit | null;
@@ -49,6 +91,8 @@ interface EditHabitDialogProps {
 export function EditHabitDialog({ habit, onClose }: EditHabitDialogProps) {
   const { updateHabit } = useHabitMutations();
   const { showToast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(values: HabitFormValues) {
     if (!habit) return;
@@ -71,20 +115,46 @@ export function EditHabitDialog({ habit, onClose }: EditHabitDialogProps) {
   }
 
   return (
-    <Dialog
+    <ResponsiveDialog
       isOpen={habit !== null}
       onClose={onClose}
       title="Edit Habit"
       description="Update your habit details."
+      footer={
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            className="flex-1"
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            className="flex-1"
+            onClick={() => formRef.current?.requestSubmit()}
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+          >
+            Save Changes
+          </Button>
+        </div>
+      }
     >
       {habit && (
         <HabitForm
+          ref={formRef}
           onSubmit={handleSubmit}
           onCancel={onClose}
           defaultValues={habitToFormValues(habit)}
           isEdit
+          hideActions
+          onSubmittingChange={setIsSubmitting}
         />
       )}
-    </Dialog>
+    </ResponsiveDialog>
   );
 }

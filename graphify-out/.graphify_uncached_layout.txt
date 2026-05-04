@@ -1,0 +1,8 @@
+components/layout/topbar.tsx
+components/layout/footer.tsx
+components/layout/user-sync.tsx
+components/layout/sidebar.tsx
+components/layout/page-transition.tsx
+components/layout/page-header.tsx
+components/layout/mobile-nav.tsx
+components/layout/theme-toggle.tsx

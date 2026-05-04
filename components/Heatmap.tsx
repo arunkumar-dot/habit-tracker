@@ -6,9 +6,8 @@ import { cellStyle } from "@/lib/heatmap";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const CELL_SIZE = 12;
+const DEFAULT_CELL_SIZE = 12;
 const CELL_GAP = 3;
-const CELL_STEP = CELL_SIZE + CELL_GAP;
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 // Only render labels for Mon, Wed, Fri rows to keep it tidy
 const LABELED_ROWS = new Set([1, 3, 5]);
@@ -36,9 +35,10 @@ function formatTooltip(date: string, count: number): string {
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 
-function HeatmapSkeleton() {
+function HeatmapSkeleton({ cellSize = DEFAULT_CELL_SIZE }: { cellSize?: number }) {
+  const height = 7 * (cellSize + CELL_GAP) - CELL_GAP + 16 + 4; // month label row + gap
   return (
-    <div className="animate-pulse" style={{ height: 108 }}>
+    <div className="animate-pulse" style={{ height }}>
       <div
         className="h-full w-full rounded-md"
         style={{ background: "var(--bg-sunken)" }}
@@ -54,12 +54,20 @@ interface HeatmapProps {
   onSelectDate?: (date: string) => void;
   /** Currently selected date (ISO) — highlights the matching cell */
   selectedDate?: string;
-  /** Number of days to show. Defaults to 365. */
+  /** Number of days to show (rolling window ending today). Ignored when startDate/endDate are set. */
   days?: number;
+  /** Fixed range start — use with endDate to show a full calendar year including future cells. */
+  startDate?: string;
+  /** Fixed range end. */
+  endDate?: string;
+  /** Size of each cell in px. Defaults to 12. */
+  cellSize?: number;
 }
 
-export function Heatmap({ onSelectDate, selectedDate, days = 365 }: HeatmapProps) {
-  const { grid, isLoading } = useHeatmapData(days);
+export function Heatmap({ onSelectDate, selectedDate, days, startDate, endDate, cellSize = DEFAULT_CELL_SIZE }: HeatmapProps) {
+  const CELL_STEP = cellSize + CELL_GAP;
+  const explicitRange = startDate && endDate ? { startDate, endDate } : undefined;
+  const { grid, isLoading } = useHeatmapData(days, explicitRange);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
   const handleMouseEnter = useCallback(
@@ -71,22 +79,20 @@ export function Heatmap({ onSelectDate, selectedDate, days = 365 }: HeatmapProps
       setTooltip({
         date,
         count,
-        x: rect.left - (parentRect?.left ?? 0) + CELL_SIZE / 2,
+        x: rect.left - (parentRect?.left ?? 0) + cellSize / 2,
         y: rect.top - (parentRect?.top ?? 0) - 8,
       });
     },
-    []
+    [cellSize]
   );
 
   const handleMouseLeave = useCallback(() => setTooltip(null), []);
 
-  if (isLoading) return <HeatmapSkeleton />;
+  if (isLoading) return <HeatmapSkeleton cellSize={cellSize} />;
   if (!grid) return null;
 
   const DAY_LABEL_WIDTH = 28;
   const totalWidth = DAY_LABEL_WIDTH + grid.weeks.length * CELL_STEP;
-  // 7 rows × CELL_STEP minus trailing gap
-  const gridHeight = 7 * CELL_STEP - CELL_GAP;
 
   return (
     <div>
@@ -143,9 +149,9 @@ export function Heatmap({ onSelectDate, selectedDate, days = 365 }: HeatmapProps
                 <div
                   key={label}
                   style={{
-                    height: CELL_SIZE,
+                    height: cellSize,
                     fontSize: 9,
-                    lineHeight: `${CELL_SIZE}px`,
+                    lineHeight: `${cellSize}px`,
                     color: LABELED_ROWS.has(row)
                       ? "var(--text-tertiary)"
                       : "transparent",
@@ -172,8 +178,8 @@ export function Heatmap({ onSelectDate, selectedDate, days = 365 }: HeatmapProps
                       <div
                         key={di}
                         style={{
-                          width: CELL_SIZE,
-                          height: CELL_SIZE,
+                          width: cellSize,
+                          height: cellSize,
                           borderRadius: 3,
                           cursor: cell.date ? "pointer" : "default",
                           outline: isSelected
@@ -247,8 +253,8 @@ export function Heatmap({ onSelectDate, selectedDate, days = 365 }: HeatmapProps
           <div
             key={level}
             style={{
-              width: CELL_SIZE,
-              height: CELL_SIZE,
+              width: cellSize,
+              height: cellSize,
               borderRadius: 3,
               ...cellStyle(level),
             }}
