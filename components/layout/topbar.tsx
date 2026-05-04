@@ -74,6 +74,14 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
 
         {/* Clerk user button — appearance adapts to current theme */}
         <UserButton
+          userProfileProps={{
+            appearance: {
+              elements: {
+                formField__firstName: { display: "none" },
+                formField__lastName: { display: "none" },
+              },
+            },
+          }}
           appearance={{
             variables: {
               colorPrimary: isLight ? "#C2410C" : "#E86F3C",
