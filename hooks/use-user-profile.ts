@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useToast } from "@/components/ui/toast";
@@ -28,6 +29,7 @@ export function useUserProfile(): {
   isUploading: boolean;
   error: string | null;
 } {
+  const { user: clerkUser } = useUser();
   const { isLoading: authLoading, isAuthenticated } = useConvexAuth();
   const { showToast } = useToast();
 
@@ -91,6 +93,11 @@ export function useUserProfile(): {
       await saveProfileImageMutation({
         storageId: storageId as Parameters<typeof saveProfileImageMutation>[0]["storageId"],
       });
+
+      // Step 4: sync the same image to Clerk so Manage Account reflects it
+      if (clerkUser) {
+        await clerkUser.setProfileImage({ file });
+      }
 
       showToast("Profile photo updated!", "success");
     } catch (err) {
