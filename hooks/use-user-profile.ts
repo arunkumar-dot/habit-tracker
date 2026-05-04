@@ -9,7 +9,8 @@ import type { Doc } from "@/convex/_generated/dataModel";
 export type ProfileUser = Doc<"users"> & { resolvedImageUrl: string | null };
 
 export interface ProfileFormValues {
-  name: string;
+  firstName: string;
+  lastName: string;
   age?: number | "";
   sex?: "male" | "female" | "other";
   location?: string;
@@ -51,7 +52,8 @@ export function useUserProfile(): {
     setError(null);
     try {
       await updateProfileMutation({
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         age: typeof data.age === "number" ? data.age : undefined,
         sex: data.sex,
         location: data.location || undefined,

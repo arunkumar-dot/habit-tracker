@@ -11,12 +11,9 @@ import { Button } from "@/components/ui/button";
 import { CityAutocomplete } from "./city-autocomplete";
 import type { ProfileFormValues, ProfileUser } from "@/hooks/use-user-profile";
 
-// ============================================
-// Validation schema
-// ============================================
-
 const profileSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
   age: z.preprocess(
     (val) => (val === "" || val === null || val === undefined ? undefined : Number(val)),
     z.number().min(1, "Age must be at least 1").max(150, "Age must be under 150").optional()
@@ -26,18 +23,14 @@ const profileSchema = z.object({
   bio: z.string().max(300, "Bio must be 300 characters or fewer").optional(),
 });
 
-// Use z.infer on the output type to avoid the `age: unknown` resolver mismatch
 type ProfileSchemaValues = {
-  name: string;
+  firstName: string;
+  lastName: string;
   age?: number;
   sex?: "male" | "female" | "other";
   location?: string;
   bio?: string;
 };
-
-// ============================================
-// Component
-// ============================================
 
 interface ProfileFormProps {
   user: ProfileUser | null | undefined;
@@ -66,7 +59,8 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(profileSchema) as any,
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       age: undefined,
       sex: undefined,
       location: "",
@@ -74,11 +68,11 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
     },
   });
 
-  // Pre-fill with existing user data once loaded
   useEffect(() => {
     if (user) {
       reset({
-        name: user.name ?? "",
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
         age: user.age ?? undefined,
         sex: user.sex ?? undefined,
         location: user.location ?? "",
@@ -98,15 +92,23 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
-      {/* Name */}
-      <Input
-        label="Name"
-        placeholder="Your name"
-        error={errors.name?.message}
-        {...register("name")}
-      />
+      {/* First name + Last name */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="First name"
+          placeholder="Jane"
+          error={errors.firstName?.message}
+          {...register("firstName")}
+        />
+        <Input
+          label="Last name"
+          placeholder="Smith"
+          error={errors.lastName?.message}
+          {...register("lastName")}
+        />
+      </div>
 
-      {/* Age + Sex row */}
+      {/* Age + Sex */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input
           label="Age"
@@ -118,31 +120,27 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
           {...register("age")}
         />
 
-        {/* Sex selector */}
         <div className="flex flex-col gap-1.5">
           <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
             Sex
           </p>
           <div className="flex items-end gap-0">
-            {SEX_OPTIONS.map((opt) => {
-              const isActive = selectedSex === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setValue("sex", opt.value, { shouldValidate: true })}
-                  className="seg-btn flex-1"
-                  data-active={isActive}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
+            {SEX_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setValue("sex", opt.value, { shouldValidate: true })}
+                className="seg-btn flex-1"
+                data-active={selectedSex === opt.value}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Location — city autocomplete */}
+      {/* Location */}
       <Controller
         name="location"
         control={control}
@@ -178,7 +176,6 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
         />
       </div>
 
-      {/* Save button */}
       <Button
         type="submit"
         variant={savedRecently ? "success" : "primary"}

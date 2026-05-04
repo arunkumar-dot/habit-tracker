@@ -2,10 +2,15 @@
 
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { Download, Trash2 } from "lucide-react";
+import { Download, Smartphone, Trash2 } from "lucide-react";
+import { usePWAInstall } from "@/hooks/use-pwa-install";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteAccountDialog } from "@/components/delete-account-dialog";
+import { ProfileAvatar } from "@/components/profile/profile-avatar";
+import { ProfileForm } from "@/components/profile/profile-form";
+import { useUserProfile } from "@/hooks/use-user-profile";
 import { useToast } from "@/components/ui/toast";
 import { downloadUserDataExport } from "@/lib/export-client";
 import * as Sentry from "@sentry/nextjs";
@@ -13,7 +18,10 @@ import * as Sentry from "@sentry/nextjs";
 export default function SettingsPage() {
   const { getToken } = useAuth();
   const { showToast } = useToast();
+  const { user, isLoading, updateProfile, uploadProfileImage, isSaving, isUploading } =
+    useUserProfile();
 
+  const { state: installState, promptInstall } = usePWAInstall();
   const [isExporting, setIsExporting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -31,11 +39,70 @@ export default function SettingsPage() {
     }
   }
 
+  const displayName = user
+    ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.name
+    : "";
+
   return (
     <>
       <PageHeader title="Settings" description="Manage your account and data" />
 
       <div className="max-w-lg mx-auto space-y-6">
+        {/* ── Avatar ───────────────────────────────────────────────────────── */}
+        <div
+          className="rounded-lg p-6 flex flex-col items-center shadow-warm-sm"
+          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
+        >
+          {isLoading ? (
+            <div className="flex flex-col items-center gap-3">
+              <Skeleton width={96} height={96} className="rounded-full" />
+              <Skeleton width={140} height={12} />
+              <Skeleton width={100} height={10} />
+            </div>
+          ) : (
+            <ProfileAvatar
+              imageUrl={user?.resolvedImageUrl}
+              name={displayName}
+              isUploading={isUploading}
+              onFileSelect={uploadProfileImage}
+            />
+          )}
+          {!isLoading && user && (
+            <div className="mt-4 text-center">
+              <p className="font-semibold text-base" style={{ color: "var(--text-primary)" }}>
+                {displayName}
+              </p>
+              <p className="text-sm mt-0.5" style={{ color: "var(--text-secondary)" }}>
+                {user.email}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Profile form ─────────────────────────────────────────────────── */}
+        <div
+          className="rounded-lg p-6 shadow-warm-sm"
+          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
+        >
+          {isLoading ? (
+            <div className="space-y-5">
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton height={56} className="rounded-xl" />
+                <Skeleton height={56} className="rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton height={56} className="rounded-xl" />
+                <Skeleton height={56} className="rounded-xl" />
+              </div>
+              <Skeleton height={56} className="rounded-xl" />
+              <Skeleton height={88} className="rounded-xl" />
+              <Skeleton height={48} className="rounded-xl" />
+            </div>
+          ) : (
+            <ProfileForm user={user} onSubmit={updateProfile} isSaving={isSaving} />
+          )}
+        </div>
+
         {/* ── Export ───────────────────────────────────────────────────────── */}
         <div
           className="rounded-lg p-6 shadow-warm-sm space-y-4"
@@ -49,7 +116,6 @@ export default function SettingsPage() {
               Download all your habit data as a JSON file.
             </p>
           </div>
-
           <Button
             variant="secondary"
             size="md"
@@ -61,6 +127,41 @@ export default function SettingsPage() {
             Export my data
           </Button>
         </div>
+
+        {/* ── Install app ──────────────────────────────────────────────────── */}
+        {installState !== "unavailable" && (
+          <div
+            className="rounded-lg p-6 shadow-warm-sm space-y-4"
+            style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
+          >
+            <div>
+              <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+                Install app
+              </h2>
+              <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+                {installState === "installed"
+                  ? "HabitFlow is installed on this device."
+                  : "Add HabitFlow to your home screen for quick access and offline support."}
+              </p>
+            </div>
+            {installState === "ready" && (
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={promptInstall}
+                className="flex items-center gap-2"
+              >
+                <Smartphone size={16} aria-hidden="true" />
+                Add to Home Screen
+              </Button>
+            )}
+            {installState === "installed" && (
+              <p className="text-sm font-medium" style={{ color: "var(--success)" }}>
+                ✓ Installed
+              </p>
+            )}
+          </div>
+        )}
 
         {/* ── Danger Zone ──────────────────────────────────────────────────── */}
         <div
@@ -79,7 +180,6 @@ export default function SettingsPage() {
               is immediate and cannot be undone.
             </p>
           </div>
-
           <Button
             variant="danger"
             size="md"

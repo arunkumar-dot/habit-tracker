@@ -9,6 +9,8 @@ export default defineSchema({
   users: defineTable({
     clerkId: v.string(), // Clerk user ID (JWT subject / tokenIdentifier)
     name: v.string(),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
     email: v.string(),
     imageUrl: v.optional(v.string()),        // Clerk-synced profile image URL
     // App-specific profile fields (all optional for zero-downtime migration)

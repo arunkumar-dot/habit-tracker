@@ -30,6 +30,8 @@ export function useCurrentUser(): { user: User | null | undefined; isLoading: bo
     // Sync Clerk user data into Convex
     upsertUser({
       name: clerkUser.fullName ?? clerkUser.username ?? "Anonymous",
+      firstName: clerkUser.firstName ?? undefined,
+      lastName: clerkUser.lastName ?? undefined,
       email: clerkUser.primaryEmailAddress?.emailAddress ?? "",
       imageUrl: clerkUser.imageUrl,
     }).catch(console.error);
