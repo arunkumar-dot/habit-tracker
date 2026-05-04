@@ -90,46 +90,56 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
             aria-hidden="true"
           />
         )}
-        {mounted && <UserButton
-          appearance={{
-            variables: {
-              colorPrimary: isLight ? "#C2410C" : "#E86F3C",
-              colorBackground: isLight ? "#FFFFFF" : "#231E1B",
-              colorText: isLight ? "#1C1B18" : "#F5F1EA",
-              colorTextSecondary: isLight ? "#57534E" : "#C8C2B8",
-              borderRadius: "10px",
-            },
-            elements: {
-              userButtonPopoverCard: {
-                background: isLight ? "#FFFFFF" : "#231E1B",
-                border: isLight ? "1px solid #E8E3DA" : "1px solid #2E2825",
+        {mounted && (
+          <UserButton
+            userProfileProps={{
+              appearance: {
+                elements: {
+                  formField__firstName: { display: "none" },
+                  formField__lastName: { display: "none" },
+                },
               },
-              userButtonPopoverActionButton: {
-                color: isLight ? "#1C1B18" : "#F5F1EA",
-                borderRadius: "8px",
+            }}
+            appearance={{
+              variables: {
+                colorPrimary: isLight ? "#C2410C" : "#E86F3C",
+                colorBackground: isLight ? "#FFFFFF" : "#231E1B",
+                colorText: isLight ? "#1C1B18" : "#F5F1EA",
+                colorTextSecondary: isLight ? "#57534E" : "#C8C2B8",
+                borderRadius: "10px",
               },
-              userButtonPopoverActionButtonText: {
-                color: isLight ? "#1C1B18" : "#F5F1EA",
+              elements: {
+                userButtonPopoverCard: {
+                  background: isLight ? "#FFFFFF" : "#231E1B",
+                  border: isLight ? "1px solid #E8E3DA" : "1px solid #2E2825",
+                },
+                userButtonPopoverActionButton: {
+                  color: isLight ? "#1C1B18" : "#F5F1EA",
+                  borderRadius: "8px",
+                },
+                userButtonPopoverActionButtonText: {
+                  color: isLight ? "#1C1B18" : "#F5F1EA",
+                },
+                userButtonPopoverActionButtonIcon: {
+                  color: isLight ? "#C2410C" : "#E86F3C",
+                },
+                userButtonPopoverUserFullName: {
+                  color: isLight ? "#1C1B18" : "#F5F1EA",
+                },
+                userButtonPopoverUserEmailAddress: {
+                  color: isLight ? "#57534E" : "#C8C2B8",
+                },
+                userPreviewMainIdentifier: {
+                  color: isLight ? "#1C1B18" : "#F5F1EA",
+                  fontWeight: "600",
+                },
+                userPreviewSecondaryIdentifier: {
+                  color: isLight ? "#57534E" : "#C8C2B8",
+                },
               },
-              userButtonPopoverActionButtonIcon: {
-                color: isLight ? "#C2410C" : "#E86F3C",
-              },
-              userButtonPopoverUserFullName: {
-                color: isLight ? "#1C1B18" : "#F5F1EA",
-              },
-              userButtonPopoverUserEmailAddress: {
-                color: isLight ? "#57534E" : "#C8C2B8",
-              },
-              userPreviewMainIdentifier: {
-                color: isLight ? "#1C1B18" : "#F5F1EA",
-                fontWeight: "600",
-              },
-              userPreviewSecondaryIdentifier: {
-                color: isLight ? "#57534E" : "#C8C2B8",
-              },
-            },
-          }}
-        />}
+            }}
+          />
+        )}
       </div>
     </header>
   );

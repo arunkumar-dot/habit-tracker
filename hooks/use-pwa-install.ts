@@ -1,53 +1,65 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-// Not in the TS standard lib yet
+type InstallState = "unavailable" | "ready" | "installed";
+
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-export type InstallState = 'unavailable' | 'ready' | 'installed';
+let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
-export function usePWAInstall() {
-  const [state, setState] = useState<InstallState>('unavailable');
-  const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
+export function usePWAInstall(): {
+  state: InstallState;
+  promptInstall: () => Promise<void>;
+} {
+  const [state, setState] = useState<InstallState>("unavailable");
 
   useEffect(() => {
-    // Already running as an installed PWA
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setState('installed');
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window.navigator as any).standalone === true;
+
+    if (isStandalone) {
+      setState("installed");
       return;
     }
 
-    function onBeforeInstallPrompt(e: Event) {
+    if (deferredPrompt) {
+      setState("ready");
+    }
+
+    const handleBeforeInstall = (e: Event) => {
       e.preventDefault();
-      setDeferred(e as BeforeInstallPromptEvent);
-      setState('ready');
-    }
+      deferredPrompt = e as BeforeInstallPromptEvent;
+      setState("ready");
+    };
 
-    function onAppInstalled() {
-      setDeferred(null);
-      setState('installed');
-    }
+    const handleAppInstalled = () => {
+      deferredPrompt = null;
+      setState("installed");
+    };
 
-    window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt);
-    window.addEventListener('appinstalled', onAppInstalled);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
+    window.addEventListener("appinstalled", handleAppInstalled);
+
     return () => {
-      window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', onAppInstalled);
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 
   async function promptInstall() {
-    if (!deferred) return;
-    await deferred.prompt();
-    const { outcome } = await deferred.userChoice;
-    if (outcome === 'accepted') {
-      setDeferred(null);
-      setState('installed');
+    if (!deferredPrompt) return;
+    await deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") {
+      setState("installed");
     }
+    deferredPrompt = null;
   }
 
   return { state, promptInstall };

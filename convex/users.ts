@@ -68,6 +68,8 @@ export const getCurrentUser = query({
 export const upsertUser = mutation({
   args: {
     name: v.string(),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
     email: v.string(),
     imageUrl: v.optional(v.string()),
   },
@@ -81,18 +83,27 @@ export const upsertUser = mutation({
       .unique();
 
     if (existing) {
-      // Update email and imageUrl only — do NOT overwrite user-edited name
+      // Sync email, imageUrl, and name fields from Clerk — do NOT overwrite
+      // firstName/lastName if the user has already edited them in settings
       await ctx.db.patch(existing._id, {
         email: args.email,
         imageUrl: args.imageUrl,
+        ...(existing.firstName === undefined && args.firstName
+          ? { firstName: args.firstName }
+          : {}),
+        ...(existing.lastName === undefined && args.lastName
+          ? { lastName: args.lastName }
+          : {}),
       });
       return existing._id;
     }
 
-    // Create new user record (name from Clerk on first creation)
+    // Create new user record with name fields from Clerk
     const userId = await ctx.db.insert("users", {
       clerkId: identity.subject,
       name: args.name,
+      firstName: args.firstName,
+      lastName: args.lastName,
       email: args.email,
       imageUrl: args.imageUrl,
       createdAt: Date.now(),
@@ -108,7 +119,8 @@ export const upsertUser = mutation({
  */
 export const updateProfile = mutation({
   args: {
-    name: v.string(),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
     age: v.optional(v.number()),
     sex: v.optional(v.union(v.literal("male"), v.literal("female"), v.literal("other"))),
     location: v.optional(v.string()),
@@ -117,8 +129,13 @@ export const updateProfile = mutation({
   handler: async (ctx, args) => {
     const user = await getAuthUser(ctx);
 
+    const firstName = args.firstName ?? user.firstName ?? "";
+    const lastName = args.lastName ?? user.lastName ?? "";
+
     await ctx.db.patch(user._id, {
-      name: args.name,
+      ...(args.firstName !== undefined ? { firstName: args.firstName } : {}),
+      ...(args.lastName !== undefined ? { lastName: args.lastName } : {}),
+      name: `${firstName} ${lastName}`.trim() || user.name,
       age: args.age,
       sex: args.sex,
       location: args.location,
