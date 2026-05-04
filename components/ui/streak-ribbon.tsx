@@ -5,11 +5,11 @@
  *
  * Spec (Phase 4):
  *   - ~56px wide × 28px tall rounded-rectangle badge
- *   - Gradient fill: terracotta (#C2410C) → amber (#E08A4B)
- *   - White text in --font-display, 16px, weight 400
+ *   - Gradient fill: deep terracotta (#7C2D12) → terracotta (#C2410C)
+ *   - White text in --font-display, 16px, weight 700
  *   - Custom 2-path flame SVG (no emoji)
  *   - Rotated −3° for personality
- *   - Warm shadow: 0 2px 6px rgba(194, 65, 12, 0.25)
+ *   - Warm shadow: 0 2px 6px rgba(194, 65, 12, 0.35)
  *   - Hidden when count < 1
  */
 
@@ -66,8 +66,8 @@ export function StreakRibbon({ count, className, title }: StreakRibbonProps) {
         height: "28px",
         padding: "0 8px",
         borderRadius: "6px",
-        background: "linear-gradient(135deg, #C2410C 0%, #E08A4B 100%)",
-        boxShadow: "0 2px 6px rgba(194, 65, 12, 0.25)",
+        background: "linear-gradient(135deg, #7C2D12 0%, #C2410C 100%)",
+        boxShadow: "0 2px 6px rgba(194, 65, 12, 0.35)",
         transform: "rotate(-3deg)",
         flexShrink: 0,
       }}
@@ -77,10 +77,11 @@ export function StreakRibbon({ count, className, title }: StreakRibbonProps) {
         style={{
           fontFamily: "var(--font-display)",
           fontSize: "16px",
-          fontWeight: 400,
+          fontWeight: 700,
           color: "white",
           lineHeight: 1,
           userSelect: "none",
+          textShadow: "0 1px 2px rgba(60, 10, 0, 0.4)",
         }}
       >
         {count}

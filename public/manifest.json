@@ -1,0 +1,25 @@
+{
+  "_comment": "ICONS TODO: Generate app icons using https://realfavicongenerator.net or https://www.pwabuilder.com/imageGenerator or run: npx pwa-asset-generator path/to/logo.svg public/icons. Required sizes: 192x192 and 512x512 for Android, 180x180 for iOS (apple-touch-icon). Current paths are placeholders — replace after generating real icons from the HabitFlow logo.",
+  "name": "HabitFlow",
+  "short_name": "HabitFlow",
+  "description": "Track your habits, monitor consistency, and visualize your daily routine with a beautiful timeline view.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8F4",
+  "theme_color": "#C2410C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

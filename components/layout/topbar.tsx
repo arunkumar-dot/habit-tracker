@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
 import { PanelLeft } from "lucide-react";
@@ -7,21 +8,29 @@ import { NotificationToggle } from "@/components/notifications/notification-togg
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { useTheme } from "@/components/providers/theme-provider";
 
-function getTodayLabel() {
-  return new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-}
-
 interface TopbarProps {
   onToggleSidebar: () => void;
 }
 
 export function Topbar({ onToggleSidebar }: TopbarProps) {
   const { theme } = useTheme();
-  const isLight = theme === "light";
+  const [mounted, setMounted] = useState(false);
+  const [dateLabel, setDateLabel] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+    setDateLabel(
+      new Date().toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      })
+    );
+  }, []);
+
+  // Use "light" before mount so server HTML and initial client render agree.
+  // After mount the real theme kicks in without a hydration mismatch.
+  const isLight = mounted ? theme === "light" : true;
 
   return (
     <header
@@ -53,7 +62,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
         </div>
       </div>
 
-      {/* Center: today's date */}
+      {/* Center: today's date — empty on SSR, filled after mount to avoid timezone mismatch */}
       <div className="hidden lg:flex flex-1 justify-center">
         <p
           style={{
@@ -63,7 +72,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
             color: "var(--text-secondary)",
           }}
         >
-          {getTodayLabel()}
+          {dateLabel}
         </p>
       </div>
 
@@ -72,8 +81,16 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
         <ThemeToggle />
         <NotificationToggle />
 
-        {/* Clerk user button — appearance adapts to current theme */}
-        <UserButton
+        {/* UserButton is client-only (ClerkHostRenderer adds DOM nodes not present in SSR HTML).
+            Render a placeholder on the server / first pass, swap in the real button after mount. */}
+        {!mounted && (
+          <div
+            className="w-8 h-8 rounded-full animate-pulse"
+            style={{ background: "var(--bg-sunken)" }}
+            aria-hidden="true"
+          />
+        )}
+        {mounted && <UserButton
           appearance={{
             variables: {
               colorPrimary: isLight ? "#C2410C" : "#E86F3C",
@@ -112,7 +129,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
               },
             },
           }}
-        />
+        />}
       </div>
     </header>
   );

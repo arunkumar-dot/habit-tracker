@@ -10,6 +10,8 @@ import { Footer } from "@/components/layout/footer";
 import { ToastProvider } from "@/components/ui/toast";
 import { ConfettiProvider } from "@/components/ui/confetti";
 import { NotificationProvider } from "@/components/notifications/notification-provider";
+import { OfflineBanner } from "@/components/layout/offline-banner";
+import { InstallPrompt } from "@/components/install-prompt";
 
 export default function DashboardLayout({
   children,
@@ -31,10 +33,12 @@ export default function DashboardLayout({
 
             {/* Main content area */}
             <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
+              <OfflineBanner />
               <Topbar onToggleSidebar={() => setCollapsed((c) => !c)} />
+              <InstallPrompt />
 
               <main
-                className="flex-1 overflow-y-auto pb-20 lg:pb-0"
+                className="flex-1 overflow-y-auto pb-28 lg:pb-0"
                 style={{ background: "var(--bg-base)" }}
               >
                 <div className="max-w-3xl mx-auto px-4 lg:px-6 py-6">
