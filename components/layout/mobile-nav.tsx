@@ -17,53 +17,84 @@ export function MobileNav() {
 
   return (
     <>
-      {/* ── Bottom tab bar ───────────────────────────────────────────────────── */}
+      {/* ── Floating pill nav ────────────────────────────────────────────────── */}
       <nav
         aria-label="Mobile navigation"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex"
-        style={{
-          background: "var(--bg-surface)",
-          borderTop: "1px solid var(--border)",
-          paddingBottom: "env(safe-area-inset-bottom)",
-        }}
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 px-4 pt-2"
+        style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0.75rem)" }}
       >
-        {PRIMARY_NAV.map((item) => {
-          const isActive =
-            pathname === item.href || pathname.startsWith(item.href + "/");
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex-1 flex flex-col items-center justify-center gap-1 py-3"
-              style={{
-                minHeight: 44,
-                color: isActive ? "var(--accent-primary)" : "var(--text-disabled)",
-              }}
-            >
-              <item.icon size={20} aria-hidden="true" />
-              <span className="text-[10px] font-medium leading-none">
-                {item.mobileLabel ?? item.label}
-              </span>
-            </Link>
-          );
-        })}
-
-        {/* More tab */}
-        <button
-          type="button"
-          onClick={() => setMoreOpen(true)}
-          className="flex-1 flex flex-col items-center justify-center gap-1 py-3 transition-colors"
+        <div
+          className="flex items-center"
           style={{
-            minHeight: 44,
-            color: isMoreActive ? "var(--accent-primary)" : "var(--text-disabled)",
+            background: "color-mix(in srgb, var(--bg-elevated) 88%, transparent)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            borderRadius: "100px",
+            padding: "5px",
+            border: "1px solid var(--border-subtle)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.1)",
           }}
-          aria-label="More navigation options"
-          aria-haspopup="dialog"
-          aria-expanded={moreOpen}
         >
-          <MoreHorizontal size={20} aria-hidden="true" />
-          <span className="text-[10px] font-medium leading-none">More</span>
-        </button>
+          {PRIMARY_NAV.map((item) => {
+            const isActive =
+              pathname === item.href || pathname.startsWith(item.href + "/");
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive ? "page" : undefined}
+                className="flex items-center justify-center transition-all duration-200"
+                style={{
+                  gap: "5px",
+                  // Active tab takes its natural width; inactive tabs share remaining space equally
+                  flex: isActive ? "0 0 auto" : "1",
+                  minWidth: 0,
+                  padding: isActive ? "9px 14px" : "9px 0",
+                  borderRadius: "100px",
+                  background: isActive ? "var(--accent)" : "transparent",
+                  color: isActive ? "#fff" : "var(--text-tertiary)",
+                  whiteSpace: "nowrap",
+                  minHeight: 44,
+                }}
+              >
+                <item.icon
+                  size={18}
+                  aria-hidden="true"
+                  strokeWidth={isActive ? 2.5 : 1.75}
+                />
+                {isActive && (
+                  <span className="text-sm font-semibold leading-none">
+                    {item.mobileLabel ?? item.label}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+
+          {/* More tab — icon only, highlights when a secondary page is active */}
+          <button
+            type="button"
+            onClick={() => setMoreOpen(true)}
+            className="flex items-center justify-center transition-all duration-200"
+            style={{
+              flex: "1",
+              minWidth: 0,
+              padding: "9px 0",
+              borderRadius: "100px",
+              background: isMoreActive
+                ? "color-mix(in srgb, var(--accent) 18%, transparent)"
+                : "transparent",
+              color: isMoreActive ? "var(--accent)" : "var(--text-tertiary)",
+              minHeight: 44,
+            }}
+            aria-label="More navigation options"
+            aria-haspopup="dialog"
+            aria-expanded={moreOpen}
+          >
+            <MoreHorizontal size={18} aria-hidden="true" />
+          </button>
+        </div>
       </nav>
 
       {/* ── More drawer ──────────────────────────────────────────────────────── */}
@@ -121,9 +152,9 @@ export function MobileNav() {
                     style={{
                       minHeight: 80,
                       padding: "12px 8px",
-                      color: isActive ? "var(--accent-primary)" : "var(--text-secondary)",
+                      color: isActive ? "var(--accent)" : "var(--text-secondary)",
                       background: isActive
-                        ? "color-mix(in srgb, var(--accent-primary) 10%, transparent)"
+                        ? "color-mix(in srgb, var(--accent) 10%, transparent)"
                         : "var(--bg-hover)",
                     }}
                   >

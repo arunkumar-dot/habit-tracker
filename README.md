@@ -230,11 +230,38 @@ habit-tracker/
 
 ---
 
+## PWA Support
+
+HabitFlow is a Progressive Web App. Users can install it to their home screen for a native-like experience.
+
+**Android (Chrome):**
+1. Open [tryhabitflow.com](https://tryhabitflow.com) in Chrome
+2. Tap the install banner, or Menu → Install app
+
+**iOS (Safari):**
+1. Open [tryhabitflow.com](https://tryhabitflow.com) in Safari
+2. Tap Share → Add to Home Screen
+
+**Features:**
+- Offline support — cached pages load without internet via service worker (`public/sw.js`)
+- Home screen icon (generate real icons with `npx pwa-asset-generator public/logo.svg public/icons`)
+- Fullscreen standalone mode (no browser chrome)
+- iOS splash screens — placeholder paths in `<head>`; generate images with `npx pwa-asset-generator` or [appsco.pe/developer/splash-screens](https://appsco.pe/developer/splash-screens)
+
+**Lighthouse PWA checklist:**
+- [x] Web app manifest (`public/manifest.json`)
+- [x] Service worker with offline fallback (`public/sw.js`)
+- [x] `theme-color` meta tag
+- [x] `apple-mobile-web-app-capable` meta tag
+- [ ] Real 192×192 and 512×512 PNG icons (placeholders in `public/icons/`)
+- [ ] Real iOS splash screen images (placeholders in `public/splash/`)
+
+---
+
 ## Roadmap
 
 - AI habit coach with personalized insights based on user data
 - Stripe billing for Pro tier (unlimited habits, AI features)
-- PWA support for installable mobile experience
 - Capacitor wrapper for App Store and Play Store presence
 
 ---

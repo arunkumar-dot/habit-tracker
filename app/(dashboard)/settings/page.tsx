@@ -5,7 +5,8 @@ import { useAuth } from "@clerk/nextjs";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Check, Download, Trash2 } from "lucide-react";
+import { Check, Download, Smartphone, Trash2 } from "lucide-react";
+import { usePWAInstall } from "@/hooks/use-pwa-install";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +44,7 @@ export default function SettingsPage() {
   const { user, isLoading, updateProfile, uploadProfileImage, isSaving, isUploading } =
     useUserProfile();
 
+  const { state: installState, promptInstall } = usePWAInstall();
   const [isExporting, setIsExporting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [savedRecently, setSavedRecently] = useState(false);
@@ -225,6 +227,43 @@ export default function SettingsPage() {
             Export my data
           </Button>
         </div>
+
+        {/* ── Install app ──────────────────────────────────────────────────── */}
+        {installState !== 'unavailable' && (
+          <div
+            className="rounded-lg p-6 shadow-warm-sm space-y-4"
+            style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
+          >
+            <div>
+              <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+                Install app
+              </h2>
+              <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+                {installState === 'installed'
+                  ? "HabitFlow is installed on this device."
+                  : "Add HabitFlow to your home screen for quick access and offline support."}
+              </p>
+            </div>
+
+            {installState === 'ready' && (
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={promptInstall}
+                className="flex items-center gap-2"
+              >
+                <Smartphone size={16} aria-hidden="true" />
+                Add to Home Screen
+              </Button>
+            )}
+
+            {installState === 'installed' && (
+              <p className="text-sm font-medium" style={{ color: "var(--success)" }}>
+                ✓ Installed
+              </p>
+            )}
+          </div>
+        )}
 
         {/* ── Danger Zone ──────────────────────────────────────────────────── */}
         <div
