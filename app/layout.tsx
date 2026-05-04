@@ -48,6 +48,7 @@ export const metadata: Metadata = {
     title: "HabitFlow",
   },
   icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     apple: "/icons/apple-touch-icon.png",
   },
 };
