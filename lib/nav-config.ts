@@ -7,7 +7,6 @@ import {
   BarChart3,
   Timer,
   Trophy,
-  User,
   Sparkles,
   BookOpen,
   Settings,
@@ -31,7 +30,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/journal",    icon: BookOpen,        label: "Journal" },
   { href: "/pomodoro",   icon: Timer,           label: "Pomodoro", mobileLabel: "Focus" },
   { href: "/milestones", icon: Trophy,          label: "Milestones" },
-  { href: "/profile",    icon: User,            label: "Profile" },
   { href: "/settings",   icon: Settings,        label: "Settings" },
 ];
 
