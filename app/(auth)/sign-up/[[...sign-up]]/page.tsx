@@ -5,7 +5,7 @@ import { clerkDarkAppearance } from "@/lib/clerk-appearance";
 export default function SignUpPage() {
   return (
     <div className="flex flex-col items-center gap-4">
-      <SignUp appearance={clerkDarkAppearance} />
+      <SignUp appearance={clerkDarkAppearance} forceRedirectUrl="/dashboard" />
 
       {/* Legal acceptance notice — Clerk has no native slot for this */}
       <p className="text-xs text-center max-w-xs" style={{ color: "var(--text-tertiary)" }}>
