@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAction, useQuery } from "convex/react";
+import { useAction, useQuery, useConvexAuth } from "convex/react";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { AlertTriangle, Trash2, X } from "lucide-react";
 import { api } from "@/convex/_generated/api";
@@ -44,8 +44,9 @@ export function DeleteAccountDialog({ isOpen, onClose }: DeleteAccountDialogProp
   const { signOut } = useAuth();
   const { user } = useUser();
   const { showToast } = useToast();
+  const { isAuthenticated } = useConvexAuth();
 
-  const summary = useQuery(api.userData.getUserDataSummary);
+  const summary = useQuery(api.userData.getUserDataSummary, isAuthenticated ? {} : "skip");
   const deleteMyAccount = useAction(api.deleteAccount.deleteMyAccount);
 
   const userEmail = user?.primaryEmailAddress?.emailAddress ?? "";
