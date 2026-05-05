@@ -92,6 +92,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
         )}
         {mounted && (
           <UserButton
+            afterSignOutUrl="/sign-in"
             userProfileProps={{
               appearance: {
                 elements: {

@@ -24,7 +24,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           Your account has been deleted.
         </div>
       )}
-      <SignIn appearance={clerkDarkAppearance} forceRedirectUrl="/dashboard" />
+      <SignIn appearance={clerkDarkAppearance} fallbackRedirectUrl="/dashboard" />
     </div>
   );
 }
