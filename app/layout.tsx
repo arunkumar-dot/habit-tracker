@@ -100,7 +100,7 @@ export default function RootLayout({
         <link rel="apple-touch-startup-image" media="screen and (device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/splash/iPad_mini_portrait.png" />
       </head>
       <body className="h-full antialiased" suppressHydrationWarning>
-        <ClerkProvider>
+        <ClerkProvider signInUrl="/sign-in" signUpUrl="/sign-up">
           <SentryUserContext />
           <ServiceWorkerProvider />
           <ConvexClientProvider>
