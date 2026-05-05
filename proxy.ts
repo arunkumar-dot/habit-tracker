@@ -1,5 +1,4 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
@@ -14,26 +13,20 @@ const isProtectedRoute = createRouteMatcher([
 
 /**
  * Next.js 16 Proxy (formerly middleware).
- * Protects all dashboard routes — redirects unauthenticated users to /sign-in.
- * Uses NextResponse.redirect instead of auth.protect() to avoid Clerk routing
- * unauthenticated users to accounts.tryhabitflow.com (the Account Portal).
+ * Uses auth.protect() so Clerk handles the post-sign-in handshake phase
+ * correctly — the manual userId check was redirecting during handshake,
+ * causing a sign-in loop. signInUrl is set on ClerkProvider + env vars so
+ * auth.protect() redirects to /sign-in, not accounts.tryhabitflow.com.
  */
 export const proxy = clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
-    const { userId } = await auth();
-    if (!userId) {
-      const signInUrl = new URL("/sign-in", req.url);
-      signInUrl.searchParams.set("redirect_url", req.url);
-      return NextResponse.redirect(signInUrl);
-    }
+    await auth.protect();
   }
 });
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
     "/(api|trpc)(.*)",
   ],
 };
