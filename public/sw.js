@@ -10,9 +10,10 @@ const PASSTHROUGH = [
   // Convex real-time (HTTP + WebSocket)
   /convex\.cloud/,
   /convex\.site/,
-  // Clerk auth
+  // Clerk auth — all Clerk domains including account portal
   /clerk\.accounts\.dev/,
   /clerk\.com/,
+  /accounts\.tryhabitflow\.com/,
   /\/__clerk/,
   /\/api\/auth/,
   // Firebase push-notification SW endpoint
@@ -147,7 +148,7 @@ async function staleWhileRevalidate(request, cacheName) {
       if (response.ok) cache.put(request, response.clone());
       return response;
     })
-    .catch(() => cached); // if network fails, stale is fine
+    .catch(() => cached ?? new Response('Offline', { status: 503 }));
 
-  return cached || fetchPromise;
+  return cached ?? fetchPromise;
 }
