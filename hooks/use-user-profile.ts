@@ -10,8 +10,6 @@ import type { Doc } from "@/convex/_generated/dataModel";
 export type ProfileUser = Doc<"users"> & { resolvedImageUrl: string | null };
 
 export interface ProfileFormValues {
-  firstName: string;
-  lastName: string;
   age?: number | "";
   sex?: "male" | "female" | "other";
   location?: string;
@@ -62,17 +60,11 @@ export function useUserProfile(): {
     setError(null);
     try {
       await updateProfileMutation({
-        firstName: data.firstName,
-        lastName: data.lastName,
         age: typeof data.age === "number" ? data.age : undefined,
         sex: data.sex,
         location: data.location || undefined,
         bio: data.bio || undefined,
       });
-      // Sync name to Clerk so the account screen reflects it
-      if (clerkUser) {
-        await clerkUser.update({ firstName: data.firstName, lastName: data.lastName });
-      }
       showToast("Profile saved!", "success");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to save profile";

@@ -119,8 +119,6 @@ export const upsertUser = mutation({
  */
 export const updateProfile = mutation({
   args: {
-    firstName: v.optional(v.string()),
-    lastName: v.optional(v.string()),
     age: v.optional(v.number()),
     sex: v.optional(v.union(v.literal("male"), v.literal("female"), v.literal("other"))),
     location: v.optional(v.string()),
@@ -129,13 +127,7 @@ export const updateProfile = mutation({
   handler: async (ctx, args) => {
     const user = await getAuthUser(ctx);
 
-    const firstName = args.firstName ?? user.firstName ?? "";
-    const lastName = args.lastName ?? user.lastName ?? "";
-
     await ctx.db.patch(user._id, {
-      ...(args.firstName !== undefined ? { firstName: args.firstName } : {}),
-      ...(args.lastName !== undefined ? { lastName: args.lastName } : {}),
-      name: `${firstName} ${lastName}`.trim() || user.name,
       age: args.age,
       sex: args.sex,
       location: args.location,

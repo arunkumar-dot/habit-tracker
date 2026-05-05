@@ -12,8 +12,6 @@ import { CityAutocomplete } from "./city-autocomplete";
 import type { ProfileFormValues, ProfileUser } from "@/hooks/use-user-profile";
 
 const profileSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
   age: z.preprocess(
     (val) => (val === "" || val === null || val === undefined ? undefined : Number(val)),
     z.number().min(1, "Age must be at least 1").max(150, "Age must be under 150").optional()
@@ -24,8 +22,6 @@ const profileSchema = z.object({
 });
 
 type ProfileSchemaValues = {
-  firstName: string;
-  lastName: string;
   age?: number;
   sex?: "male" | "female" | "other";
   location?: string;
@@ -59,8 +55,6 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(profileSchema) as any,
     defaultValues: {
-      firstName: "",
-      lastName: "",
       age: undefined,
       sex: undefined,
       location: "",
@@ -71,8 +65,6 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
   useEffect(() => {
     if (user) {
       reset({
-        firstName: user.firstName ?? "",
-        lastName: user.lastName ?? "",
         age: user.age ?? undefined,
         sex: user.sex ?? undefined,
         location: user.location ?? "",
@@ -92,22 +84,6 @@ export function ProfileForm({ user, onSubmit, isSaving }: ProfileFormProps) {
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
-      {/* First name + Last name */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input
-          label="First name"
-          placeholder="Jane"
-          error={errors.firstName?.message}
-          {...register("firstName")}
-        />
-        <Input
-          label="Last name"
-          placeholder="Smith"
-          error={errors.lastName?.message}
-          {...register("lastName")}
-        />
-      </div>
-
       {/* Age + Sex */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input
