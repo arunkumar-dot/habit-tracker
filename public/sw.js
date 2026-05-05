@@ -1,6 +1,6 @@
 // HabitFlow offline service worker
 // Bump CACHE_VERSION to force cache invalidation on next deploy
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v3';
 const STATIC_CACHE  = `habitflow-static-${CACHE_VERSION}`;
 const IMAGE_CACHE   = `habitflow-images-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `habitflow-dynamic-${CACHE_VERSION}`;
@@ -15,7 +15,8 @@ const PASSTHROUGH = [
   /clerk\.com/,
   /accounts\.tryhabitflow\.com/,
   /\/__clerk/,
-  /\/api\/auth/,
+  // All API routes — user-specific, must never be stale
+  /\/api\//,
   // Firebase push-notification SW endpoint
   /\/api\/firebase-messaging-sw/,
   // Sentry tunnel
@@ -24,6 +25,14 @@ const PASSTHROUGH = [
   /\/_next\/webpack-hmr/,
   // RSC payloads — always fresh
   /_rsc=/,
+  // User-specific pages — serving a cached version after account switch
+  // causes stale user data; always fetch from network
+  /\/dashboard(\/|$)/,
+  /\/profile(\/|$)/,
+  /\/settings(\/|$)/,
+  /\/habits(\/|$)/,
+  /\/analytics(\/|$)/,
+  /\/journal(\/|$)/,
 ];
 
 // Cache-first: versioned Next.js chunks + local static assets
