@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -19,9 +20,12 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const { user } = useUser();
 
+  // Key on userId so all dashboard components remount when the signed-in
+  // user changes, clearing stale Convex query state from the previous session.
   return (
-    <ToastProvider>
+    <ToastProvider key={user?.id}>
       <ConfettiProvider>
         {/* Sync Clerk user → Convex on every dashboard load */}
         <UserSync />
