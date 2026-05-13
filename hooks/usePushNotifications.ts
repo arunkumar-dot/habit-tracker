@@ -61,13 +61,12 @@ export function usePushNotifications() {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") return "denied";
 
-      // 2. Register the service worker (served dynamically with env vars baked in)
-      const swReg = await navigator.serviceWorker.register(
-        "/api/firebase-messaging-sw",
-        { scope: "/" }
-      );
-      // Wait for the SW to be active before calling getToken
-      await navigator.serviceWorker.ready;
+      // 2. Reuse the single SW already registered by ServiceWorkerProvider.
+      //    We must NOT register a second SW here — two registrations at the
+      //    same scope fight for control, leaving the FCM SW in "waiting" state
+      //    so getToken() silently fails. navigator.serviceWorker.ready returns
+      //    the active registration (our unified /api/firebase-messaging-sw SW).
+      const swReg = await navigator.serviceWorker.ready;
 
       // 3. Get FCM messaging instance (async — firebase/messaging is lazy-loaded
       //    to avoid the module running browser APIs during SSR)
