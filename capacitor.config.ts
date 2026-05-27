@@ -34,8 +34,7 @@ const config: CapacitorConfig = {
       showSpinner: false,
       splashFullScreen: true,
       splashImmersive: true,
-      fadeInDuration: 400,
-      fadeOutDuration: 400,
+      launchFadeOutDuration: 400,
     },
   },
 };
