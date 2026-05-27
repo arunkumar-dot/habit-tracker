@@ -23,6 +23,9 @@
 /.next/
 /out/
 
+# Generated at build time by scripts/generate-sw.mjs (contains baked-in env vars)
+/public/firebase-messaging-sw.js
+
 # production
 /build
 
@@ -53,6 +56,9 @@ next-env.d.ts
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Claude Code local settings (machine-specific)
+.claude/
 
 # Legal reference files — Termly/FreePrivacyPolicy source HTML; not for version control
 habitflow-privacy.html
