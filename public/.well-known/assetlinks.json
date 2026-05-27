@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.tryhabitflow.app",
+      "sha256_cert_fingerprints": [
+        "C3:63:FC:63:F2:5D:0F:9C:C3:31:67:C2:CC:6E:3D:CC:F2:66:3A:3A:7F:95:77:A5:A5:F9:B8:F8:E8:E9:41:05"
+      ]
+    }
+  }
+]
