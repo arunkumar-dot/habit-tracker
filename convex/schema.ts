@@ -21,6 +21,8 @@ export default defineSchema({
     profileImageStorageId: v.optional(v.id("_storage")), // Custom uploaded image
     updatedAt: v.optional(v.number()),       // Unix timestamp ms of last profile edit
     createdAt: v.number(), // Unix timestamp ms
+    identityStatement: v.optional(v.string()), // "Who do you want to become?" — onboarding answer
+    onboardingCompleted: v.optional(v.boolean()), // true once identity onboarding is done
   }).index("by_clerk_id", ["clerkId"]),
 
   /**

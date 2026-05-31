@@ -153,6 +153,25 @@ export const generateUploadUrl = mutation({
 });
 
 /**
+ * Mark identity onboarding as complete and save the user's identity statement.
+ * Called once after the two-screen onboarding flow.
+ */
+export const completeOnboarding = mutation({
+  args: {
+    identityStatement: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await getAuthUser(ctx);
+
+    await ctx.db.patch(user._id, {
+      identityStatement: args.identityStatement.trim(),
+      onboardingCompleted: true,
+      updatedAt: Date.now(),
+    });
+  },
+});
+
+/**
  * Save the storageId of a newly uploaded profile image to the user's record.
  */
 export const saveProfileImage = mutation({
