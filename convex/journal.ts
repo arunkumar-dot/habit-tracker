@@ -101,6 +101,33 @@ export const getByDate = query({
   },
 });
 
+/**
+ * Returns the first journal entry found at one of the provided candidate dates,
+ * in the order given. Used by the "Then" memory feature — caller passes dates
+ * in priority order (30d ago, 60d ago, 90d ago, 180d ago, 365d ago).
+ *
+ * Returns { entry } where entry is the first match, or null if none found.
+ */
+export const getThenMemory = query({
+  args: { candidateDates: v.array(v.string()) },
+  handler: async (ctx, args) => {
+    const user = await getAuthUser(ctx);
+
+    for (const date of args.candidateDates) {
+      if (!isValidISODate(date)) continue;
+      const entry = await ctx.db
+        .query("journalEntries")
+        .withIndex("by_user_date", (q) =>
+          q.eq("userId", user._id).eq("date", date)
+        )
+        .unique();
+      if (entry) return { entry };
+    }
+
+    return { entry: null };
+  },
+});
+
 // ============================================
 // MUTATIONS
 // ============================================

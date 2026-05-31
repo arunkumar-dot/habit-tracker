@@ -4,11 +4,15 @@ import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery, useMutation, useConvexAuth, usePaginatedQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Check } from "lucide-react";
-import { today as todayString } from "@/lib/date-utils";
+import { today as todayString, addDays } from "@/lib/date-utils";
 import { getDailyPrompt } from "@/lib/journalPrompts";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDateRange } from "@/hooks/use-completions";
+import { ThenMemoryCard } from "@/components/journal/then-memory-card";
 import type { Doc } from "@/convex/_generated/dataModel";
+
+// Memory interval candidates in priority order
+const MEMORY_INTERVALS = [30, 60, 90, 180, 365] as const;
 
 // ── Injected styles ───────────────────────────────────────────────────────────
 const PAGE_STYLE = `
@@ -50,6 +54,35 @@ function formatTodayLong(): string {
 }
 
 type SaveState = "idle" | "saving" | "saved" | "error" | "error-final";
+
+// ── Then Memory section ────────────────────────────────────────────────────────
+
+function ThenMemorySection({ todayStr }: { todayStr: string }) {
+  const { isAuthenticated } = useConvexAuth();
+
+  const candidateDates = useMemo(
+    () => MEMORY_INTERVALS.map((n) => addDays(todayStr, -n)),
+    [todayStr]
+  );
+
+  const result = useQuery(
+    api.journal.getThenMemory,
+    isAuthenticated ? { candidateDates } : "skip"
+  );
+
+  if (!result || !result.entry) return null;
+
+  const daysAgo = MEMORY_INTERVALS.find(
+    (n) => addDays(todayStr, -n) === result.entry!.date
+  );
+  if (!daysAgo) return null;
+
+  return (
+    <div style={{ marginTop: 24 }}>
+      <ThenMemoryCard entry={result.entry} daysAgo={daysAgo} />
+    </div>
+  );
+}
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function JournalPage() {
@@ -392,6 +425,9 @@ export default function JournalPage() {
           </div>
         </div>
       )}
+
+      {/* Then memory — shows a past entry from 30/60/90/180/365 days ago */}
+      <ThenMemorySection todayStr={todayStr} />
 
       {/* Past Entries */}
       <div style={{ marginTop: 48 }}>
