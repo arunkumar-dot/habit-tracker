@@ -1,15 +1,7 @@
 "use client";
 
-import { UpNextCard } from "@/components/dashboard/up-next-card";
-import { TodaysHabits } from "@/components/dashboard/todays-habits";
-import { WeeklyHeatmap } from "@/components/dashboard/weekly-heatmap";
+import { TodayScreen } from "@/components/dashboard/today-screen";
 
 export default function DashboardPage() {
-  return (
-    <>
-      <UpNextCard />
-      <TodaysHabits />
-      <WeeklyHeatmap />
-    </>
-  );
+  return <TodayScreen />;
 }
