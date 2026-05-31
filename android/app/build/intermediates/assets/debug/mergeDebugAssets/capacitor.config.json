@@ -1,0 +1,28 @@
+{
+	"appId": "com.tryhabitflow.app",
+	"appName": "Habit Flow",
+	"webDir": "out",
+	"server": {
+		"url": "https://tryhabitflow.com",
+		"cleartext": false,
+		"allowNavigation": [
+			"*.clerk.accounts.dev",
+			"*.clerk.com",
+			"accounts.google.com",
+			"*.google.com",
+			"github.com",
+			"api.github.com"
+		]
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 2000,
+			"backgroundColor": "#FAF8F4",
+			"androidScaleType": "CENTER_CROP",
+			"showSpinner": false,
+			"splashFullScreen": true,
+			"splashImmersive": true,
+			"launchFadeOutDuration": 400
+		}
+	}
+}
