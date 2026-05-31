@@ -14,7 +14,8 @@ export function InstallPrompt() {
   useEffect(() => {
     if (state !== 'ready') return;
     if (localStorage.getItem(DISMISSED_KEY)) return;
-    setVisible(true);
+    const timer = setTimeout(() => setVisible(true), 0);
+    return () => clearTimeout(timer);
   }, [state]);
 
   function dismiss() {

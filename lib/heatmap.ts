@@ -67,7 +67,7 @@ export function buildHeatmapGrid(
 
   const weeks: HeatmapCell[][] = [];
   const monthLabels: { label: string; weekIndex: number }[] = [];
-  let seenMonths = new Set<string>();
+  const seenMonths = new Set<string>();
 
   let cursor = gridStart;
   while (cursor <= gridEnd) {

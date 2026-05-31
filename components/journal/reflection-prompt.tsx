@@ -40,8 +40,12 @@ export function ReflectionPrompt() {
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const doSaveRef = useRef<(isRetry?: boolean) => Promise<void>>(async () => {});
   const contentRef = useRef(content);
-  contentRef.current = content;
+
+  useEffect(() => {
+    contentRef.current = content;
+  }, [content]);
 
   // Auto-grow textarea
   useEffect(() => {
@@ -83,12 +87,18 @@ export function ReflectionPrompt() {
         } else {
           setSaveState("error");
           setErrorMsg("Couldn't save — trying again...");
-          retryTimerRef.current = setTimeout(() => doSave(true), 3000);
+          retryTimerRef.current = setTimeout(() => {
+            void doSaveRef.current(true);
+          }, 3000);
         }
       }
     },
     [upsertEntry]
   );
+
+  useEffect(() => {
+    doSaveRef.current = doSave;
+  }, [doSave]);
 
   const handleRetry = () => {
     if (retryTimerRef.current) clearTimeout(retryTimerRef.current);

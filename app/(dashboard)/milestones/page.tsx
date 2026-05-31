@@ -16,7 +16,8 @@ export default function MilestonesPage() {
   // Default to first habit once loaded
   useEffect(() => {
     if (!selectedHabitId && habits && habits.length > 0) {
-      setSelectedHabitId(habits[0]!._id);
+      const timer = setTimeout(() => setSelectedHabitId(habits[0]!._id), 0);
+      return () => clearTimeout(timer);
     }
   }, [habits, selectedHabitId]);
 

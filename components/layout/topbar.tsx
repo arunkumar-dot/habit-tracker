@@ -18,14 +18,17 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
   const [dateLabel, setDateLabel] = useState("");
 
   useEffect(() => {
-    setMounted(true);
-    setDateLabel(
-      new Date().toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-      })
-    );
+    const timer = setTimeout(() => {
+      setMounted(true);
+      setDateLabel(
+        new Date().toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+        })
+      );
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Use "light" before mount so server HTML and initial client render agree.

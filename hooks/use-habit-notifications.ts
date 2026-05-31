@@ -19,10 +19,13 @@ export function useHabitNotifications(habits: Habit[]) {
 
   // Sync browser state after mount — runs client-side only, avoids hydration mismatch.
   useEffect(() => {
-    if ("Notification" in window) {
-      setPermission(Notification.permission);
-    }
-    setEnabled(localStorage.getItem(LS_KEY) === "true");
+    const timer = setTimeout(() => {
+      if ("Notification" in window) {
+        setPermission(Notification.permission);
+      }
+      setEnabled(localStorage.getItem(LS_KEY) === "true");
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
   const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 

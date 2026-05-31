@@ -24,12 +24,13 @@ export function usePWAInstall(): {
       (window.navigator as any).standalone === true;
 
     if (isStandalone) {
-      setState("installed");
-      return;
+      const timer = setTimeout(() => setState("installed"), 0);
+      return () => clearTimeout(timer);
     }
 
+    let readyTimer: ReturnType<typeof setTimeout> | null = null;
     if (deferredPrompt) {
-      setState("ready");
+      readyTimer = setTimeout(() => setState("ready"), 0);
     }
 
     const handleBeforeInstall = (e: Event) => {
@@ -47,6 +48,7 @@ export function usePWAInstall(): {
     window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
+      if (readyTimer) clearTimeout(readyTimer);
       window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
       window.removeEventListener("appinstalled", handleAppInstalled);
     };

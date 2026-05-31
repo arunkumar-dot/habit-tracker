@@ -72,21 +72,28 @@ export default function JournalPage() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const doSaveRef = useRef<(isRetry?: boolean) => Promise<void>>(async () => {});
   // Always-current content ref — prevents stale closure in doSave
   const contentRef = useRef(content);
-  contentRef.current = content;
+
+  useEffect(() => {
+    contentRef.current = content;
+  }, [content]);
 
   // Populate textarea once today's entry loads; autofocus when new
   useEffect(() => {
     if (loaded) return;
     if (todayEntry === undefined) return;
     const existingContent = todayEntry.entry?.content ?? "";
-    setContent(existingContent);
-    setLoaded(true);
-    // Only autofocus when the entry is empty (don't override edit scroll position)
-    if (!existingContent) {
-      setTimeout(() => textareaRef.current?.focus(), 50);
-    }
+    const timer = setTimeout(() => {
+      setContent(existingContent);
+      setLoaded(true);
+      // Only autofocus when the entry is empty (don't override edit scroll position)
+      if (!existingContent) {
+        setTimeout(() => textareaRef.current?.focus(), 50);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [todayEntry, loaded]);
 
   // Auto-grow textarea whenever content changes
@@ -130,12 +137,18 @@ export default function JournalPage() {
         } else {
           setSaveState("error");
           setErrorMsg("Couldn't save — trying again...");
-          retryTimerRef.current = setTimeout(() => doSave(true), 3000);
+          retryTimerRef.current = setTimeout(() => {
+            void doSaveRef.current(true);
+          }, 3000);
         }
       }
     },
     [upsertEntry]
   );
+
+  useEffect(() => {
+    doSaveRef.current = doSave;
+  }, [doSave]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;

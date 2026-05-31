@@ -8,7 +8,7 @@ export function OfflineBanner() {
 
   useEffect(() => {
     // Initialise from current state (not just event-driven)
-    setOffline(!navigator.onLine);
+    const initTimer = setTimeout(() => setOffline(!navigator.onLine), 0);
 
     const goOffline = () => setOffline(true);
     const goOnline  = () => setOffline(false);
@@ -16,6 +16,7 @@ export function OfflineBanner() {
     window.addEventListener('offline', goOffline);
     window.addEventListener('online',  goOnline);
     return () => {
+      clearTimeout(initTimer);
       window.removeEventListener('offline', goOffline);
       window.removeEventListener('online',  goOnline);
     };
