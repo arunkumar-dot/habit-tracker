@@ -6,6 +6,30 @@ export function ServiceWorkerProvider() {
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
 
+    if (process.env.NODE_ENV === 'development') {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((registrations) =>
+          Promise.all(registrations.map((registration) => registration.unregister()))
+        )
+        .catch((err) => console.warn('[SW] Unregistration failed:', err));
+
+      if ('caches' in window) {
+        caches
+          .keys()
+          .then((keys) =>
+            Promise.all(
+              keys
+                .filter((key) => key.startsWith('habitflow-'))
+                .map((key) => caches.delete(key))
+            )
+          )
+          .catch((err) => console.warn('[SW] Cache cleanup failed:', err));
+      }
+
+      return;
+    }
+
     // Register the unified service worker (offline caching + FCM).
     // Generated at build time by scripts/generate-sw.mjs with Firebase config
     // baked in. Served as a static file from /public so it works with

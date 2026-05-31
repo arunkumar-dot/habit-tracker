@@ -50,6 +50,38 @@ const CACHE_VERSION = 'v4';
 const STATIC_CACHE  = 'habitflow-static-'  + CACHE_VERSION;
 const IMAGE_CACHE   = 'habitflow-images-'  + CACHE_VERSION;
 const DYNAMIC_CACHE = 'habitflow-dynamic-' + CACHE_VERSION;
+const IS_DEV_HOST =
+  self.location.hostname === 'localhost' ||
+  self.location.hostname === '127.0.0.1' ||
+  self.location.hostname === '0.0.0.0' ||
+  self.location.hostname.startsWith('192.168.') ||
+  self.location.hostname.startsWith('10.') ||
+  /^172\\.(1[6-9]|2\\d|3[0-1])\\./.test(self.location.hostname);
+
+async function unregisterDevServiceWorker() {
+  const keys = await caches.keys();
+  await Promise.all(
+    keys
+      .filter((key) => key.startsWith('habitflow-'))
+      .map((key) => caches.delete(key))
+  );
+  await self.registration.unregister();
+  const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+  await Promise.all(clients.map((client) => client.navigate(client.url)));
+}
+
+if (IS_DEV_HOST) {
+  self.addEventListener('install', (event) => {
+    self.skipWaiting();
+    event.waitUntil(unregisterDevServiceWorker());
+  });
+
+  self.addEventListener('activate', (event) => {
+    event.waitUntil(unregisterDevServiceWorker());
+  });
+
+  self.addEventListener('fetch', () => {});
+} else {
 
 const PASSTHROUGH_SUBSTRINGS = [
   'convex.cloud',
@@ -215,6 +247,8 @@ self.addEventListener('notificationclick', function(event) {
   );
 });
 ` : '// Firebase not configured — push notifications disabled.'}
+
+}
 `;
 
 writeFileSync(resolve(root, 'public', 'firebase-messaging-sw.js'), swContent);

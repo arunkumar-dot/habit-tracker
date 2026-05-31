@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import { ProvidersWrapper } from "@/components/providers/providers-wrapper";
 import { CapacitorInit } from "@/components/capacitor-init";
 import "./globals.css";
@@ -70,7 +71,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/*
           iOS splash screens — static images shown while the app launches in standalone mode.
           Generate these from the HabitFlow logo + brand colors (#FAF8F4 background, #C2410C accent)
@@ -97,6 +97,9 @@ export default function RootLayout({
         <link rel="apple-touch-startup-image" media="screen and (device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/splash/iPad_mini_portrait.png" />
       </head>
       <body className="h-full antialiased" suppressHydrationWarning>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
         <CapacitorInit />
         <ProvidersWrapper>{children}</ProvidersWrapper>
       </body>
