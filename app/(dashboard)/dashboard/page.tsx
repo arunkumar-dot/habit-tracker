@@ -4,6 +4,7 @@ import { CharacterBanner } from "@/components/rpg/character-banner";
 import { UpNextCard } from "@/components/dashboard/up-next-card";
 import { TodaysHabits } from "@/components/dashboard/todays-habits";
 import { StreakThreadCard } from "@/components/dashboard/streak-thread-card";
+import { AchievementSpotlight } from "@/components/dashboard/achievement-spotlight";
 import { WeeklyHeatmap } from "@/components/dashboard/weekly-heatmap";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDateRange } from "@/hooks/use-completions";
@@ -28,6 +29,7 @@ export default function DashboardPage() {
       />
       <UpNextCard />
       <TodaysHabits />
+      <AchievementSpotlight />
       <StreakThreadCard completions={completions} isLoading={completionsLoading} />
       <WeeklyHeatmap />
     </>

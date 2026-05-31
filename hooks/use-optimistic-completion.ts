@@ -2,9 +2,11 @@
 
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useToast } from "@/components/ui/toast";
 import { useConfetti } from "@/components/ui/confetti";
+import { useAchievementUnlock } from "@/components/providers/achievement-provider";
 import { MILESTONES } from "@/lib/milestone-config";
+
+const MILESTONE_XP = 50;
 import type { HabitCompletion, HabitId } from "@/types";
 import type { Id } from "@/convex/_generated/dataModel";
 
@@ -21,8 +23,8 @@ let pendingToggleTimestamp = 0;
  */
 export function useOptimisticCompletion(habitId: HabitId, date: string) {
   const { isLoading: authLoading, isAuthenticated } = useConvexAuth();
-  const { showToast } = useToast();
   const { triggerConfetti } = useConfetti();
+  const { showAchievement } = useAchievementUnlock();
 
   const raw = useQuery(
     api.completions.getCompletionsForDate,
@@ -81,10 +83,13 @@ export function useOptimisticCompletion(habitId: HabitId, date: string) {
       for (const days of result.newMilestones) {
         const config = MILESTONES.find((m) => m.daysRequired === days);
         if (config) {
-          showToast(
-            `🎉 Milestone unlocked: ${config.icon} ${config.name} — ${config.description}`,
-            "success"
-          );
+          showAchievement({
+            name: config.name,
+            description: config.description,
+            icon: config.icon,
+            tier: config.tier,
+            xp: MILESTONE_XP,
+          });
         }
       }
     }

@@ -13,6 +13,7 @@ import { PageTransition } from "@/components/layout/page-transition";
 import { Footer } from "@/components/layout/footer";
 import { ToastProvider } from "@/components/ui/toast";
 import { ConfettiProvider } from "@/components/ui/confetti";
+import { AchievementProvider } from "@/components/providers/achievement-provider";
 import { NotificationProvider } from "@/components/notifications/notification-provider";
 import { OfflineBanner } from "@/components/layout/offline-banner";
 import { InstallPrompt } from "@/components/install-prompt";
@@ -91,6 +92,7 @@ export default function DashboardLayout({
   return (
     <ToastProvider key={user?.id}>
       <ConfettiProvider>
+        <AchievementProvider>
         {/* Sync Clerk user → Convex on every dashboard load */}
         <UserSync />
         {/* Schedule habit reminders and expose notification state app-wide */}
@@ -124,6 +126,7 @@ export default function DashboardLayout({
             <MobileNav />
           </div>
         </NotificationProvider>
+        </AchievementProvider>
       </ConfettiProvider>
     </ToastProvider>
   );
