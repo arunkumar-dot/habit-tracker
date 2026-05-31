@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
-import { Download, Smartphone, Trash2 } from "lucide-react";
+import { useAuth, useClerk, useUser } from "@clerk/nextjs";
+import { Download, ExternalLink, Smartphone, Trash2 } from "lucide-react";
 import { usePWAInstall } from "@/hooks/use-pwa-install";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,8 @@ import * as Sentry from "@sentry/nextjs";
 
 export default function SettingsPage() {
   const { getToken } = useAuth();
+  const { openUserProfile } = useClerk();
+  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { showToast } = useToast();
   const { user, isLoading, updateProfile, uploadProfileImage, isSaving, isUploading } =
     useUserProfile();
@@ -39,9 +41,10 @@ export default function SettingsPage() {
     }
   }
 
-  const displayName = user
-    ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.name
-    : "";
+  const firstName = clerkUser?.firstName ?? user?.firstName ?? "";
+  const lastName = clerkUser?.lastName ?? user?.lastName ?? "";
+  const displayName = [firstName, lastName].filter(Boolean).join(" ") || user?.name || "";
+  const isNameLoading = !clerkLoaded || isLoading;
 
   return (
     <>
@@ -56,7 +59,8 @@ export default function SettingsPage() {
           {isLoading ? (
             <div className="flex flex-col items-center gap-3">
               <Skeleton width={96} height={96} className="rounded-full" />
-              <Skeleton width={120} height={12} />
+              <Skeleton width={140} height={12} />
+              <Skeleton width={100} height={10} />
             </div>
           ) : (
             <ProfileAvatar
@@ -78,14 +82,71 @@ export default function SettingsPage() {
           )}
         </div>
 
-        {/* ── Profile form ─────────────────────────────────────────────────── */}
+        {/* ── Name (read-only, managed by Clerk) ───────────────────────────── */}
+        <div
+          className="rounded-lg p-6 shadow-warm-sm space-y-4"
+          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
+        >
+          <div>
+            <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+              Name
+            </h2>
+            <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+              Your name is managed through your account settings.
+            </p>
+          </div>
+
+          {isNameLoading ? (
+            <div className="grid grid-cols-2 gap-4">
+              <Skeleton height={56} className="rounded-xl" />
+              <Skeleton height={56} className="rounded-xl" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { label: "First name", value: firstName || "—" },
+                { label: "Last name", value: lastName || "—" },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex flex-col gap-1.5">
+                  <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+                    {label}
+                  </p>
+                  <div
+                    className="px-3 py-2 rounded-xl text-sm"
+                    style={{
+                      background: "var(--bg-surface)",
+                      border: "1px solid var(--border-subtle)",
+                      color: "var(--text-disabled)",
+                    }}
+                  >
+                    {value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => openUserProfile()}
+            className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity hover:opacity-70"
+            style={{ color: "var(--accent)" }}
+          >
+            Edit name in Account Settings
+            <ExternalLink size={13} />
+          </button>
+        </div>
+
+        {/* ── Profile details (Convex fields) ──────────────────────────────── */}
         <div
           className="rounded-lg p-6 shadow-warm-sm"
           style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
         >
+          <h2 className="text-base font-semibold mb-5" style={{ color: "var(--text-primary)" }}>
+            Profile details
+          </h2>
           {isLoading ? (
             <div className="space-y-5">
-              <Skeleton height={56} className="rounded-xl" />
               <div className="grid grid-cols-2 gap-4">
                 <Skeleton height={56} className="rounded-xl" />
                 <Skeleton height={56} className="rounded-xl" />
@@ -140,7 +201,6 @@ export default function SettingsPage() {
                   : "Add HabitFlow to your home screen for quick access and offline support."}
               </p>
             </div>
-
             {installState === "ready" && (
               <Button
                 variant="secondary"
@@ -152,7 +212,6 @@ export default function SettingsPage() {
                 Add to Home Screen
               </Button>
             )}
-
             {installState === "installed" && (
               <p className="text-sm font-medium" style={{ color: "var(--success)" }}>
                 ✓ Installed

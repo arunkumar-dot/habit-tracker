@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { SentryUserContext } from "@/components/providers/sentry-user-context";
-import { ServiceWorkerProvider } from "@/components/providers/service-worker-provider";
+import Script from "next/script";
+import { ProvidersWrapper } from "@/components/providers/providers-wrapper";
+import { CapacitorInit } from "@/components/capacitor-init";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -73,7 +71,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/*
           iOS splash screens — static images shown while the app launches in standalone mode.
           Generate these from the HabitFlow logo + brand colors (#FAF8F4 background, #C2410C accent)
@@ -100,13 +97,11 @@ export default function RootLayout({
         <link rel="apple-touch-startup-image" media="screen and (device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/splash/iPad_mini_portrait.png" />
       </head>
       <body className="h-full antialiased" suppressHydrationWarning>
-        <ClerkProvider>
-          <SentryUserContext />
-          <ServiceWorkerProvider />
-          <ConvexClientProvider>
-            <ThemeProvider>{children}</ThemeProvider>
-          </ConvexClientProvider>
-        </ClerkProvider>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
+        <CapacitorInit />
+        <ProvidersWrapper>{children}</ProvidersWrapper>
       </body>
     </html>
   );

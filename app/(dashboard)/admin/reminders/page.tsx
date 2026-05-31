@@ -5,14 +5,6 @@ import { useState } from "react";
 import { useQuery, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
-// Guard: this page must not be accessible in production.
-// notFound() in a client component won't work server-side, so we also use an
-// early-return pattern that renders nothing before the redirect kicks in.
-// The production guard is re-applied inside devTriggerReminders on the backend.
-if (process.env.NODE_ENV === "production") {
-  notFound();
-}
-
 type Outcome = "sent" | "stale_token" | "error";
 
 const OUTCOME_LABEL: Record<Outcome, string> = {

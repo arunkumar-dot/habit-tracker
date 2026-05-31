@@ -1,15 +1,17 @@
-import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+'use client';
 
-/**
- * Root page — redirects to /dashboard if authenticated, /sign-in otherwise.
- */
-export default async function RootPage() {
-  const { userId } = await auth();
+import { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
-  if (userId) {
-    redirect("/dashboard");
-  } else {
-    redirect("/sign-in");
-  }
+export default function RootPage() {
+  const { isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    router.replace(isSignedIn ? "/dashboard" : "/sign-in");
+  }, [isSignedIn, isLoaded, router]);
+
+  return null;
 }

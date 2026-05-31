@@ -1,5 +1,5 @@
-// This service worker has been superseded by /api/firebase-messaging-sw,
-// which is now the single unified SW handling both caching and FCM push.
+// This service worker has been superseded by /firebase-messaging-sw.js,
+// which is the single unified SW handling both offline caching and FCM push.
 //
 // This stub exists only so that browsers which still have the old /sw.js
 // registration receive a clean update. skipWaiting() lets the new unified

@@ -92,6 +92,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
         )}
         {mounted && (
           <UserButton
+            userProfileUrl="/settings"
             userProfileProps={{
               appearance: {
                 elements: {

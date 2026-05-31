@@ -3,7 +3,24 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["192.168.29.47"],
+  allowedDevOrigins: ["192.168.29.47", "192.168.1.2"],
+  async headers() {
+    return [
+      {
+        source: "/:serviceWorker(firebase-messaging-sw|sw).js",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+        ],
+      },
+    ];
+  },
   turbopack: {
     root: path.join(__dirname),
   },
