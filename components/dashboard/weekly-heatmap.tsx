@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Card } from "@/components/ui/card";
+import { AnimatedCard } from "@/components/rpg/animated-card";
 import { Heatmap } from "@/components/Heatmap";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDateRange } from "@/hooks/use-completions";
@@ -27,25 +27,29 @@ export function WeeklyHeatmap() {
   }, [completions, habits]);
 
   return (
-    <Card variant="default" padding="md" className="mb-5" data-testid="weekly-heatmap">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-          This week
-        </h2>
+    <AnimatedCard className="mb-5 p-4" data-testid="weekly-heatmap">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div>
+          <p className="type-stat-label text-[var(--nebula-cyan)]">Weekly mission log</p>
+          <h2 className="type-quest-title text-[var(--text-primary)]">Completion Star Map</h2>
+        </div>
         {weekStats && (
           <p
-            className="text-xs"
+            className="max-w-[13rem] text-right text-xs"
             style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
           >
-            {weekStats.completed} of {weekStats.total} habits completed this week
+            {weekStats.completed}/{weekStats.total} cleared
           </p>
         )}
       </div>
-      <Heatmap
-        startDate={yearStart}
-        endDate={yearEnd}
-        cellSize={isMobile ? 16 : 12}
-      />
-    </Card>
+      <div className="rounded-lg border border-[var(--border-subtle)] bg-[rgba(139,92,246,0.05)] p-3">
+        <Heatmap
+          startDate={yearStart}
+          endDate={yearEnd}
+          cellSize={isMobile ? 16 : 12}
+          variant="nebula"
+        />
+      </div>
+    </AnimatedCard>
   );
 }

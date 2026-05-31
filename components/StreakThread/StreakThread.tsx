@@ -18,6 +18,7 @@ export interface StreakDay {
 export interface StreakThreadProps {
   days: StreakDay[];
   variant: "week" | "month";
+  tone?: "default" | "space";
   className?: string;
   ariaLabel?: string;
 }
@@ -110,20 +111,43 @@ function NodeCircle({
   day,
   cx,
   cy,
+  tone = "default",
 }: {
   day: StreakDay;
   cx: number;
   cy: number;
+  tone?: "default" | "space";
 }): React.ReactElement {
   switch (day.status) {
     case "completed":
-      return <circle cx={cx} cy={cy} r={4} fill={day.color ?? "var(--text-primary)"} />;
+      return tone === "space" ? (
+        <circle
+          cx={cx}
+          cy={cy}
+          r={4}
+          fill={day.color ?? "var(--plasma-green)"}
+          style={{ filter: "drop-shadow(0 0 4px rgba(16, 185, 129, 0.45))" }}
+        />
+      ) : (
+        <circle cx={cx} cy={cy} r={4} fill={day.color ?? "var(--text-primary)"} />
+      );
     case "missed":
       // --border-strong doesn't exist in this token set; #C8C2B8 is a warm
       // mid-gray that reads clearly as a speck on the cream background.
       return <circle cx={cx} cy={cy} r={1.5} fill="var(--border-strong, #C8C2B8)" />;
     case "today":
-      return (
+      return tone === "space" ? (
+        <circle
+          className="rpg-shield-pulse"
+          cx={cx}
+          cy={cy}
+          r={5}
+          fill="var(--accent-soft)"
+          stroke="var(--accent)"
+          strokeWidth={1.5}
+          style={{ transformBox: "fill-box", transformOrigin: "center" }}
+        />
+      ) : (
         <circle cx={cx} cy={cy} r={5} fill="none" stroke="var(--accent)" strokeWidth={1.5} />
       );
     case "future":
@@ -138,6 +162,7 @@ function NodeCircle({
 export function StreakThread({
   days,
   variant,
+  tone = "default",
   className,
   ariaLabel,
 }: StreakThreadProps) {
@@ -191,9 +216,10 @@ export function StreakThread({
         <path
           d={pathD}
           fill="none"
-          stroke="var(--text-tertiary)"
-          strokeWidth={1.5}
+          stroke={tone === "space" ? "var(--nebula-purple)" : "var(--text-tertiary)"}
+          strokeWidth={tone === "space" ? 1.75 : 1.5}
           strokeLinecap="round"
+          opacity={tone === "space" ? 0.45 : 1}
         />
 
         {days.map((day, i) => {
@@ -206,7 +232,7 @@ export function StreakThread({
             return (
               <g key={day.date}>
                 <title>{titleText}</title>
-                <NodeCircle day={day} cx={x} cy={cy} />
+                <NodeCircle day={day} cx={x} cy={cy} tone={tone} />
                 <text
                   x={x}
                   y={WEEK_DAY_LABEL_Y}
@@ -246,7 +272,7 @@ export function StreakThread({
           return (
             <g key={day.date}>
               <title>{titleText}</title>
-              <NodeCircle day={day} cx={x} cy={cy} />
+              <NodeCircle day={day} cx={x} cy={cy} tone={tone} />
               {isLabeled && (
                 <text
                   x={x}

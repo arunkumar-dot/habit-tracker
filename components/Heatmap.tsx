@@ -62,9 +62,24 @@ interface HeatmapProps {
   endDate?: string;
   /** Size of each cell in px. Defaults to 12. */
   cellSize?: number;
+  /** Visual treatment. Dashboard mission log uses the nebula scale without changing data. */
+  variant?: "default" | "nebula";
 }
 
-export function Heatmap({ onSelectDate, selectedDate, days, startDate, endDate, cellSize = DEFAULT_CELL_SIZE }: HeatmapProps) {
+function heatmapCellStyle(level: 0 | 1 | 2 | 3 | 4, variant: "default" | "nebula") {
+  if (variant === "default") return cellStyle(level);
+
+  const nebulaStyles: Record<0 | 1 | 2 | 3 | 4, React.CSSProperties> = {
+    0: { background: "rgba(148, 163, 184, 0.10)", border: "1px solid rgba(148, 163, 184, 0.10)" },
+    1: { background: "rgba(139, 92, 246, 0.20)", border: "1px solid rgba(139, 92, 246, 0.16)" },
+    2: { background: "rgba(139, 92, 246, 0.42)", border: "1px solid rgba(139, 92, 246, 0.24)" },
+    3: { background: "rgba(59, 130, 246, 0.62)", border: "1px solid rgba(59, 130, 246, 0.34)" },
+    4: { background: "var(--grad-xp)", border: "1px solid rgba(245, 158, 11, 0.36)", boxShadow: "var(--glow-purple)" },
+  };
+  return nebulaStyles[level];
+}
+
+export function Heatmap({ onSelectDate, selectedDate, days, startDate, endDate, cellSize = DEFAULT_CELL_SIZE, variant = "default" }: HeatmapProps) {
   const CELL_STEP = cellSize + CELL_GAP;
   const explicitRange = startDate && endDate ? { startDate, endDate } : undefined;
   const { grid, isLoading } = useHeatmapData(days, explicitRange);
@@ -187,7 +202,7 @@ export function Heatmap({ onSelectDate, selectedDate, days, startDate, endDate, 
                             : "none",
                           outlineOffset: 1,
                           transition: "opacity 100ms",
-                          ...cellStyle(cell.date ? cell.level : 0),
+                          ...heatmapCellStyle(cell.date ? cell.level : 0, variant),
                         }}
                         onMouseEnter={
                           cell.date
@@ -256,7 +271,7 @@ export function Heatmap({ onSelectDate, selectedDate, days, startDate, endDate, 
               width: cellSize,
               height: cellSize,
               borderRadius: 3,
-              ...cellStyle(level),
+              ...heatmapCellStyle(level, variant),
             }}
           />
         ))}

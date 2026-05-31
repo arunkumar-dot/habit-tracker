@@ -2,12 +2,16 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { AnimatedCard } from "@/components/rpg/animated-card";
+import { GlowButton } from "@/components/rpg/glow-button";
+import { StreakShield } from "@/components/rpg/streak-shield";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDate } from "@/hooks/use-completions";
 import { useOptimisticCompletion } from "@/hooks/use-optimistic-completion";
+import { useStreak } from "@/hooks/use-streaks";
 import { today } from "@/lib/date-utils";
+import { getQuestCodename, QUEST_XP } from "@/lib/rpg-dashboard";
 import {
   parseTimeToMinutes,
   getCurrentMinutes,
@@ -92,9 +96,95 @@ function CompletionRing({
 function MarkCompleteButton({ habitId, date }: { habitId: HabitId; date: string }) {
   const { toggle } = useOptimisticCompletion(habitId, date);
   return (
-    <Button size="sm" onClick={() => void toggle()}>
-      Mark complete
-    </Button>
+    <GlowButton onClick={() => void toggle()} tone="xp" className="w-full md:w-auto">
+      Complete mission
+    </GlowButton>
+  );
+}
+
+function ActiveMissionDetails({
+  targetHabit,
+  date,
+  completedCount,
+  totalCount,
+  timing,
+  status,
+}: {
+  targetHabit: NonNullable<ReturnType<typeof useHabits>["habits"]>[number];
+  date: string;
+  completedCount: number;
+  totalCount: number;
+  timing: string;
+  status: "upnext" | "late";
+}) {
+  const color = targetHabit.color ?? "#C2410C";
+  const { currentStreak } = useStreak(targetHabit._id, targetHabit.frequency);
+  const questName = getQuestCodename(targetHabit.title);
+
+  return (
+    <AnimatedCard
+      className="rpg-glow-breathe relative mb-5 overflow-hidden border-[rgba(139,92,246,0.35)] p-5"
+      data-testid="up-next-card"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-70"
+        style={{
+          background:
+            "radial-gradient(ellipse at 12% 0%, rgba(139,92,246,0.22), transparent 48%), radial-gradient(ellipse at 85% 20%, rgba(6,182,212,0.12), transparent 42%)",
+        }}
+      />
+      <div className="relative z-10 grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
+        <div className="min-w-0">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="type-stat-label rounded-full border border-[var(--border-subtle)] px-2 py-1 text-[var(--nebula-cyan)]">
+              Active mission
+            </span>
+            <span className="rounded-full bg-[var(--stellar-gold-soft)] px-2 py-1 font-[var(--font-mono)] text-xs text-[var(--stellar-gold)]">
+              +{QUEST_XP} XP
+            </span>
+            <span
+              className="rounded-full px-2 py-1 font-[var(--font-mono)] text-xs"
+              style={{
+                background: status === "late" ? "var(--danger-soft)" : "var(--accent-soft)",
+                color: status === "late" ? "var(--danger)" : "var(--accent)",
+              }}
+            >
+              {timing}
+            </span>
+          </div>
+          <div className="flex items-start gap-3">
+            <div
+              className="mt-1 h-3 w-3 flex-shrink-0 rounded-full shadow-[var(--glow-purple)]"
+              style={{ background: color }}
+            />
+            <div className="min-w-0">
+              <h2 className="truncate font-[var(--font-rpg)] text-2xl font-bold text-[var(--text-primary)]">
+                {questName}
+              </h2>
+              {questName !== targetHabit.title && (
+                <p className="mt-1 truncate text-sm text-[var(--text-secondary)]">
+                  Source habit: {targetHabit.title}
+                </p>
+              )}
+              <p className="mt-2 font-[var(--font-mono)] text-xs text-[var(--text-tertiary)]">
+                Scheduled at {formatDisplayTime(targetHabit.startTime)}
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <MarkCompleteButton habitId={targetHabit._id} date={date} />
+            <p className="text-xs text-[var(--text-tertiary)]">
+              {completedCount}/{totalCount} missions cleared today
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-between gap-4 md:flex-col md:items-end">
+          <StreakShield streak={currentStreak} />
+          <CompletionRing completed={completedCount} total={totalCount} size={64} />
+        </div>
+      </div>
+    </AnimatedCard>
   );
 }
 
@@ -144,12 +234,12 @@ export function UpNextCard() {
   // ── Loading skeleton ─────────────────────────────────────────────────────
   if (habitsLoading || completionsLoading || derived.state === "loading") {
     return (
-      <Card variant="default" padding="lg" className="mb-5" data-testid="up-next-card">
+      <AnimatedCard className="mb-5 p-5" data-testid="up-next-card">
         <div
           className="animate-pulse rounded-md"
           style={{ height: 64, background: "var(--bg-sunken)" }}
         />
-      </Card>
+      </AnimatedCard>
     );
   }
 
@@ -159,7 +249,7 @@ export function UpNextCard() {
   if (state === "empty") {
     return (
       <>
-        <Card variant="default" padding="lg" className="mb-5" data-testid="up-next-card">
+        <AnimatedCard className="mb-5 p-5" data-testid="up-next-card">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="type-meta-label mb-1" style={{ color: "var(--text-tertiary)" }}>
@@ -173,7 +263,7 @@ export function UpNextCard() {
               Create habit
             </Button>
           </div>
-        </Card>
+        </AnimatedCard>
         <CreateHabitDialog isOpen={createOpen} onClose={() => setCreateOpen(false)} />
       </>
     );
@@ -182,7 +272,7 @@ export function UpNextCard() {
   // ── State B: All done ─────────────────────────────────────────────────────
   if (state === "done") {
     return (
-      <Card variant="default" padding="lg" className="mb-5" data-testid="up-next-card">
+      <AnimatedCard className="mb-5 border-[var(--success)] p-5" data-testid="up-next-card">
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
             <p className="type-meta-label mb-1" style={{ color: "var(--success)" }}>
@@ -204,14 +294,14 @@ export function UpNextCard() {
           </div>
           <CompletionRing completed={totalCount} total={totalCount} size={56} />
         </div>
-      </Card>
+      </AnimatedCard>
     );
   }
 
   // ── State D: End of day ───────────────────────────────────────────────────
   if (state === "endofday") {
     return (
-      <Card variant="default" padding="lg" className="mb-5" data-testid="up-next-card">
+      <AnimatedCard className="mb-5 p-5" data-testid="up-next-card">
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
             <p className="type-meta-label mb-1" style={{ color: "var(--text-tertiary)" }}>
@@ -230,136 +320,37 @@ export function UpNextCard() {
             </Link>
           </div>
         </div>
-      </Card>
+      </AnimatedCard>
     );
   }
 
   // ── State A: Up next ──────────────────────────────────────────────────────
   if (state === "upnext" && targetHabit) {
     const diffMinutes = parseTimeToMinutes(targetHabit.startTime) - nowMinutes;
-    const color = targetHabit.color ?? "#C2410C";
     return (
-      <Card variant="default" padding="lg" className="mb-5" data-testid="up-next-card">
-        {/*
-          Mobile  (default): flex-col — info row, then actions row
-          Desktop (md+):     flex-row — info column left, ring right (current layout)
-        */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between md:gap-4">
-          {/* Info block */}
-          <div className="min-w-0 flex-1">
-            <p
-              className="text-[10px] md:text-xs font-medium uppercase tracking-[0.05em] mb-0.5 md:mb-1"
-              style={{ color: "var(--text-tertiary)" }}
-            >
-              Up next
-            </p>
-            {/* Name + inline time on mobile; name only on desktop */}
-            <div className="flex items-center gap-2 min-w-0">
-              <div
-                className="flex-shrink-0 rounded-full"
-                style={{ width: 8, height: 8, background: color }}
-              />
-              <p
-                className="text-sm md:text-base font-semibold truncate flex-1"
-                style={{ color: "var(--text-primary)" }}
-              >
-                {targetHabit.title}
-              </p>
-              <span
-                className="md:hidden text-[10px] flex-shrink-0"
-                style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
-              >
-                · {formatDisplayTime(targetHabit.startTime)} · {relativeTime(diffMinutes)}
-              </span>
-            </div>
-            {/* Desktop: time on its own line */}
-            <p
-              className="hidden md:block text-xs mt-1"
-              style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
-            >
-              at {formatDisplayTime(targetHabit.startTime)} · {relativeTime(diffMinutes)}
-            </p>
-            {/* Desktop: button sits under the time */}
-            <div className="hidden md:block mt-3">
-              <MarkCompleteButton habitId={targetHabit._id} date={dateStr} />
-            </div>
-          </div>
-
-          {/* Mobile: button + ring on one compact row */}
-          <div className="md:hidden flex items-center gap-3 mt-2">
-            <div className="flex-1">
-              <MarkCompleteButton habitId={targetHabit._id} date={dateStr} />
-            </div>
-            <CompletionRing completed={completedCount} total={totalCount} size={40} />
-          </div>
-
-          {/* Desktop: ring at far right */}
-          <div className="hidden md:block flex-shrink-0">
-            <CompletionRing completed={completedCount} total={totalCount} size={56} />
-          </div>
-        </div>
-      </Card>
+      <ActiveMissionDetails
+        targetHabit={targetHabit}
+        date={dateStr}
+        completedCount={completedCount}
+        totalCount={totalCount}
+        timing={relativeTime(diffMinutes)}
+        status="upnext"
+      />
     );
   }
 
   // ── State C: Late ─────────────────────────────────────────────────────────
   if (state === "late" && targetHabit) {
     const diffMinutes = parseTimeToMinutes(targetHabit.startTime) - nowMinutes; // negative
-    const color = targetHabit.color ?? "#C2410C";
     return (
-      <Card variant="default" padding="lg" className="mb-5" data-testid="up-next-card">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between md:gap-4">
-          {/* Info block */}
-          <div className="min-w-0 flex-1">
-            <p
-              className="text-[10px] md:text-xs font-medium uppercase tracking-[0.05em] mb-0.5 md:mb-1"
-              style={{ color: "var(--text-tertiary)" }}
-            >
-              Behind today
-            </p>
-            <div className="flex items-center gap-2 min-w-0">
-              <div
-                className="flex-shrink-0 rounded-full"
-                style={{ width: 8, height: 8, background: color }}
-              />
-              <p
-                className="text-sm md:text-base font-semibold truncate flex-1"
-                style={{ color: "var(--text-primary)" }}
-              >
-                {targetHabit.title}
-              </p>
-              <span
-                className="md:hidden text-[10px] flex-shrink-0"
-                style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
-              >
-                · {Math.abs(diffMinutes)}m late
-              </span>
-            </div>
-            <p
-              className="hidden md:block text-xs mt-1"
-              style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
-            >
-              {Math.abs(diffMinutes)} minutes late
-            </p>
-            <div className="hidden md:block mt-3">
-              <MarkCompleteButton habitId={targetHabit._id} date={dateStr} />
-            </div>
-          </div>
-
-          {/* Mobile: button + ring on one compact row */}
-          <div className="md:hidden flex items-center gap-3 mt-2">
-            <div className="flex-1">
-              <MarkCompleteButton habitId={targetHabit._id} date={dateStr} />
-            </div>
-            <CompletionRing completed={completedCount} total={totalCount} size={40} />
-          </div>
-
-          {/* Desktop: ring at far right */}
-          <div className="hidden md:block flex-shrink-0">
-            <CompletionRing completed={completedCount} total={totalCount} size={56} />
-          </div>
-        </div>
-      </Card>
+      <ActiveMissionDetails
+        targetHabit={targetHabit}
+        date={dateStr}
+        completedCount={completedCount}
+        totalCount={totalCount}
+        timing={`${Math.abs(diffMinutes)}m late`}
+        status="late"
+      />
     );
   }
 
