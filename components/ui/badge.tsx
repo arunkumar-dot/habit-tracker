@@ -18,15 +18,15 @@ const badgeVariants = cva(
         default:
           "bg-secondary text-muted-foreground border border-border",
         success:
-          "bg-[rgba(16,185,129,0.15)] text-[#10b981] border border-[rgba(16,185,129,0.3)]",
+          "bg-[var(--success-soft)] text-[var(--success)] border border-[color-mix(in_srgb,var(--success)_30%,transparent)]",
         warning:
-          "bg-[rgba(245,158,11,0.15)] text-[#f59e0b] border border-[rgba(245,158,11,0.3)]",
+          "bg-[var(--warning-soft)] text-[var(--warning)] border border-[color-mix(in_srgb,var(--warning)_30%,transparent)]",
         danger:
-          "bg-[rgba(239,68,68,0.15)] text-destructive border border-[rgba(239,68,68,0.3)]",
+          "bg-[var(--danger-soft)] text-destructive border border-[color-mix(in_srgb,var(--danger)_30%,transparent)]",
         info:
-          "bg-[rgba(30,96,145,0.12)] text-[#1E6091] border border-[rgba(30,96,145,0.25)]",
+          "bg-[var(--nebula-blue-soft)] text-[var(--nebula-blue)] border border-[color-mix(in_srgb,var(--nebula-blue)_25%,transparent)]",
         purple:
-          "bg-[rgba(124,111,92,0.12)] text-[#7C6F5C] border border-[rgba(124,111,92,0.25)]",
+          "bg-[var(--nebula-purple-soft)] text-[var(--nebula-purple)] border border-[color-mix(in_srgb,var(--nebula-purple)_25%,transparent)]",
       },
     },
     defaultVariants: {

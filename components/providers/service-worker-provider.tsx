@@ -6,6 +6,16 @@ export function ServiceWorkerProvider() {
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
 
+    if (process.env.NODE_ENV === 'development') {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((registrations) => {
+          registrations.forEach((registration) => void registration.unregister());
+        })
+        .catch((err) => console.warn('[SW] Unregister failed:', err));
+      return;
+    }
+
     // Register the unified service worker (offline caching + FCM).
     // Generated at build time by scripts/generate-sw.mjs with Firebase config
     // baked in. Served as a static file from /public so it works with

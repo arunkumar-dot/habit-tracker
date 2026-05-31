@@ -5,7 +5,7 @@ import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
 import { PanelLeft } from "lucide-react";
 import { NotificationToggle } from "@/components/notifications/notification-toggle";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { ThemeCycleButton } from "@/components/layout/theme-cycle-button";
 import { useTheme } from "@/components/providers/theme-provider";
 
 interface TopbarProps {
@@ -81,7 +81,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
 
       {/* Right: actions */}
       <div className="flex-1 flex items-center justify-end gap-3">
-        <ThemeToggle />
+        <ThemeCycleButton />
         <NotificationToggle />
 
         {/* UserButton is client-only (ClerkHostRenderer adds DOM nodes not present in SSR HTML).

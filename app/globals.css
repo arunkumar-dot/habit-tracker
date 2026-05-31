@@ -70,10 +70,31 @@
   --color-habit-4:                var(--habit-4);
   --color-habit-5:                var(--habit-5);
 
+  /* RPG space theme utilities */
+  --color-space-void:             var(--space-void);
+  --color-space-surface:          var(--space-surface);
+  --color-space-elevated:         var(--space-elevated);
+  --color-space-hover:            var(--space-hover);
+  --color-space-glow:             var(--space-glow);
+  --color-nebula-purple:          var(--nebula-purple);
+  --color-nebula-blue:            var(--nebula-blue);
+  --color-nebula-cyan:            var(--nebula-cyan);
+  --color-stellar-gold:           var(--stellar-gold);
+  --color-plasma-green:           var(--plasma-green);
+  --color-ember-red:              var(--ember-red);
+  --color-ember-orange:           var(--ember-orange);
+  --color-comet-white:            var(--comet-white);
+  --color-stardust:               var(--stardust);
+  --color-asteroid:               var(--asteroid);
+  --color-void-border:            var(--void-border);
+  --color-void-border-strong:     var(--void-border-strong);
+
   /* Font families — populated at runtime by next/font/google variables */
   --font-display: var(--nf-display, 'Instrument Serif', Georgia, serif);
   --font-sans:    var(--nf-sans,    'Inter', -apple-system, sans-serif);
   --font-mono:    var(--nf-mono,    'JetBrains Mono', ui-monospace, monospace);
+  --font-display-rpg: var(--nf-rpg, 'Space Grotesk', var(--font-sans));
+  --font-rpg:     var(--nf-rpg,     'Space Grotesk', var(--font-sans));
 
   /* Radius scale */
   --radius-sm:  6px;
@@ -133,6 +154,44 @@
     /* Timeline */
     --timeline-line: var(--border-default);
     --timeline-now:  var(--accent);
+
+    /* RPG space tokens are available in every theme for progressive rollout. */
+    --space-void:           #0B0D12;
+    --space-surface:        #12151C;
+    --space-elevated:       #1A1E28;
+    --space-hover:          #222838;
+    --space-glow:           #2A3148;
+    --nebula-purple:        #8B5CF6;
+    --nebula-purple-soft:   rgba(139, 92, 246, 0.12);
+    --nebula-blue:          #3B82F6;
+    --nebula-blue-soft:     rgba(59, 130, 246, 0.12);
+    --nebula-cyan:          #06B6D4;
+    --nebula-cyan-soft:     rgba(6, 182, 212, 0.12);
+    --stellar-gold:         #F59E0B;
+    --stellar-gold-soft:    rgba(245, 158, 11, 0.12);
+    --plasma-green:         #10B981;
+    --plasma-green-soft:    rgba(16, 185, 129, 0.12);
+    --ember-red:            #EF4444;
+    --ember-red-soft:       rgba(239, 68, 68, 0.12);
+    --ember-orange:         #F97316;
+    --ember-orange-soft:    rgba(249, 115, 22, 0.12);
+    --comet-white:          #F1F5F9;
+    --stardust:             #94A3B8;
+    --asteroid:             #64748B;
+    --void-border:          rgba(148, 163, 184, 0.08);
+    --void-border-strong:   rgba(148, 163, 184, 0.15);
+    --grad-xp:              linear-gradient(135deg, #8B5CF6, #3B82F6);
+    --grad-gold:            linear-gradient(135deg, #F59E0B, #EAB308);
+    --grad-streak:          linear-gradient(135deg, #F97316, #EF4444);
+    --grad-health:          linear-gradient(135deg, #10B981, #06B6D4);
+    --grad-cosmic:          radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.15), transparent 60%);
+    --shadow-space-sm:      0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-space-md:      0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-space-lg:      0 12px 40px rgba(0, 0, 0, 0.5);
+    --glow-purple:          0 0 20px rgba(139, 92, 246, 0.3);
+    --glow-gold:            0 0 20px rgba(245, 158, 11, 0.3);
+    --glow-streak:          0 0 20px rgba(249, 115, 22, 0.3);
+    --glow-health:          0 0 20px rgba(16, 185, 129, 0.2);
   }
 
   /* ============================================
@@ -180,6 +239,132 @@
     --timeline-line: var(--border-default);
     --timeline-now:  var(--accent);
   }
+
+  /* ============================================
+     RPG SPACE THEME — dark-first nebula palette.
+     Existing semantic tokens are remapped so
+     current components adapt without API changes.
+     ============================================ */
+  [data-theme="space"] {
+    --space-void:           #050816;
+    --space-surface:        #0F172A;
+    --space-elevated:       #172036;
+    --space-hover:          #1E1B4B;
+    --space-glow:           #312E81;
+    --void-border:          rgba(167, 139, 250, 0.18);
+    --void-border-strong:   rgba(167, 139, 250, 0.32);
+
+    --bg-base:      var(--space-void);
+    --bg-elevated:  var(--space-surface);
+    --bg-sunken:    #020617;
+    --bg-hover:     var(--space-hover);
+
+    --text-primary:   #EDE9FE;
+    --text-secondary: #A5B4FC;
+    --text-tertiary:  #818CF8;
+    --text-disabled:  #4F46E5;
+
+    --border-subtle:  var(--void-border);
+    --border-default: var(--void-border-strong);
+
+    --accent:       var(--nebula-purple);
+    --accent-hover: #A78BFA;
+    --accent-soft:  rgba(139, 92, 246, 0.20);
+    --accent-text:  #EDE9FE;
+
+    --success:      var(--plasma-green);
+    --success-soft: var(--plasma-green-soft);
+    --warning:      var(--ember-orange);
+    --warning-soft: var(--ember-orange-soft);
+    --danger:       var(--ember-red);
+    --danger-soft:  var(--ember-red-soft);
+
+    --habit-1: var(--nebula-purple);
+    --habit-2: var(--nebula-blue);
+    --habit-3: var(--plasma-green);
+    --habit-4: var(--nebula-cyan);
+    --habit-5: var(--stellar-gold);
+
+    --shadow-sm: 0 1px 3px rgba(2, 6, 23, 0.45);
+    --shadow-md: 0 4px 18px rgba(2, 6, 23, 0.55);
+    --shadow-lg: 0 16px 48px rgba(2, 6, 23, 0.65);
+
+    --timeline-line: rgba(139, 92, 246, 0.35);
+    --timeline-now:  var(--nebula-cyan);
+  }
+
+  /* ============================================
+     RPG SPACE LIGHT THEME — "daybreak" variant.
+     ============================================ */
+  [data-theme="space-light"] {
+    --space-void:           #EEF2FF;
+    --space-surface:        #FFFFFF;
+    --space-elevated:       #FFFFFF;
+    --space-hover:          #DDD6FE;
+    --space-glow:           #C7D2FE;
+    --nebula-purple:        #7C3AED;
+    --nebula-purple-soft:   rgba(124, 58, 237, 0.10);
+    --nebula-blue:          #2563EB;
+    --nebula-blue-soft:     rgba(37, 99, 235, 0.10);
+    --nebula-cyan:          #0891B2;
+    --nebula-cyan-soft:     rgba(8, 145, 178, 0.10);
+    --stellar-gold:         #B45309;
+    --stellar-gold-soft:    rgba(180, 83, 9, 0.10);
+    --plasma-green:         #059669;
+    --plasma-green-soft:    rgba(5, 150, 105, 0.10);
+    --ember-red:            #DC2626;
+    --ember-red-soft:       rgba(220, 38, 38, 0.10);
+    --ember-orange:         #EA580C;
+    --ember-orange-soft:    rgba(234, 88, 12, 0.10);
+    --comet-white:          #0F172A;
+    --stardust:             #475569;
+    --asteroid:             #64748B;
+    --void-border:          rgba(124, 58, 237, 0.14);
+    --void-border-strong:   rgba(124, 58, 237, 0.24);
+    --grad-xp:              linear-gradient(135deg, #7C3AED, #2563EB);
+    --grad-gold:            linear-gradient(135deg, #B45309, #CA8A04);
+    --grad-streak:          linear-gradient(135deg, #EA580C, #DC2626);
+    --grad-health:          linear-gradient(135deg, #059669, #0891B2);
+    --grad-cosmic:          radial-gradient(ellipse at 30% 20%, rgba(124, 58, 237, 0.12), transparent 60%);
+
+    --bg-base:      var(--space-void);
+    --bg-elevated:  var(--space-surface);
+    --bg-sunken:    #E0E7FF;
+    --bg-hover:     var(--space-hover);
+
+    --text-primary:   #1E1B4B;
+    --text-secondary: #4338CA;
+    --text-tertiary:  #6366F1;
+    --text-disabled:  #A5B4FC;
+
+    --border-subtle:  var(--void-border);
+    --border-default: var(--void-border-strong);
+
+    --accent:       var(--nebula-purple);
+    --accent-hover: #6D28D9;
+    --accent-soft:  rgba(124, 58, 237, 0.14);
+    --accent-text:  #5B21B6;
+
+    --success:      var(--plasma-green);
+    --success-soft: var(--plasma-green-soft);
+    --warning:      var(--ember-orange);
+    --warning-soft: var(--ember-orange-soft);
+    --danger:       var(--ember-red);
+    --danger-soft:  var(--ember-red-soft);
+
+    --habit-1: var(--nebula-purple);
+    --habit-2: var(--nebula-blue);
+    --habit-3: var(--plasma-green);
+    --habit-4: var(--nebula-cyan);
+    --habit-5: var(--stellar-gold);
+
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.10);
+    --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.14);
+
+    --timeline-line: rgba(124, 58, 237, 0.35);
+    --timeline-now:  var(--nebula-cyan);
+  }
 }
 
 /* ============================================
@@ -193,6 +378,16 @@
 
   html {
     height: 100%;
+    color-scheme: light;
+  }
+
+  [data-theme="dark"],
+  [data-theme="space"] {
+    color-scheme: dark;
+  }
+
+  [data-theme="space-light"] {
+    color-scheme: light;
   }
 
   body {
@@ -203,6 +398,22 @@
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  [data-theme="space"] body,
+  body[data-theme="space"] {
+    background:
+      radial-gradient(ellipse at 28% 8%, rgba(139, 92, 246, 0.18), transparent 42%),
+      radial-gradient(ellipse at 80% 0%, rgba(6, 182, 212, 0.10), transparent 34%),
+      var(--space-void);
+  }
+
+  [data-theme="space-light"] body,
+  body[data-theme="space-light"] {
+    background:
+      radial-gradient(ellipse at 28% 8%, rgba(124, 58, 237, 0.12), transparent 42%),
+      radial-gradient(ellipse at 82% 2%, rgba(8, 145, 178, 0.08), transparent 36%),
+      var(--space-void);
   }
 
   /* Paper-grain texture — very subtle, reads as warmth not texture */
@@ -216,13 +427,31 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
+  [data-theme="space"] body::before,
+  [data-theme="space-light"] body::before,
+  body[data-theme="space"]::before,
+  body[data-theme="space-light"]::before {
+    opacity: 0.12;
+    background-image:
+      radial-gradient(1px 1px at 18% 22%, rgba(241, 245, 249, 0.60), transparent),
+      radial-gradient(1px 1px at 42% 68%, rgba(139, 92, 246, 0.55), transparent),
+      radial-gradient(1px 1px at 78% 18%, rgba(6, 182, 212, 0.50), transparent),
+      radial-gradient(2px 2px at 64% 42%, rgba(245, 158, 11, 0.30), transparent);
+    background-size: 260px 260px;
+  }
+
+  [data-theme="space-light"] body::before,
+  body[data-theme="space-light"]::before {
+    opacity: 0.08;
+  }
+
   /* ============================================
      BACKWARDS-COMPAT ALIASES
      Old variable names used by components not yet
      updated. Removed in Phase 3 as each component
      is migrated to new token names.
      ============================================ */
-  :root, [data-theme="dark"] {
+  :root, [data-theme="dark"], [data-theme="space"], [data-theme="space-light"] {
     --bg-surface:           var(--bg-elevated);
     --bg-input:             var(--bg-sunken);
     --border:               var(--border-default);
@@ -246,6 +475,8 @@
 
   :root            { --border-strong: #C5BDB0; } /* warm mid-gray, visible on cream/white */
   [data-theme="dark"] { --border-strong: #5A5550; } /* visible on warm-dark surfaces     */
+  [data-theme="space"] { --border-strong: rgba(148, 163, 184, 0.24); }
+  [data-theme="space-light"] { --border-strong: rgba(15, 23, 42, 0.24); }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
@@ -331,6 +562,24 @@
 .shadow-warm-sm { box-shadow: var(--shadow-sm); }
 .shadow-warm-md { box-shadow: var(--shadow-md); }
 .shadow-warm-lg { box-shadow: var(--shadow-lg); }
+.shadow-space-sm { box-shadow: var(--shadow-space-sm); }
+.shadow-space-md { box-shadow: var(--shadow-space-md); }
+.shadow-space-lg { box-shadow: var(--shadow-space-lg); }
+.glow-purple { box-shadow: var(--glow-purple); }
+.glow-gold { box-shadow: var(--glow-gold); }
+.glow-streak { box-shadow: var(--glow-streak); }
+.glow-health { box-shadow: var(--glow-health); }
+
+.glass-panel {
+  background: rgba(18, 21, 28, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--void-border);
+}
+
+[data-theme="space-light"] .glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+}
 
 /* ============================================
    CARD HOVER
@@ -442,6 +691,37 @@
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 500;
+}
+
+/* RPG type additions */
+.type-level {
+  font-family: var(--font-rpg);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.type-xp {
+  font-family: var(--font-rpg);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.type-quest-title {
+  font-family: var(--font-rpg);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.type-stat-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* First-letter capitalize — for habit names outside of type-habit-name context */

@@ -8,7 +8,9 @@ import {
   type ReactNode,
 } from "react";
 
-type Theme = "dark" | "light";
+type Theme = "dark" | "light" | "space" | "space-light";
+
+const THEMES: Theme[] = ["light", "dark", "space", "space-light"];
 
 interface ThemeContextValue {
   theme: Theme;
@@ -21,18 +23,31 @@ const ThemeContext = createContext<ThemeContextValue>({
 });
 
 function applyTheme(t: Theme) {
-  if (t === "dark") {
-    document.documentElement.setAttribute("data-theme", "dark");
-  } else {
+  const body = document.body;
+
+  if (t === "light") {
     document.documentElement.removeAttribute("data-theme");
+    body?.removeAttribute("data-theme");
+  } else {
+    document.documentElement.setAttribute("data-theme", t);
+    body?.setAttribute("data-theme", t);
   }
+}
+
+function isTheme(value: string | null): value is Theme {
+  return value !== null && THEMES.includes(value as Theme);
+}
+
+function getNextTheme(theme: Theme): Theme {
+  const currentIndex = THEMES.indexOf(theme);
+  return THEMES[(currentIndex + 1) % THEMES.length] ?? "light";
 }
 
 /**
  * Provides theme context to the app.
  * - Reads initial value from localStorage (defaults to "light").
  * - Persists changes to localStorage.
- * - Sets/removes data-theme="dark" on <html> to activate CSS variable overrides.
+ * - Sets/removes data-theme on <html> to activate CSS variable overrides.
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
   // Start with light to match the server render; useEffect syncs with localStorage.
@@ -40,7 +55,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const stored = (localStorage.getItem("theme") as Theme | null) ?? "light";
+      const value = localStorage.getItem("theme");
+      const stored = isTheme(value) ? value : "light";
       setTheme(stored);
       applyTheme(stored);
     }, 0);
@@ -48,10 +64,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   function toggleTheme() {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem("theme", next);
-    applyTheme(next);
+    setTheme((current) => {
+      const next = getNextTheme(current);
+      localStorage.setItem("theme", next);
+      applyTheme(next);
+      return next;
+    });
   }
 
   return (

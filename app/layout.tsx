@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { ProvidersWrapper } from "@/components/providers/providers-wrapper";
 import { CapacitorInit } from "@/components/capacitor-init";
 import "./globals.css";
@@ -23,6 +23,13 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--nf-mono",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "700"],
+  variable: "--nf-rpg",
   display: "swap",
 });
 
@@ -50,27 +57,18 @@ export const metadata: Metadata = {
   },
 };
 
-/**
- * Inline script that runs synchronously before React hydration to apply the
- * saved theme class. Prevents a flash of the wrong theme on page load.
- */
-const themeInitScript = `(function(){try{var t=localStorage.getItem('theme')||'light';if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();`;
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    // suppressHydrationWarning: the inline script may add "light" before React
-    // hydrates, causing a class mismatch between server and client HTML.
     <html
       lang="en"
-      className={`h-full ${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`h-full ${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/*
           iOS splash screens — static images shown while the app launches in standalone mode.
           Generate these from the HabitFlow logo + brand colors (#FAF8F4 background, #C2410C accent)
