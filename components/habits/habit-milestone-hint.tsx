@@ -16,11 +16,6 @@ interface HabitMilestoneHintProps {
   frequency?: "daily" | "weekly";
 }
 
-/**
- * Displays the next locked milestone as a compact inline hint.
- * Example: "Next: First Week (5/7)"
- * Returns null when all milestones are unlocked or data is loading.
- */
 export function HabitMilestoneHint({ habitId, frequency = "daily" }: HabitMilestoneHintProps) {
   const { nextMilestone, isLoading } = useMilestones(habitId, frequency);
 
@@ -30,16 +25,20 @@ export function HabitMilestoneHint({ habitId, frequency = "daily" }: HabitMilest
 
   return (
     <span
-      className="flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-md"
+      className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-md"
       style={{
-        color: "var(--text-secondary)",
-        background: "var(--bg-hover)",
+        color: "var(--stardust)",
+        background: "var(--nebula-purple-soft)",
+        border: "1px solid color-mix(in srgb, var(--nebula-purple) 20%, transparent)",
       }}
     >
-      <Icon size={11} />
-      Next:{" "}
-      <span style={{ color: "var(--text-primary)" }}>{nextMilestone.name}</span>
-      &nbsp;({nextMilestone.progress}/{nextMilestone.daysRequired})
+      <Star size={10} style={{ color: "var(--stellar-gold)", flexShrink: 0 }} aria-hidden="true" />
+      <Icon size={10} aria-hidden="true" />
+      <span>Next:</span>
+      <span style={{ color: "var(--comet-white)", fontWeight: 600 }}>{nextMilestone.name}</span>
+      <span style={{ color: "var(--asteroid)" }}>
+        ({nextMilestone.progress}/{nextMilestone.daysRequired})
+      </span>
     </span>
   );
 }

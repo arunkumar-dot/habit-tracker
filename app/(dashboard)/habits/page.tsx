@@ -57,11 +57,11 @@ export default function HabitsPage() {
   return (
     <>
       <PageHeader
-        title="My Habits"
+        title="Quest Board"
         actions={
           <Button variant="primary" size="md" onClick={() => setIsCreateOpen(true)}>
             <Plus size={16} />
-            New Habit
+            New Quest
           </Button>
         }
       />
@@ -70,19 +70,19 @@ export default function HabitsPage() {
       {totalCount > 0 && (
         <div className="mb-5">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
-              Today&apos;s Progress
+            <span className="type-meta-label" style={{ color: "var(--stardust)" }}>
+              Mission Progress
             </span>
             <span
-              className="text-xs font-semibold"
+              className="type-meta-label"
               style={{
                 color:
                   completedCount === totalCount
-                    ? "var(--success)"
-                    : "var(--text-secondary)",
+                    ? "var(--plasma-green)"
+                    : "var(--stardust)",
               }}
             >
-              {completedCount}/{totalCount} completed
+              {completedCount}/{totalCount} complete
             </span>
           </div>
           <Progress

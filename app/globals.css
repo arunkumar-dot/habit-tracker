@@ -595,6 +595,30 @@
 }
 
 /* ============================================
+   QUEST CARD
+   RPG card shell used by the Quest Board.
+   Set --quest-color on the element to drive
+   the per-habit glow accent on hover.
+   ============================================ */
+.quest-card {
+  background: var(--space-surface);
+  border: 1px solid var(--void-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  position: relative;
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+@media (hover: hover) {
+  .quest-card:hover {
+    border-color: var(--quest-color, var(--nebula-purple));
+    box-shadow:
+      0 0 16px color-mix(in srgb, var(--quest-color, var(--nebula-purple)) 25%, transparent),
+      var(--shadow-space-md);
+    transform: translateY(-1px);
+  }
+}
+
+/* ============================================
    SEGMENTED CONTROL
    Used by HabitFilters and window toggles.
    ============================================ */

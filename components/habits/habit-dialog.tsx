@@ -44,8 +44,8 @@ export function CreateHabitDialog({ isOpen, onClose }: CreateHabitDialogProps) {
     <ResponsiveDialog
       isOpen={isOpen}
       onClose={onClose}
-      title="New Habit"
-      description="Build a new routine and track your progress."
+      title="New Quest"
+      description="Define a new mission and track your progress."
       footer={
         <div className="flex gap-3">
           <Button
@@ -65,7 +65,7 @@ export function CreateHabitDialog({ isOpen, onClose }: CreateHabitDialogProps) {
             isLoading={isSubmitting}
             disabled={isSubmitting}
           >
-            Create Habit
+            Create Quest
           </Button>
         </div>
       }
@@ -118,8 +118,8 @@ export function EditHabitDialog({ habit, onClose }: EditHabitDialogProps) {
     <ResponsiveDialog
       isOpen={habit !== null}
       onClose={onClose}
-      title="Edit Habit"
-      description="Update your habit details."
+      title="Edit Quest"
+      description="Update your quest details."
       footer={
         <div className="flex gap-3">
           <Button

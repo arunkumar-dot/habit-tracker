@@ -1,6 +1,6 @@
 "use client";
 
-import { ListChecks } from "lucide-react";
+import { Swords } from "lucide-react";
 import { HabitCard } from "./habit-card";
 import { HabitCardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -35,12 +35,12 @@ export function HabitList({
   if (!habits || habits.length === 0) {
     return (
       <EmptyState
-        icon={<ListChecks size={28} />}
-        title="No habits yet"
-        description="Create your first habit to start building better routines."
+        icon={<Swords size={28} />}
+        title="No quests yet"
+        description="Create your first quest to start your adventure."
         action={
           <Button variant="primary" onClick={onAddNew}>
-            Create your first habit
+            Create your first quest
           </Button>
         }
       />
@@ -48,8 +48,7 @@ export function HabitList({
   }
 
   return (
-    // Top border opens the list; each row closes itself with a bottom border
-    <div style={{ borderTop: "1px solid var(--border-default)" }}>
+    <div className="space-y-3">
       {habits.map((habit) => (
         <HabitCard
           key={habit._id}

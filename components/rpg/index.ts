@@ -1,4 +1,5 @@
 export * from "./achievement-unlock-animation";
+export * from "./quest-card";
 export * from "./animated-card";
 export * from "./character-banner";
 export * from "./floating-card";

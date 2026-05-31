@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard,
-  ListChecks,
+  Swords,
   Clock,
   CalendarDays,
   BarChart3,
@@ -22,7 +22,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard",  icon: LayoutDashboard, label: "Dashboard", mobileLabel: "Home" },
-  { href: "/habits",     icon: ListChecks,      label: "Habits" },
+  { href: "/habits",     icon: Swords,          label: "Quests" },
   { href: "/timeline",   icon: Clock,           label: "Timeline" },
   { href: "/calendar",   icon: CalendarDays,    label: "Calendar" },
   { href: "/analytics",  icon: BarChart3,       label: "Analytics" },
