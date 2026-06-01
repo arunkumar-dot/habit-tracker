@@ -30,37 +30,40 @@ export default function DashboardLayout({
       <ConfettiProvider>
         {/* Sync Clerk user → Convex on every dashboard load */}
         <UserSync />
-        {/* Schedule habit reminders and expose notification state app-wide */}
-        <NotificationProvider>
-          <div className="flex h-full">
-            {/* Desktop sidebar */}
-            <Sidebar collapsed={collapsed} />
 
-            {/* Main content area */}
-            <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
-              <OfflineBanner />
-              <Topbar onToggleSidebar={() => setCollapsed((c) => !c)} />
-              <InstallPrompt />
+        <div className="flex h-full">
+          {/* Desktop sidebar */}
+          <Sidebar collapsed={collapsed} />
 
-              <main
-                className="flex-1 overflow-y-auto pb-28 lg:pb-0"
-                style={{ background: "var(--bg-base)" }}
-              >
-                <div className="max-w-3xl mx-auto px-4 lg:px-6 py-6">
-                  <UserGate>
+          {/* Main content area */}
+          <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
+            <OfflineBanner />
+            <Topbar onToggleSidebar={() => setCollapsed((c) => !c)} />
+            <InstallPrompt />
+
+            <main
+              className="flex-1 overflow-y-auto pb-28 lg:pb-0"
+              style={{ background: "var(--bg-base)" }}
+            >
+              <div className="max-w-3xl mx-auto px-4 lg:px-6 py-6">
+                {/* NotificationProvider is inside UserGate so it only mounts
+                    after the Convex user record exists — prevents "User not found"
+                    errors from useHabits() on first sign-up. */}
+                <UserGate>
+                  <NotificationProvider>
                     <PageTransition>{children}</PageTransition>
-                  </UserGate>
-                </div>
-                <div className="max-w-3xl mx-auto px-4 lg:px-6">
-                  <Footer />
-                </div>
-              </main>
-            </div>
-
-            {/* Mobile bottom navigation */}
-            <MobileNav />
+                  </NotificationProvider>
+                </UserGate>
+              </div>
+              <div className="max-w-3xl mx-auto px-4 lg:px-6">
+                <Footer />
+              </div>
+            </main>
           </div>
-        </NotificationProvider>
+
+          {/* Mobile bottom navigation */}
+          <MobileNav />
+        </div>
       </ConfettiProvider>
     </ToastProvider>
   );

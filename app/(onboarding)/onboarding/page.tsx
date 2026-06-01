@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
+import { Spinner } from "@/components/ui/spinner";
 
 const PLACEHOLDERS = [
   "Someone who exercises every morning",
@@ -123,8 +124,23 @@ export default function OnboardingPage() {
     }
   }
 
-  // Show nothing while auth loads to avoid flicker
-  if (!isLoaded || authLoading) return null;
+  // Show a centred spinner while Clerk or Convex auth is still resolving
+  if (!isLoaded || authLoading) {
+    return (
+      <div
+        style={{
+          minHeight: "100dvh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "var(--bg-base)",
+        }}
+      >
+        <Spinner size="lg" className="text-terracotta" />
+      </div>
+    );
+  }
+
   if (!isSignedIn) return null;
 
   return (

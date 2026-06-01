@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function RootPage() {
   const { isSignedIn, isLoaded } = useUser();
@@ -13,5 +14,17 @@ export default function RootPage() {
     router.replace(isSignedIn ? "/dashboard" : "/sign-in");
   }, [isSignedIn, isLoaded, router]);
 
-  return null;
+  return (
+    <div
+      style={{
+        minHeight: "100dvh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "var(--bg-base)",
+      }}
+    >
+      <Spinner size="lg" className="text-terracotta" />
+    </div>
+  );
 }

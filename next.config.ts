@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["192.168.29.47", "192.168.1.2"],
+  allowedDevOrigins: ["192.168.29.47", "192.168.1.2", "192.168.29.174"],
   async headers() {
     return [
       {
