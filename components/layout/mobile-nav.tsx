@@ -72,28 +72,30 @@ export function MobileNav() {
             );
           })}
 
-          {/* More tab — icon only, highlights when a secondary page is active */}
-          <button
-            type="button"
-            onClick={() => setMoreOpen(true)}
-            className="flex items-center justify-center transition-all duration-200"
-            style={{
-              flex: "1",
-              minWidth: 0,
-              padding: "9px 0",
-              borderRadius: "100px",
-              background: isMoreActive
-                ? "color-mix(in srgb, var(--accent) 18%, transparent)"
-                : "transparent",
-              color: isMoreActive ? "var(--accent)" : "var(--text-tertiary)",
-              minHeight: 44,
-            }}
-            aria-label="More navigation options"
-            aria-haspopup="dialog"
-            aria-expanded={moreOpen}
-          >
-            <MoreHorizontal size={18} aria-hidden="true" />
-          </button>
+          {/* More tab — only shown when MORE_NAV has items */}
+          {MORE_NAV.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setMoreOpen(true)}
+              className="flex items-center justify-center transition-all duration-200"
+              style={{
+                flex: "1",
+                minWidth: 0,
+                padding: "9px 0",
+                borderRadius: "100px",
+                background: isMoreActive
+                  ? "color-mix(in srgb, var(--accent) 18%, transparent)"
+                  : "transparent",
+                color: isMoreActive ? "var(--accent)" : "var(--text-tertiary)",
+                minHeight: 44,
+              }}
+              aria-label="More navigation options"
+              aria-haspopup="dialog"
+              aria-expanded={moreOpen}
+            >
+              <MoreHorizontal size={18} aria-hidden="true" />
+            </button>
+          )}
         </div>
       </nav>
 

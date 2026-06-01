@@ -224,6 +224,35 @@ export const markComplete = mutation({
 });
 
 /**
+ * Returns all-time journey stats for the authenticated user:
+ * - totalCompletions: raw count of all habit completion records
+ * - daysActive: number of unique dates with at least one completion
+ * - firstDate: earliest completion date "YYYY-MM-DD", or null if none
+ *
+ * Used by the Journey V2 page for the hero section and one-number display.
+ */
+export const getTotalCompletionCount = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getAuthUser(ctx);
+
+    const completions = await ctx.db
+      .query("habitCompletions")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+
+    const uniqueDates = new Set(completions.map((c) => c.date));
+    const sortedDates = [...uniqueDates].sort();
+
+    return {
+      totalCompletions: completions.length,
+      daysActive: uniqueDates.size,
+      firstDate: sortedDates[0] ?? null,
+    };
+  },
+});
+
+/**
  * Aggregate completion counts per day for the heatmap view.
  * Returns [{ date, count }] sorted ascending — one entry per day that has ≥1 completion.
  * Days with zero completions are omitted (the component fills them as empty).
