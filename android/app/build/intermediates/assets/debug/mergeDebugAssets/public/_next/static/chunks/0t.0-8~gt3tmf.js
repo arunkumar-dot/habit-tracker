@@ -1,4 +1,0 @@
-;!function(){try { var e="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof global?global:"undefined"!=typeof window?window:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&((e._debugIds|| (e._debugIds={}))[n]="4336bc80-fb86-4eb0-c2d5-b063ed49dd12")}catch(e){}}();
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,618566,(e,t,r)=>{t.exports=e.r(976562)},331713,e=>{"use strict";var t=e.i(271645),r=e.i(827085),s=e.i(618566);e.s(["default",0,function(){let{isSignedIn:e,isLoaded:u}=(0,r.useUser)(),i=(0,s.useRouter)();return(0,t.useEffect)(()=>{u&&i.replace(e?"/dashboard":"/sign-in")},[e,u,i]),null}])}]);
-
-//# debugId=4336bc80-fb86-4eb0-c2d5-b063ed49dd12
