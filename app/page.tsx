@@ -2,12 +2,16 @@
 
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
-import { ArrowRight, LayoutDashboard, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { ThreeAmbientCanvas } from "@/components/3d/three-ambient-canvas";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
 import { LandingHero } from "@/components/landing/landing-hero";
 import { LandingPillars } from "@/components/landing/landing-pillars";
 import { LandingInteractiveShowcase } from "@/components/landing/landing-interactive-showcase";
+import { LandingComparison } from "@/components/landing/landing-comparison";
+import { LandingPricing } from "@/components/landing/landing-pricing";
+import { LandingPrivacy } from "@/components/landing/landing-privacy";
+import { LandingMobile } from "@/components/landing/landing-mobile";
 import { LandingFaq } from "@/components/landing/landing-faq";
 import { LandingCta } from "@/components/landing/landing-cta";
 import { LandingFooter } from "@/components/landing/landing-footer";
@@ -25,7 +29,7 @@ export default function LandingPage() {
 
       {/* Floating Banner for Authenticated Users */}
       {isLoaded && isSignedIn && (
-        <div className="relative z-50 bg-[var(--accent)] text-white text-xs font-semibold px-4 py-2 flex items-center justify-center gap-2 text-center">
+        <div className="relative z-50 bg-[var(--accent)] text-white text-xs font-semibold px-4 py-2 flex items-center justify-center gap-2 text-center shadow-xs">
           <Sparkles size={14} />
           <span>Welcome back{user?.firstName ? `, ${user.firstName}` : ""}! You are signed in.</span>
           <Link
@@ -47,6 +51,10 @@ export default function LandingPage() {
         <LandingHero />
         <LandingPillars />
         <LandingInteractiveShowcase />
+        <LandingComparison />
+        <LandingPricing />
+        <LandingPrivacy />
+        <LandingMobile />
         <LandingFaq />
         <LandingCta />
       </main>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { ArrowRight, Sparkles, ShieldCheck, Heart } from "lucide-react";
 
 export function LandingCta() {
   return (
@@ -39,7 +39,7 @@ export function LandingCta() {
             </h2>
 
             <p className="text-base sm:text-lg mb-8 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Join thousands who have transitioned from chaotic to-do lists to identity-first daily routines. Free forever.
+              A calm, intentional space to reinforce who you want to become. 100% free with no ads, subscriptions, or paywalls.
             </p>
 
             <Link
@@ -51,13 +51,20 @@ export function LandingCta() {
                 textDecoration: "none",
               }}
             >
-              <span>Create Free Account</span>
+              <span>Start Free Journey</span>
               <ArrowRight size={18} />
             </Link>
 
-            <div className="mt-8 flex items-center gap-2 text-xs font-medium" style={{ color: "var(--text-tertiary)" }}>
-              <ShieldCheck size={16} className="text-[var(--accent)]" />
-              <span>No credit card required • Instant setup • 100% private data</span>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs font-medium" style={{ color: "var(--text-tertiary)" }}>
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck size={16} className="text-[var(--accent)]" />
+                <span>No credit card required • Instant setup • 100% private</span>
+              </div>
+              <span className="hidden sm:inline" aria-hidden="true">•</span>
+              <div className="flex items-center gap-1.5">
+                <Heart size={14} className="text-rose-500 fill-rose-500" />
+                <span>Crafted for daily focus</span>
+              </div>
             </div>
           </div>
 

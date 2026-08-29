@@ -60,21 +60,28 @@ export function LandingNavbar() {
             className="transition-colors hover:text-[var(--accent)]"
             style={{ color: "var(--text-secondary)", textDecoration: "none" }}
           >
-            The 4 Pillars
+            Features
           </a>
           <a
-            href="#showcase"
+            href="#comparison"
             className="transition-colors hover:text-[var(--accent)]"
             style={{ color: "var(--text-secondary)", textDecoration: "none" }}
           >
-            Experience
+            Why RoutineIQ
           </a>
           <a
-            href="#science"
+            href="#pricing"
             className="transition-colors hover:text-[var(--accent)]"
             style={{ color: "var(--text-secondary)", textDecoration: "none" }}
           >
-            Atomic Science
+            Pricing
+          </a>
+          <a
+            href="#privacy"
+            className="transition-colors hover:text-[var(--accent)]"
+            style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+          >
+            Privacy
           </a>
           <a
             href="#faq"
@@ -195,7 +202,7 @@ export function LandingNavbar() {
                   textDecoration: "none",
                 }}
               >
-                <span>Get Started Free</span>
+                <span>Start Free Journey</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
@@ -244,23 +251,31 @@ export function LandingNavbar() {
               className="text-sm font-medium py-1"
               style={{ color: "var(--text-primary)", textDecoration: "none" }}
             >
-              The 4 Pillars
+              Features
             </a>
             <a
-              href="#showcase"
+              href="#comparison"
               onClick={() => setMobileMenuOpen(false)}
               className="text-sm font-medium py-1"
               style={{ color: "var(--text-primary)", textDecoration: "none" }}
             >
-              Experience
+              Why RoutineIQ
             </a>
             <a
-              href="#science"
+              href="#pricing"
               onClick={() => setMobileMenuOpen(false)}
               className="text-sm font-medium py-1"
               style={{ color: "var(--text-primary)", textDecoration: "none" }}
             >
-              Atomic Science
+              Pricing
+            </a>
+            <a
+              href="#privacy"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm font-medium py-1"
+              style={{ color: "var(--text-primary)", textDecoration: "none" }}
+            >
+              Privacy
             </a>
             <a
               href="#faq"

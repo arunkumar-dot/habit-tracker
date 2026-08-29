@@ -242,7 +242,7 @@ export function LandingInteractiveShowcase() {
                         Zen Soundscapes Active
                       </p>
                       <p className="text-[11px] text-[var(--text-tertiary)] m-0">
-                        Playing 10Hz Alpha Wave Binaural Entrainment
+                        Playing Calm Ambient Focus Tone (Zen Alpha)
                       </p>
                     </div>
                   </div>

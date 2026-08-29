@@ -6,29 +6,29 @@ import { ChevronDown, HelpCircle } from "lucide-react";
 
 const FAQS = [
   {
-    question: "How is RoutineIQ different from typical habit trackers?",
+    question: "How is RoutineIQ different from typical habit apps?",
     answer:
-      "Most habit apps treat you like a project manager tracking a checklist. RoutineIQ is built around James Clear's atomic identity philosophy: you start by designing who you want to become. Your habits evolve into interactive 3D streak crystals, and our 'Then & Now' journal connects your past reflections with current momentum.",
+      "Most apps treat habits like disconnected tasks on a checklist. RoutineIQ is built around identity psychology: you begin by defining who you want to become, grouping your daily rituals into natural time-of-day slots (Morning, Afternoon, Evening). As you complete habits, you see real-time 3D streak solids evolve, and our 'Then & Now' journal connects your past reflections with current momentum.",
   },
   {
-    question: "Is RoutineIQ completely free to use?",
+    question: "Is RoutineIQ really 100% free with no paid tiers?",
     answer:
-      "Yes! All core habit tracking, time-of-day groupings, interactive 3D streak crystals, Pomodoro focus timer, ambient soundscapes, and full data exports are 100% free with no paywalls or intrusive advertisements.",
+      "Yes. There are no locked analytics, no trial periods, and no premium subscriptions. RoutineIQ was built as an independent craft project to provide a high-quality, distraction-free habit space without commercial pressure.",
   },
   {
-    question: "Can I install RoutineIQ as an app on my phone?",
+    question: "How do I install RoutineIQ on iOS or Android?",
     answer:
-      "Absolutely. RoutineIQ is a Progressive Web App (PWA). In iOS Safari, tap Share → 'Add to Home Screen'. In Android Chrome, tap the install banner or browser menu. It opens in standalone fullscreen mode and works offline with background service workers.",
+      "RoutineIQ is a full Progressive Web App (PWA). In iOS Safari, tap the Share icon and select 'Add to Home Screen'. In Android Chrome, tap the 3-dots menu and select 'Install app'. It launches fullscreen like a native app and works offline.",
   },
   {
-    question: "How is my habit and journal data secured?",
+    question: "How is my personal habit and reflection data secured?",
     answer:
-      "Your data is protected by enterprise-grade Clerk authentication and stored in secure Convex cloud instances. Data is strictly isolated by cryptographic user tokens. We never sell your data or serve ads.",
+      "All user data is isolated in secure cloud databases managed through cryptographic Clerk tokens. We never sell user data, embed third-party ad networks, or run invasive tracking pixels.",
   },
   {
-    question: "Can I export or backup my habit records?",
+    question: "Can I export or backup my data?",
     answer:
-      "Yes, anytime. Under Settings → Danger Zone, you can download a complete structured JSON export of all your habits, daily completion timestamps, streak achievements, and journal entries in one click.",
+      "Yes. You can download a complete structured JSON export of all your habits, completion timestamps, streak achievements, and journal reflections anytime under Settings → Danger Zone in one click.",
   },
 ];
 
@@ -62,10 +62,10 @@ export function LandingFaq() {
               color: "var(--text-primary)",
             }}
           >
-            Everything you need to know.
+            Clear answers to common questions.
           </h2>
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            Clear answers about features, privacy, and mobile installation.
+            Everything you need to know about features, privacy, and mobile use.
           </p>
         </div>
 

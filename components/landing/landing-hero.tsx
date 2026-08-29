@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Shield, Zap, Flame, CheckCircle2, Play } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, Zap, Flame, CheckCircle2, Play, Lock } from "lucide-react";
 import { ThreeStreakCrystal } from "@/components/3d/three-streak-crystal";
 
 const DEMO_MILESTONES = [
@@ -35,7 +35,7 @@ export function LandingHero() {
               }}
             >
               <Sparkles size={13} className="text-[var(--accent)]" />
-              <span>Identity-First Habit Mastery</span>
+              <span>Identity-First Daily Habits</span>
             </motion.div>
 
             {/* Main Headline */}
@@ -56,7 +56,7 @@ export function LandingHero() {
               you designed.
             </motion.h1>
 
-            {/* Subheadline */}
+            {/* Subheadline (grounded, clean, no jargon or uncredited claims) */}
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -64,11 +64,11 @@ export function LandingHero() {
               className="text-base sm:text-lg max-w-xl leading-relaxed mb-8"
               style={{ color: "var(--text-secondary)" }}
             >
-              RoutineIQ unites James Clear&apos;s atomic identity loops, generative 3D habit crystals, 
-              past-self reflection memories, and spatial ambient soundscapes into one distraction-free daily ritual.
+              A focused, distraction-free space that connects who you want to be with what you do each day. 
+              Features interactive 3D streak progress, past-self memory journaling, and calm ambient focus sounds.
             </motion.p>
 
-            {/* CTAs */}
+            {/* CTAs (Unified to Start Free Journey) */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -84,7 +84,7 @@ export function LandingHero() {
                   textDecoration: "none",
                 }}
               >
-                <span>Start Your Journey Free</span>
+                <span>Start Free Journey</span>
                 <ArrowRight size={17} />
               </Link>
               
@@ -97,11 +97,11 @@ export function LandingHero() {
                 }}
               >
                 <Play size={14} className="fill-[var(--text-primary)]" />
-                <span>See How It Works</span>
+                <span>See Interactive Demo</span>
               </a>
             </motion.div>
 
-            {/* Feature Badges */}
+            {/* Honest Trust Badges */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -111,11 +111,11 @@ export function LandingHero() {
             >
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 size={15} className="text-[var(--accent)]" />
-                <span>Zero Ads or Paywalls</span>
+                <span>100% Free • No Credit Card</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Shield size={15} className="text-[var(--accent)]" />
-                <span>100% Private & Exportable</span>
+                <Lock size={14} className="text-[var(--accent)]" />
+                <span>Private & Full JSON Export</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Zap size={15} className="text-[var(--accent)]" />
@@ -143,7 +143,7 @@ export function LandingHero() {
                 <div className="flex items-center gap-1.5">
                   <Flame size={15} className="text-[var(--accent)]" />
                   <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--accent)" }}>
-                    Interactive 3D Crystal
+                    Interactive 3D Solid
                   </span>
                 </div>
                 <span className="text-[11px] px-2 py-0.5 rounded-md bg-[var(--bg-sunken)] font-mono" style={{ color: "var(--text-tertiary)" }}>
@@ -155,7 +155,7 @@ export function LandingHero() {
                 &ldquo;A Disciplined Athlete&rdquo;
               </h3>
               <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
-                Crystals evolve their facets, refraction, and ember halo as your streak grows.
+                Move cursor to tilt. Streak solids evolve their geometry and ember halo as your streak grows.
               </p>
 
               {/* 3D Crystal Container */}
