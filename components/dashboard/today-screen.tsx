@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, Sparkles, Flame, CheckCircle2 } from "lucide-react";
+import { ChevronRight, Sparkles, Flame, CheckCircle2, Trophy, Target, Check } from "lucide-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useBestStreak } from "@/hooks/use-best-streak";
+import { useCompletionsForDateRange } from "@/hooks/use-completions";
 import { TodaysHabits } from "@/components/dashboard/todays-habits";
 import { ThreeStreakCrystal } from "@/components/3d/three-streak-crystal";
+import { today } from "@/lib/date-utils";
 
 function timeGreeting(): string {
   const h = new Date().getHours();
@@ -17,6 +20,60 @@ function timeGreeting(): string {
 
 function displayName(user: { firstName?: string | null; name?: string | null }): string {
   return user.firstName ?? user.name?.split(" ")[0] ?? "there";
+}
+
+interface StreakMilestone {
+  current: number;
+  target: number;
+  label: string;
+  badge: string;
+  progressPercent: number;
+}
+
+function getNextMilestone(streak: number): StreakMilestone {
+  if (streak < 3) {
+    return {
+      current: streak,
+      target: 3,
+      label: "Sprout 🌱",
+      badge: "3-Day Habit Initiation",
+      progressPercent: Math.min(Math.round((streak / 3) * 100), 100),
+    };
+  }
+  if (streak < 7) {
+    return {
+      current: streak,
+      target: 7,
+      label: "Momentum ⚡",
+      badge: "7-Day Active Rhythm",
+      progressPercent: Math.min(Math.round((streak / 7) * 100), 100),
+    };
+  }
+  if (streak < 21) {
+    return {
+      current: streak,
+      target: 21,
+      label: "Habit Lock 🔒",
+      badge: "21-Day Neural Formation",
+      progressPercent: Math.min(Math.round((streak / 21) * 100), 100),
+    };
+  }
+  if (streak < 66) {
+    return {
+      current: streak,
+      target: 66,
+      label: "Mastery 👑",
+      badge: "66-Day Identity Transformation",
+      progressPercent: Math.min(Math.round((streak / 66) * 100), 100),
+    };
+  }
+  return {
+    current: streak,
+    target: 100,
+    label: "Titan 🏆",
+    badge: "100-Day Mastery",
+    progressPercent: 100,
+  };
 }
 
 function IdentitySection({ statement }: { statement: string | undefined }) {
@@ -111,6 +168,47 @@ export function TodayScreen() {
   const { user, isLoading: userLoading } = useCurrentUser();
   const { bestStreak, isLoading: streakLoading } = useBestStreak();
 
+  // Compute 7 days of the current week (Monday to Sunday)
+  const todayStr = today();
+  const weekDays = useMemo(() => {
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const diffToMonday = (dayOfWeek + 6) % 7;
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - diffToMonday);
+
+    const days = [];
+    const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      const dateStr = d.toISOString().split("T")[0];
+      const isToday = dateStr === todayStr;
+      const isPast = d < now && !isToday;
+      days.push({
+        dateStr,
+        label: dayNames[i],
+        isToday,
+        isPast,
+      });
+    }
+    return days;
+  }, [todayStr]);
+
+  const startDate = weekDays[0].dateStr;
+  const endDate = weekDays[6].dateStr;
+  const { completions } = useCompletionsForDateRange(startDate, endDate);
+
+  const completedDatesSet = useMemo(() => {
+    const set = new Set<string>();
+    (completions ?? []).forEach((c) => {
+      if (c.date) set.add(c.date);
+    });
+    return set;
+  }, [completions]);
+
+  const milestone = getNextMilestone(bestStreak ?? 0);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -118,21 +216,21 @@ export function TodayScreen() {
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       className="flex flex-col gap-6 max-w-xl mx-auto w-full"
     >
-      {/* ── 1. Hero Identity & 3D Crystal Card ──────────────────────────────── */}
+      {/* ── 1. Hero Identity & Redesigned Streak Crystal Card ───────────────── */}
       <motion.section
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.45, delay: 0.05 }}
-        className="glass-card glow-card rounded-3xl p-6 sm:p-7 relative overflow-hidden"
+        className="glass-card glow-card rounded-3xl p-6 sm:p-7 relative overflow-hidden border border-[var(--border-default)] shadow-xl"
       >
-        {/* Subtle background gradient */}
+        {/* Ambient radial glow background */}
         <div
-          className="absolute -top-24 -right-24 w-60 h-60 rounded-full pointer-events-none opacity-20 blur-3xl"
+          className="absolute -top-24 -right-24 w-64 h-64 rounded-full pointer-events-none opacity-20 blur-3xl"
           style={{ background: "var(--accent)" }}
         />
 
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6 relative z-10">
-          <div className="flex-1 text-center sm:text-left">
+          <div className="flex-1 text-center sm:text-left w-full">
             {/* Greeting */}
             <p
               className="text-xs uppercase tracking-wider font-semibold mb-2"
@@ -159,40 +257,105 @@ export function TodayScreen() {
               <IdentitySection statement={user?.identityStatement} />
             )}
 
-            {/* Streak indicator badge */}
-            <div className="mt-5 flex items-center justify-center sm:justify-start gap-3">
+            {/* ── Redesigned Streak Counter & Milestone Trackers ─────────────── */}
+            <div className="mt-5 pt-4 border-t border-[var(--border-subtle)] flex flex-col gap-3">
               {streakLoading ? (
                 <div
-                  className="animate-pulse rounded-full"
-                  style={{ width: 90, height: 28, background: "var(--bg-sunken)" }}
+                  className="animate-pulse rounded-2xl h-14"
+                  style={{ background: "var(--bg-sunken)" }}
                 />
-              ) : bestStreak > 0 ? (
-                <div className="flex items-center gap-2">
-                  <div
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-                    style={{
-                      background: "color-mix(in srgb, var(--accent) 15%, transparent)",
-                      color: "var(--accent)",
-                      border: "1px solid color-mix(in srgb, var(--accent) 25%, transparent)",
-                    }}
-                  >
-                    <Flame size={14} className="fill-[var(--accent)]" />
-                    <span>{bestStreak} Day Streak</span>
-                  </div>
-                  <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-                    Best active streak
-                  </span>
-                </div>
               ) : (
-                <span className="text-xs font-medium" style={{ color: "var(--text-tertiary)" }}>
-                  Start your first streak today!
-                </span>
+                <>
+                  {/* Streak & Next Milestone Header */}
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold shadow-xs"
+                        style={{
+                          background: "color-mix(in srgb, var(--accent) 16%, var(--bg-elevated))",
+                          color: "var(--accent)",
+                          border: "1px solid color-mix(in srgb, var(--accent) 30%, transparent)",
+                        }}
+                      >
+                        <Flame size={14} className="fill-[var(--accent)] text-[var(--accent)]" />
+                        <span>{bestStreak} Day Streak</span>
+                      </div>
+                      <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+                        Active streak
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
+                      <Target size={13} className="text-[var(--accent)]" />
+                      <span>Next: <strong>{milestone.label}</strong></span>
+                    </div>
+                  </div>
+
+                  {/* Milestone Progress Bar */}
+                  <div className="space-y-1">
+                    <div className="w-full h-2 rounded-full bg-[var(--bg-sunken)] overflow-hidden border border-[var(--border-subtle)]">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${milestone.progressPercent}%` }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="h-full rounded-full shadow-xs"
+                        style={{
+                          background: "linear-gradient(90deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #ffffff) 100%)",
+                        }}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+                      <span>{milestone.current} / {milestone.target} days to unlock</span>
+                      <span>{milestone.progressPercent}%</span>
+                    </div>
+                  </div>
+
+                  {/* 7-Day Consistency Week Dots */}
+                  <div className="pt-1 flex items-center justify-between sm:justify-start gap-2 sm:gap-3">
+                    <span className="text-[11px] font-medium" style={{ color: "var(--text-tertiary)" }}>
+                      This week:
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {weekDays.map((day, idx) => {
+                        const isDone = completedDatesSet.has(day.dateStr);
+                        return (
+                          <div
+                            key={idx}
+                            title={`${day.dateStr}${isDone ? " (Completed)" : ""}`}
+                            className="flex flex-col items-center gap-0.5"
+                          >
+                            <div
+                              className="w-5 h-5 rounded-lg flex items-center justify-center text-[9px] font-bold transition-all"
+                              style={{
+                                background: isDone
+                                  ? "var(--accent)"
+                                  : day.isToday
+                                  ? "color-mix(in srgb, var(--accent) 15%, transparent)"
+                                  : "var(--bg-sunken)",
+                                color: isDone
+                                  ? "#ffffff"
+                                  : day.isToday
+                                  ? "var(--accent)"
+                                  : "var(--text-tertiary)",
+                                border: day.isToday
+                                  ? "1.5px solid var(--accent)"
+                                  : "1px solid var(--border-subtle)",
+                              }}
+                            >
+                              {isDone ? <Check size={10} className="stroke-[3]" /> : day.label}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
 
-          {/* Interactive 3D Streak Crystal */}
-          <div className="flex-shrink-0 flex items-center justify-center">
+          {/* Interactive 3D Streak Solid Widget */}
+          <div className="flex-shrink-0 flex items-center justify-center self-center sm:self-start mt-2 sm:mt-0">
             <ThreeStreakCrystal streak={bestStreak ?? 0} size={150} />
           </div>
         </div>
@@ -203,7 +366,7 @@ export function TodayScreen() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, delay: 0.15 }}
-        className="glass-card rounded-3xl p-5 sm:p-6"
+        className="glass-card rounded-3xl p-5 sm:p-6 border border-[var(--border-default)] shadow-sm"
       >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
