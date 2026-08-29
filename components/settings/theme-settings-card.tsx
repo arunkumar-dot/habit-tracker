@@ -2,12 +2,42 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sun, Moon, Laptop, Palette, Check, Sparkles, Volume2, VolumeX, Play } from "lucide-react";
-import { useTheme, THEME_PALETTES, type ThemeMode } from "@/components/providers/theme-provider";
+import {
+  Sun,
+  Moon,
+  Laptop,
+  Palette,
+  Check,
+  Sparkles,
+  Volume2,
+  VolumeX,
+  Play,
+  Waves,
+  Grid,
+  Flame,
+  Rocket,
+  Layers,
+} from "lucide-react";
+import {
+  useTheme,
+  THEME_PALETTES,
+  BACKGROUND_STYLES,
+  type ThemeMode,
+  type BackgroundStyle,
+} from "@/components/providers/theme-provider";
 import { isSoundEnabled, setSoundEnabled, playCompletionChime } from "@/lib/sound-effects";
 
+const STYLE_ICONS: Record<BackgroundStyle, typeof Sparkles> = {
+  stardust: Flame,
+  magnetic_grid: Grid,
+  constellation: Sparkles,
+  aurora_glow: Waves,
+  warp: Rocket,
+  minimal: Layers,
+};
+
 export function ThemeSettingsCard() {
-  const { palette, setPalette, mode, setMode, theme } = useTheme();
+  const { palette, setPalette, mode, setMode, theme, backgroundStyle, setBackgroundStyle } = useTheme();
   const [soundActive, setSoundActive] = useState(true);
   const isDark = theme === "dark";
 
@@ -25,17 +55,88 @@ export function ThemeSettingsCard() {
   };
 
   return (
-    <div className="glass-card rounded-3xl p-6 sm:p-7 space-y-6">
+    <div className="glass-card rounded-3xl p-6 sm:p-7 space-y-7">
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Palette size={18} className="text-[var(--accent)]" />
           <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
-            Appearance & Audio
+            Visuals, Themes & Backgrounds
           </h2>
         </div>
         <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-          Customize your visual aesthetics, color palette, and completion feedback.
+          Customize your 3D motion backgrounds, color palette, and audio feedback.
         </p>
+      </div>
+
+      {/* 3D Visual Background Selector */}
+      <div>
+        <label className="text-xs font-semibold uppercase tracking-wider block mb-2.5" style={{ color: "var(--text-tertiary)" }}>
+          3D & Motion Background Scene
+        </label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {BACKGROUND_STYLES.map((style) => {
+            const isSelected = backgroundStyle === style.id;
+            const Icon = STYLE_ICONS[style.id] ?? Sparkles;
+
+            return (
+              <motion.button
+                key={style.id}
+                type="button"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setBackgroundStyle(style.id)}
+                className={`p-3.5 rounded-2xl text-left transition-all border flex flex-col justify-between relative overflow-hidden ${
+                  isSelected
+                    ? "glass-panel border-[var(--accent)] shadow-md"
+                    : "glass-panel border-[var(--border-subtle)] hover:border-[var(--border-default)]"
+                }`}
+              >
+                <div className="flex items-center justify-between w-full mb-2">
+                  <div
+                    className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: isSelected
+                        ? "color-mix(in srgb, var(--accent) 20%, transparent)"
+                        : "var(--bg-sunken)",
+                      color: isSelected ? "var(--accent)" : "var(--text-secondary)",
+                    }}
+                  >
+                    <Icon size={16} />
+                  </div>
+                  <span
+                    className="text-[10px] px-2 py-0.5 rounded-md font-mono"
+                    style={{
+                      background: isSelected
+                        ? "color-mix(in srgb, var(--accent) 15%, transparent)"
+                        : "var(--bg-sunken)",
+                      color: isSelected ? "var(--accent)" : "var(--text-tertiary)",
+                    }}
+                  >
+                    {style.badge}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-xs font-semibold block" style={{ color: "var(--text-primary)" }}>
+                    {style.name}
+                  </span>
+                  <span className="text-[11px] block mt-0.5 line-clamp-1" style={{ color: "var(--text-tertiary)" }}>
+                    {style.description}
+                  </span>
+                </div>
+
+                {isSelected && (
+                  <div
+                    className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center"
+                    style={{ background: "var(--accent)", color: "#ffffff" }}
+                  >
+                    <Check size={10} strokeWidth={3} />
+                  </div>
+                )}
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Mode Selector (Light / Dark / System) */}
@@ -83,7 +184,7 @@ export function ThemeSettingsCard() {
       {/* Palette Grid */}
       <div>
         <label className="text-xs font-semibold uppercase tracking-wider block mb-2.5" style={{ color: "var(--text-tertiary)" }}>
-          Curated Palettes
+          Curated Color Palettes
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {THEME_PALETTES.map((item) => {

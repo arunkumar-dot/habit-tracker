@@ -6,6 +6,7 @@ import { UserButton } from "@clerk/nextjs";
 import { PanelLeft, Search } from "lucide-react";
 import { NotificationToggle } from "@/components/notifications/notification-toggle";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { BackgroundSwitcher } from "@/components/layout/background-switcher";
 import { useTheme } from "@/components/providers/theme-provider";
 
 interface TopbarProps {
@@ -78,6 +79,7 @@ export function Topbar({ onToggleSidebar }: TopbarProps) {
 
       {/* Right: actions */}
       <div className="flex items-center gap-2">
+        <BackgroundSwitcher />
         <ThemeToggle />
         <NotificationToggle />
 

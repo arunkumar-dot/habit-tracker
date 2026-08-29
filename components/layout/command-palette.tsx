@@ -22,7 +22,12 @@ import {
   CheckCircle2,
   X,
 } from "lucide-react";
-import { useTheme, THEME_PALETTES, type ThemePalette } from "@/components/providers/theme-provider";
+import {
+  useTheme,
+  THEME_PALETTES,
+  BACKGROUND_STYLES,
+  type ThemePalette,
+} from "@/components/providers/theme-provider";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDate } from "@/hooks/use-completions";
 import { useOptimisticCompletion } from "@/hooks/use-optimistic-completion";
@@ -32,7 +37,7 @@ import { playCompletionChime } from "@/lib/sound-effects";
 interface CommandItem {
   id: string;
   title: string;
-  category: "Navigation" | "Habits" | "Themes" | "Actions";
+  category: "Navigation" | "Habits" | "Themes" | "Backgrounds" | "Actions";
   icon: typeof Search;
   action: () => void;
   subtitle?: string;
@@ -47,7 +52,7 @@ export function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const { palette, setPalette, theme, toggleTheme } = useTheme();
+  const { palette, setPalette, theme, toggleTheme, setBackgroundStyle } = useTheme();
   const { habits } = useHabits();
   const dateStr = today();
   const { completedHabitIds } = useCompletionsForDate(dateStr);
@@ -122,7 +127,22 @@ export function CommandPalette() {
       });
     }
 
-    // 3. Theme Palettes
+    // 3. 3D Background Scenes
+    BACKGROUND_STYLES.forEach((bg) => {
+      list.push({
+        id: `bg-${bg.id}`,
+        title: `Background: ${bg.name}`,
+        category: "Backgrounds",
+        icon: Sparkles,
+        subtitle: bg.description,
+        action: () => {
+          setBackgroundStyle(bg.id);
+          setIsOpen(false);
+        },
+      });
+    });
+
+    // 4. Theme Palettes
     THEME_PALETTES.forEach((p) => {
       list.push({
         id: `theme-${p.id}`,
@@ -137,7 +157,7 @@ export function CommandPalette() {
       });
     });
 
-    // 4. Quick Actions
+    // 5. Quick Actions
     list.push({
       id: "action-dark-light",
       title: theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode",
@@ -150,7 +170,7 @@ export function CommandPalette() {
     });
 
     return list;
-  }, [habits, completedHabitIds, router, setPalette, theme, toggleTheme]);
+  }, [habits, completedHabitIds, router, setPalette, setBackgroundStyle, theme, toggleTheme]);
 
   // Filter items by search query
   const filteredItems = useMemo(() => {

@@ -18,6 +18,14 @@ export type ThemePalette =
 
 export type ThemeMode = "light" | "dark" | "system";
 
+export type BackgroundStyle =
+  | "stardust"
+  | "magnetic_grid"
+  | "constellation"
+  | "aurora_glow"
+  | "warp"
+  | "minimal";
+
 export interface PaletteInfo {
   id: ThemePalette;
   name: string;
@@ -25,6 +33,13 @@ export interface PaletteInfo {
   accentLight: string;
   accentDark: string;
   bgDark: string;
+}
+
+export interface BackgroundInfo {
+  id: BackgroundStyle;
+  name: string;
+  description: string;
+  badge: string;
 }
 
 export const THEME_PALETTES: PaletteInfo[] = [
@@ -78,12 +93,53 @@ export const THEME_PALETTES: PaletteInfo[] = [
   },
 ];
 
+export const BACKGROUND_STYLES: BackgroundInfo[] = [
+  {
+    id: "stardust",
+    name: "Cosmic Embers & Fireflies",
+    description: "Warm glowing particles drifting in 3D depth with interactive cursor glow",
+    badge: "Cosmic 3D",
+  },
+  {
+    id: "magnetic_grid",
+    name: "Magnetic Dot Matrix",
+    description: "Minimalist 3D dot array deforming with magnetic cursor gravity & depth",
+    badge: "Interactive Grid",
+  },
+  {
+    id: "constellation",
+    name: "Celestial Constellation",
+    description: "Crisp, delicate star nodes connected by subtle geometric filaments",
+    badge: "Constellation",
+  },
+  {
+    id: "aurora_glow",
+    name: "Ethereal Aurora Glow",
+    description: "Volumetric luxury gradient orbs drifting smoothly with ambient breathing light",
+    badge: "Liquid Glow",
+  },
+  {
+    id: "warp",
+    name: "Hyperspace Warp Field",
+    description: "Cosmic velocity stars accelerating forward in 3D perspective",
+    badge: "Velocity 3D",
+  },
+  {
+    id: "minimal",
+    name: "Pure Glass Studio",
+    description: "Zero visual noise, clean dark backdrop with maximum focus",
+    badge: "Battery Saver",
+  },
+];
+
 interface ThemeContextValue {
   palette: ThemePalette;
   mode: ThemeMode;
   theme: "light" | "dark"; // Resolved actual theme for compatibility
+  backgroundStyle: BackgroundStyle;
   setPalette: (palette: ThemePalette) => void;
   setMode: (mode: ThemeMode) => void;
+  setBackgroundStyle: (style: BackgroundStyle) => void;
   toggleTheme: () => void;
 }
 
@@ -91,8 +147,10 @@ const ThemeContext = createContext<ThemeContextValue>({
   palette: "terracotta",
   mode: "light",
   theme: "light",
+  backgroundStyle: "stardust",
   setPalette: () => {},
   setMode: () => {},
+  setBackgroundStyle: () => {},
   toggleTheme: () => {},
 });
 
@@ -115,14 +173,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [palette, setPaletteState] = useState<ThemePalette>("terracotta");
   const [mode, setModeState] = useState<ThemeMode>("light");
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [backgroundStyle, setBackgroundStyleState] = useState<BackgroundStyle>("stardust");
 
   useEffect(() => {
     const storedPalette = (localStorage.getItem("habitflow_palette") as ThemePalette | null) ?? "terracotta";
+    const storedBg = (localStorage.getItem("habitflow_bg_style") as BackgroundStyle | null) ?? "stardust";
     const storedMode = (localStorage.getItem("habitflow_mode") as ThemeMode | null) ??
       (localStorage.getItem("theme") as "dark" | "light" | null) ??
       "light";
 
     setPaletteState(storedPalette);
+    setBackgroundStyleState(storedBg);
     setModeState(storedMode);
 
     let actual: "light" | "dark" = "light";
@@ -152,6 +213,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     applyThemeToDOM(nextPalette, resolvedTheme);
   }
 
+  function setBackgroundStyle(nextStyle: BackgroundStyle) {
+    setBackgroundStyleState(nextStyle);
+    localStorage.setItem("habitflow_bg_style", nextStyle);
+  }
+
   function setMode(nextMode: ThemeMode) {
     setModeState(nextMode);
     localStorage.setItem("habitflow_mode", nextMode);
@@ -178,8 +244,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         palette,
         mode,
         theme: resolvedTheme,
+        backgroundStyle,
         setPalette,
         setMode,
+        setBackgroundStyle,
         toggleTheme,
       }}
     >
