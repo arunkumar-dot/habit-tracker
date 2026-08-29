@@ -101,18 +101,19 @@ export function buildHeatmapGrid(
   return { weeks, monthLabels };
 }
 
-// ── Colour helper (CSS-variable aware) ───────────────────────────────────────
-
-const LEVEL_STYLES: Record<number, React.CSSProperties> = {
-  0: { background: "var(--bg-sunken)" },
-  1: { background: "rgba(194, 65, 12, 0.20)" },
-  2: { background: "rgba(194, 65, 12, 0.45)" },
-  3: { background: "rgba(194, 65, 12, 0.70)" },
-  4: { background: "var(--accent)" },
-};
-
 export function cellStyle(level: 0 | 1 | 2 | 3 | 4): React.CSSProperties {
-  return LEVEL_STYLES[level];
+  switch (level) {
+    case 0:
+      return { background: "var(--bg-sunken)" };
+    case 1:
+      return { background: "color-mix(in srgb, var(--accent) 22%, transparent)" };
+    case 2:
+      return { background: "color-mix(in srgb, var(--accent) 45%, transparent)" };
+    case 3:
+      return { background: "color-mix(in srgb, var(--accent) 70%, transparent)" };
+    case 4:
+      return { background: "var(--accent)" };
+  }
 }
 
 // ── Date range helpers ────────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, CloudSun, Moon, Sparkles, Check, Flame } from "lucide-react";
 import { HabitStreakBadge } from "@/components/habits/habit-streak-badge";
@@ -13,10 +13,6 @@ import { playCompletionChime } from "@/lib/sound-effects";
 import type { Habit, HabitCompletion } from "@/types";
 
 type TimeBucket = "all" | "morning" | "afternoon" | "evening";
-
-interface TodaysHabitsProps {
-  onCompletedChange?: (isCompleted: boolean, ratio: number) => void;
-}
 
 function getTimeBucket(timeStr: string): "morning" | "afternoon" | "evening" {
   const hour = parseInt(timeStr.split(":")[0], 10);
@@ -157,7 +153,7 @@ function CompletedHabitRow({ habit, date }: { habit: Habit; date: string }) {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export function TodaysHabits({ onCompletedChange }: TodaysHabitsProps = {}) {
+export function TodaysHabits() {
   const { habits, isLoading: habitsLoading } = useHabits();
   const dateStr = today();
   const { completions, completedHabitIds, isLoading: completionsLoading } = useCompletionsForDate(dateStr);
@@ -201,18 +197,6 @@ export function TodaysHabits({ onCompletedChange }: TodaysHabitsProps = {}) {
       },
     };
   }, [habits, completedHabitIds, completions, timeFilter]);
-
-  useEffect(() => {
-    if (!habits) return;
-    const total = habits.length;
-    if (total === 0) {
-      onCompletedChange?.(false, 0);
-      return;
-    }
-    const isDone = counts.all === 0;
-    const ratio = (total - counts.all) / total;
-    onCompletedChange?.(isDone, ratio);
-  }, [habits, counts.all, onCompletedChange]);
 
   if (!habitsLoading && !completionsLoading && (!habits || habits.length === 0)) return null;
 

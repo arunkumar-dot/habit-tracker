@@ -26,47 +26,12 @@ export function JourneyHeatmapSection() {
         Days you showed up.
       </p>
 
-      {/* Heatmap — has its own overflow-x-auto */}
+      {/* Heatmap — has its own overflow-x-auto & theme-reactive legend */}
       <Heatmap
         startDate={range.startDate}
         endDate={range.endDate}
         cellSize={11}
       />
-
-      {/* Legend */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          marginTop: 10,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: 11,
-            color: "var(--text-subtle)",
-          }}
-        >
-          Less
-        </span>
-        {["#F3EFE8", "#E5C9A8", "#C8956A", "#A0622A", "#7C2D12"].map((color) => (
-          <div
-            key={color}
-            style={{ width: 11, height: 11, borderRadius: 2, background: color }}
-          />
-        ))}
-        <span
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: 11,
-            color: "var(--text-subtle)",
-          }}
-        >
-          More
-        </span>
-      </div>
     </section>
   );
 }

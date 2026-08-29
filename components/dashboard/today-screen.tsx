@@ -212,18 +212,10 @@ export function TodayScreen() {
   const { habits } = useHabits();
   const { completedHabitIds } = useCompletionsForDate(todayStr);
 
-  const [liveCompletion, setLiveCompletion] = useState<{ isDone: boolean; ratio: number } | null>(null);
-
   const totalHabitsCount = habits?.length ?? 0;
   const completedCount = habits?.filter((h) => completedHabitIds.has(h._id)).length ?? 0;
-  const realIsCompletedToday = liveCompletion
-    ? liveCompletion.isDone
-    : totalHabitsCount > 0 && completedCount === totalHabitsCount;
-  const realCompletionRatio = liveCompletion
-    ? liveCompletion.ratio
-    : totalHabitsCount > 0
-    ? completedCount / totalHabitsCount
-    : 0;
+  const realIsCompletedToday = totalHabitsCount > 0 && completedCount === totalHabitsCount;
+  const realCompletionRatio = totalHabitsCount > 0 ? completedCount / totalHabitsCount : 0;
   const realStreak = bestStreak ?? 0;
 
   const [devOverrides, setDevOverrides] = useState<{
@@ -232,9 +224,9 @@ export function TodayScreen() {
     completionRatio: number;
     isOverridden: boolean;
   }>({
-    streak: realStreak,
-    isCompletedToday: realIsCompletedToday,
-    completionRatio: realCompletionRatio,
+    streak: 0,
+    isCompletedToday: false,
+    completionRatio: 0,
     isOverridden: false,
   });
 
@@ -428,9 +420,7 @@ export function TodayScreen() {
           </Link>
         </div>
 
-        <TodaysHabits
-          onCompletedChange={(isDone, ratio) => setLiveCompletion({ isDone, ratio })}
-        />
+        <TodaysHabits />
       </motion.section>
 
       {/* ── 3. Reflection CTA ─────────────────────────────────────────────── */}

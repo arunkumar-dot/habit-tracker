@@ -97,7 +97,7 @@ export function Heatmap({ onSelectDate, selectedDate, days, startDate, endDate, 
   return (
     <div>
       {/* Scrollable wrapper */}
-      <div className="overflow-x-auto pb-1">
+      <div className="overflow-x-auto pb-3">
         {/* Outer container: relative so tooltip can be absolute inside */}
         <div
           data-heatmap-grid
@@ -106,7 +106,7 @@ export function Heatmap({ onSelectDate, selectedDate, days, startDate, endDate, 
         >
           {/* ── Month labels row ───────────────────────────────────────── */}
           <div
-            className="flex mb-1"
+            className="flex mb-1.5"
             style={{ paddingLeft: DAY_LABEL_WIDTH, height: 16 }}
           >
             {grid.monthLabels.map(({ label, weekIndex }, i) => {
@@ -235,10 +235,10 @@ export function Heatmap({ onSelectDate, selectedDate, days, startDate, endDate, 
         </div>
       </div>
 
-      {/* ── Legend ─────────────────────────────────────────────────────── */}
+      {/* ── Theme-Reactive Legend ──────────────────────────────────────── */}
       <div
-        className="flex items-center gap-1.5 mt-2"
-        style={{ paddingLeft: 28 }}
+        className="flex items-center gap-2 mt-3"
+        style={{ paddingLeft: DAY_LABEL_WIDTH }}
       >
         <span
           style={{
