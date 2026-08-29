@@ -26,6 +26,11 @@ const FAQS = [
       "All user data is isolated in secure cloud databases managed through cryptographic Clerk tokens. We never sell user data, embed third-party ad networks, or run invasive tracking pixels.",
   },
   {
+    question: "Can I backfill or edit habits from previous days?",
+    answer:
+      "No. RoutineIQ enforces real-time daily accountability. Habits must be completed before midnight on the day they occur to count toward your streak. Past days are sealed as an honest historical record—if you miss a day, you reflect on what happened in your Journal and show up stronger today.",
+  },
+  {
     question: "Can I export or backup my data?",
     answer:
       "Yes. You can download a complete structured JSON export of all your habits, completion timestamps, streak achievements, and journal reflections anytime under Settings → Danger Zone in one click.",

@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { Shield, Clock } from "lucide-react";
 import { useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useCompletionsForDate } from "@/hooks/use-completions";
 import { useHabits } from "@/hooks/use-habits";
-import { toDateString } from "@/lib/date-utils";
+import { toDateString, today } from "@/lib/date-utils";
 
 interface DayDetailPanelProps {
   selectedDate: string;
@@ -63,10 +64,13 @@ export function DayDetailPanel({ selectedDate }: DayDetailPanelProps) {
     ? journalContent.slice(0, 200) + "…"
     : journalContent;
 
+  const isToday = selectedDate === today();
+  const isPast = selectedDate < today();
+
   return (
     <div
       data-testid="day-detail-panel"
-      className="rounded-lg p-4 flex flex-col gap-4"
+      className="rounded-2xl p-5 flex flex-col gap-4"
       style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
     >
       {/* Heading */}
@@ -230,6 +234,28 @@ export function DayDetailPanel({ selectedDate }: DayDetailPanelProps) {
           </p>
         </section>
       )}
+
+      {/* ── Strict Integrity Information Notice ── */}
+      <div
+        className="pt-3 border-t border-[var(--border-subtle)] flex items-start gap-2 text-[11px] leading-relaxed"
+        style={{ color: "var(--text-tertiary)" }}
+      >
+        {isPast ? (
+          <>
+            <Shield size={13} className="text-[var(--accent)] flex-shrink-0 mt-0.5" />
+            <span>
+              <strong>Sealed Historical Record:</strong> Past habits cannot be retroactively modified to preserve genuine discipline and streak integrity.
+            </span>
+          </>
+        ) : isToday ? (
+          <>
+            <Clock size={13} className="text-[var(--accent)] flex-shrink-0 mt-0.5" />
+            <span>
+              <strong>Today&apos;s Window:</strong> Complete habits before midnight to build your verified streak.
+            </span>
+          </>
+        ) : null}
+      </div>
     </div>
   );
 }
