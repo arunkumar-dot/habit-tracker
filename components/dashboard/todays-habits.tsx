@@ -2,8 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, CloudSun, Moon, Sparkles } from "lucide-react";
-import { HabitCompletionButton } from "@/components/habits/habit-completion-button";
+import { Sun, CloudSun, Moon, Sparkles, Check, Flame } from "lucide-react";
 import { HabitStreakBadge } from "@/components/habits/habit-streak-badge";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDate } from "@/hooks/use-completions";
@@ -28,7 +27,8 @@ function ActiveHabitRow({ habit, date }: { habit: Habit; date: string }) {
   const { isCompleted, toggle } = useOptimisticCompletion(habit._id, date);
   const color = habit.color ?? "var(--accent)";
 
-  const handleToggle = async () => {
+  const handleToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!isCompleted) {
       playCompletionChime();
     }
@@ -41,41 +41,56 @@ function ActiveHabitRow({ habit, date }: { habit: Habit; date: string }) {
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
-      whileHover={{ x: 2 }}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
       transition={{ duration: 0.2 }}
-      className="flex items-center gap-3.5 py-3 px-3.5 my-1 rounded-2xl transition-all duration-200 hover:bg-[var(--bg-hover)]"
+      onClick={handleToggle}
+      className="group flex items-center justify-between gap-3.5 py-3 px-4 my-1.5 rounded-2xl transition-all duration-200 cursor-pointer border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:border-[var(--accent)]/50 hover:shadow-xs"
     >
-      <div
-        className="flex-shrink-0 relative flex items-center justify-center"
-        style={{ width: 12, height: 12 }}
-      >
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        {/* Habit Color Indicator */}
         <div
-          className="absolute inset-0 rounded-full blur-[3px] opacity-70"
-          style={{ background: color }}
-        />
-        <div
-          className="relative z-10 rounded-full"
-          style={{ width: 8, height: 8, background: color }}
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
-          {habit.title}
-        </p>
-        <p
-          className="text-xs mt-0.5"
-          style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
+          className="flex-shrink-0 relative flex items-center justify-center"
+          style={{ width: 12, height: 12 }}
         >
-          {formatDisplayTime(habit.startTime)}
-        </p>
+          <div
+            className="absolute inset-0 rounded-full blur-[3px] opacity-70"
+            style={{ background: color }}
+          />
+          <div
+            className="relative z-10 rounded-full"
+            style={{ width: 8, height: 8, background: color }}
+          />
+        </div>
+
+        {/* Title & Time */}
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold truncate group-hover:text-[var(--accent)] transition-colors" style={{ color: "var(--text-primary)" }}>
+            {habit.title}
+          </p>
+          <p
+            className="text-xs mt-0.5"
+            style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}
+          >
+            {formatDisplayTime(habit.startTime)}
+          </p>
+        </div>
       </div>
-      <HabitStreakBadge habitId={habit._id} frequency={habit.frequency} />
-      <HabitCompletionButton
-        isCompleted={isCompleted}
-        onToggle={handleToggle}
-        color={color}
-        size="sm"
-      />
+
+      {/* Streak Badge & Interactive Checkmark Box */}
+      <div className="flex items-center gap-2.5 flex-shrink-0">
+        <HabitStreakBadge habitId={habit._id} frequency={habit.frequency} />
+        
+        {/* Prominent Checkbox Button */}
+        <button
+          type="button"
+          onClick={handleToggle}
+          aria-label={`Mark ${habit.title} complete`}
+          className="w-7 h-7 rounded-xl flex items-center justify-center transition-all duration-200 bg-[var(--bg-sunken)] border border-[var(--border-default)] group-hover:border-[var(--accent)] group-hover:bg-[var(--accent)]/15 group-hover:scale-105 cursor-pointer"
+        >
+          <Check size={14} className="opacity-0 group-hover:opacity-60 text-[var(--accent)] transition-opacity" />
+        </button>
+      </div>
     </motion.div>
   );
 }
@@ -86,29 +101,52 @@ function CompletedHabitRow({ habit, date }: { habit: Habit; date: string }) {
   const { toggle } = useOptimisticCompletion(habit._id, date);
   const color = habit.color ?? "var(--accent)";
 
+  const handleToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await toggle();
+  };
+
   return (
     <motion.div
       layout
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.12 } }}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
       transition={{ duration: 0.2 }}
-      className="flex items-center gap-3.5 py-2.5 px-3.5 my-1 rounded-2xl transition-all opacity-80 hover:opacity-100 hover:bg-[var(--bg-hover)]"
+      onClick={handleToggle}
+      className="group flex items-center justify-between gap-3.5 py-2.5 px-4 my-1.5 rounded-2xl transition-all duration-200 cursor-pointer border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/40 hover:bg-[var(--bg-hover)]"
     >
-      <div
-        className="flex-shrink-0 rounded-full"
-        style={{ width: 8, height: 8, background: color, opacity: 0.4 }}
-      />
-      <p className="flex-1 text-sm truncate line-through" style={{ color: "var(--text-tertiary)" }}>
-        {habit.title}
-      </p>
-      <HabitStreakBadge habitId={habit._id} frequency={habit.frequency} />
-      <HabitCompletionButton
-        isCompleted={true}
-        onToggle={toggle}
-        color={color}
-        size="sm"
-      />
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div
+          className="flex-shrink-0 rounded-full"
+          style={{ width: 8, height: 8, background: color, opacity: 0.4 }}
+        />
+        <p className="text-sm truncate line-through flex-1" style={{ color: "var(--text-tertiary)" }}>
+          {habit.title}
+        </p>
+      </div>
+
+      <div className="flex items-center gap-2.5 flex-shrink-0">
+        <HabitStreakBadge habitId={habit._id} frequency={habit.frequency} />
+        
+        {/* Completed Checked Box */}
+        <button
+          type="button"
+          onClick={handleToggle}
+          aria-label={`Uncheck ${habit.title}`}
+          className="w-7 h-7 rounded-xl flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer"
+          style={{
+            background: "var(--accent)",
+            color: "#ffffff",
+            border: "1px solid var(--accent)",
+          }}
+          title="Click to uncheck"
+        >
+          <Check size={14} className="stroke-[2.5]" />
+        </button>
+      </div>
     </motion.div>
   );
 }
@@ -199,7 +237,7 @@ export function TodaysHabits() {
               key={bucket.id}
               type="button"
               onClick={() => setTimeFilter(bucket.id)}
-              className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 isSelected
                   ? "text-[var(--text-primary)]"
                   : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-sunken)]"
@@ -264,7 +302,7 @@ export function TodaysHabits() {
               key="all-done"
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="glass-panel text-center py-6 px-4 rounded-2xl my-2"
+              className="glass-panel text-center py-6 px-4 rounded-2xl my-2 border border-[var(--border-subtle)]"
             >
               <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
                 {timeFilter === "all"
@@ -272,7 +310,7 @@ export function TodaysHabits() {
                   : `No remaining ${timeFilter} habits 🎉`}
               </p>
               <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
-                Great work building consistency.
+                All habits are checked off. The 3D crystal is glowing in celebration.
               </p>
             </motion.div>
           )}
@@ -284,13 +322,13 @@ export function TodaysHabits() {
         <div className="pt-2">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs uppercase tracking-wider font-semibold" style={{ color: "var(--text-tertiary)" }}>
-              Completed Today
+              Completed Today (Click to toggle)
             </span>
             <span
-              className="text-xs px-2 py-0.5 rounded-full font-mono"
+              className="text-xs px-2 py-0.5 rounded-full font-mono font-semibold"
               style={{
-                background: "var(--bg-sunken)",
-                color: "var(--text-tertiary)",
+                background: "color-mix(in srgb, var(--accent) 15%, transparent)",
+                color: "var(--accent)",
               }}
             >
               {completedHabits.length}
