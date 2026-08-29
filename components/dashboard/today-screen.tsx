@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import { ChevronRight, Sparkles, Flame, CheckCircle2, Trophy, Target, Check } from "lucide-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useBestStreak } from "@/hooks/use-best-streak";
-import { useCompletionsForDateRange } from "@/hooks/use-completions";
+import { useCompletionsForDate, useCompletionsForDateRange } from "@/hooks/use-completions";
+import { useHabits } from "@/hooks/use-habits";
 import { TodaysHabits } from "@/components/dashboard/todays-habits";
 import { ThreeStreakCrystal } from "@/components/3d/three-streak-crystal";
 import { today } from "@/lib/date-utils";
@@ -207,6 +208,14 @@ export function TodayScreen() {
     return set;
   }, [completions]);
 
+  const { habits } = useHabits();
+  const { completedHabitIds } = useCompletionsForDate(todayStr);
+
+  const totalHabitsCount = habits?.length ?? 0;
+  const completedCount = habits?.filter((h) => completedHabitIds.has(h._id)).length ?? 0;
+  const isCompletedToday = totalHabitsCount > 0 && completedCount === totalHabitsCount;
+  const completionRatio = totalHabitsCount > 0 ? completedCount / totalHabitsCount : 0;
+
   const milestone = getNextMilestone(bestStreak ?? 0);
 
   return (
@@ -356,7 +365,12 @@ export function TodayScreen() {
 
           {/* Interactive 3D Streak Solid Widget */}
           <div className="flex-shrink-0 flex items-center justify-center self-center sm:self-start mt-2 sm:mt-0">
-            <ThreeStreakCrystal streak={bestStreak ?? 0} size={150} />
+            <ThreeStreakCrystal
+              streak={bestStreak ?? 0}
+              size={150}
+              isCompletedToday={isCompletedToday}
+              completionRatio={completionRatio}
+            />
           </div>
         </div>
       </motion.section>

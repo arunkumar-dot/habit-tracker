@@ -15,6 +15,7 @@ const DEMO_MILESTONES = [
 
 export function LandingHero() {
   const [demoStreak, setDemoStreak] = useState(7);
+  const [demoCompletedToday, setDemoCompletedToday] = useState(false);
 
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
@@ -160,14 +161,34 @@ export function LandingHero() {
 
               {/* 3D Crystal Container */}
               <div className="flex items-center justify-center my-2 h-[190px] relative">
-                <ThreeStreakCrystal streak={demoStreak} size={210} />
+                <ThreeStreakCrystal
+                  streak={demoStreak}
+                  size={210}
+                  isCompletedToday={demoCompletedToday}
+                  completionRatio={demoCompletedToday ? 1 : 0.4}
+                />
               </div>
 
-              {/* Interactive Milestone Selector */}
-              <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex flex-col gap-2">
-                <span className="text-[11px] font-medium" style={{ color: "var(--text-tertiary)" }}>
-                  Try a streak level:
-                </span>
+              {/* Interactive Milestone & Daily Completion Selector */}
+              <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex flex-col gap-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-medium" style={{ color: "var(--text-tertiary)" }}>
+                    Streak level:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setDemoCompletedToday(!demoCompletedToday)}
+                    className="text-[10px] font-semibold px-2 py-0.5 rounded-md cursor-pointer transition-all flex items-center gap-1"
+                    style={{
+                      background: demoCompletedToday ? "var(--success)" : "var(--bg-sunken)",
+                      color: demoCompletedToday ? "#ffffff" : "var(--text-secondary)",
+                      border: demoCompletedToday ? "1px solid var(--success)" : "1px solid var(--border-subtle)",
+                    }}
+                  >
+                    <Sparkles size={11} />
+                    <span>{demoCompletedToday ? "All Habits Done ✨" : "Mark 100% Done"}</span>
+                  </button>
+                </div>
                 <div className="grid grid-cols-2 gap-1.5">
                   {DEMO_MILESTONES.map((m) => (
                     <button
