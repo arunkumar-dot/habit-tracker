@@ -1,23 +1,6 @@
 import { mutation, internalQuery, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
-import type { MutationCtx, QueryCtx } from "./_generated/server";
-
-// ============================================
-// INTERNAL HELPER
-// ============================================
-
-async function getAuthUser(ctx: MutationCtx | QueryCtx) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthenticated");
-
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-    .unique();
-
-  if (!user) throw new Error("User not found. Please reload the page.");
-  return user;
-}
+import { getAuthUser } from "./lib/auth";
 
 // ============================================
 // PUBLIC MUTATIONS

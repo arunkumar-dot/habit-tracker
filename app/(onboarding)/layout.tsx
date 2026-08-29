@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UserSync } from "@/components/layout/user-sync";
 
 export const metadata: Metadata = {
   title: "Get Started — HabitFlow",
@@ -14,6 +15,7 @@ export default function OnboardingLayout({
       className="h-full"
       style={{ background: "var(--bg-base)" }}
     >
+      <UserSync />
       {children}
     </div>
   );

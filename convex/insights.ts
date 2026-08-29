@@ -1,19 +1,6 @@
 import { query } from "./_generated/server";
 import { v } from "convex/values";
-import type { QueryCtx } from "./_generated/server";
-
-async function getAuthUser(ctx: QueryCtx) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthenticated");
-
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-    .unique();
-
-  if (!user) throw new Error("User not found. Please reload the page.");
-  return user;
-}
+import { getOptionalAuthUser } from "./lib/auth";
 
 /**
  * Returns per-day completion counts for the last `days` days.
@@ -22,7 +9,8 @@ async function getAuthUser(ctx: QueryCtx) {
 export const getCompletionStats = query({
   args: { days: v.number() },
   handler: async (ctx, args) => {
-    const user = await getAuthUser(ctx);
+    const user = await getOptionalAuthUser(ctx);
+    if (!user) return [];
 
     const endDate = new Date().toLocaleDateString("en-CA");
     const startDate = (() => {
@@ -79,7 +67,8 @@ export const getCompletionStats = query({
 export const getHabitCompletionStats = query({
   args: { days: v.number() },
   handler: async (ctx, args) => {
-    const user = await getAuthUser(ctx);
+    const user = await getOptionalAuthUser(ctx);
+    if (!user) return [];
 
     const endDate = new Date().toLocaleDateString("en-CA");
     const startDate = (() => {
@@ -129,7 +118,10 @@ export const getHabitCompletionStats = query({
 export const getPomodoroStats = query({
   args: {},
   handler: async (ctx) => {
-    const user = await getAuthUser(ctx);
+    const user = await getOptionalAuthUser(ctx);
+    if (!user) {
+      return { totalMinutes: 0, sessionCount: 0 };
+    }
 
     const sessions = await ctx.db
       .query("pomodoroSessions")

@@ -1,28 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import type { QueryCtx, MutationCtx } from "./_generated/server";
 import { withSentry } from "./lib/sentry";
-
-// ============================================
-// INTERNAL HELPER
-// ============================================
-
-/**
- * Resolves the authenticated user's Convex record.
- * Throws if unauthenticated or user record not found.
- */
-async function getAuthUser(ctx: QueryCtx | MutationCtx) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthenticated");
-
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-    .unique();
-
-  if (!user) throw new Error("User not found. Please reload the page.");
-  return user;
-}
+import { getAuthUser, getOptionalAuthUser } from "./lib/auth";
 
 // ============================================
 // QUERIES
@@ -34,7 +13,8 @@ async function getAuthUser(ctx: QueryCtx | MutationCtx) {
 export const listHabits = query({
   args: {},
   handler: async (ctx) => {
-    const user = await getAuthUser(ctx);
+    const user = await getOptionalAuthUser(ctx);
+    if (!user) return [];
 
     const habits = await ctx.db
       .query("habits")
@@ -54,7 +34,8 @@ export const listHabits = query({
 export const getHabit = query({
   args: { habitId: v.id("habits") },
   handler: async (ctx, args) => {
-    const user = await getAuthUser(ctx);
+    const user = await getOptionalAuthUser(ctx);
+    if (!user) return null;
     const habit = await ctx.db.get(args.habitId);
 
     if (!habit || habit.userId !== user._id) return null;
@@ -69,7 +50,8 @@ export const getHabit = query({
 export const listHabitsForTimeline = query({
   args: {},
   handler: async (ctx) => {
-    const user = await getAuthUser(ctx);
+    const user = await getOptionalAuthUser(ctx);
+    if (!user) return [];
 
     const habits = await ctx.db
       .query("habits")

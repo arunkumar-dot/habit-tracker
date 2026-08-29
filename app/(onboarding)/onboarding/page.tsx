@@ -16,7 +16,7 @@ const PLACEHOLDERS = [
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
+  const { user: clerkUser, isSignedIn, isLoaded } = useUser();
   const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
 
   const [step, setStep] = useState<1 | 2>(1);
@@ -24,13 +24,27 @@ export default function OnboardingPage() {
   const [habitName, setHabitName] = useState("");
   const [habitTime, setHabitTime] = useState("07:00");
   const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
 
   const identityInputRef = useRef<HTMLTextAreaElement>(null);
   const habitInputRef = useRef<HTMLInputElement>(null);
 
+  const upsertUser = useMutation(api.users.upsertUser);
   const completeOnboarding = useMutation(api.users.completeOnboarding);
   const createHabit = useMutation(api.habits.createHabit);
+
+  // Sync Clerk user -> Convex as soon as auth resolves
+  useEffect(() => {
+    if (authLoading || !isAuthenticated || !clerkUser) return;
+    upsertUser({
+      name: clerkUser.fullName ?? clerkUser.username ?? "Anonymous",
+      firstName: clerkUser.firstName ?? undefined,
+      lastName: clerkUser.lastName ?? undefined,
+      email: clerkUser.primaryEmailAddress?.emailAddress ?? "",
+      imageUrl: clerkUser.imageUrl,
+    }).catch(console.error);
+  }, [authLoading, isAuthenticated, clerkUser, upsertUser]);
 
   // Query existing habits to decide whether to show Step 2
   const habits = useQuery(
@@ -86,16 +100,27 @@ export default function OnboardingPage() {
 
   async function handleStep1() {
     if (!canAdvance || submitting) return;
+    setErrorMsg(null);
 
     // If user already has habits, skip Step 2 and complete onboarding now
     const hasHabits = Array.isArray(habits) && habits.length > 0;
     if (hasHabits) {
       setSubmitting(true);
       try {
+        if (clerkUser) {
+          await upsertUser({
+            name: clerkUser.fullName ?? clerkUser.username ?? "Anonymous",
+            firstName: clerkUser.firstName ?? undefined,
+            lastName: clerkUser.lastName ?? undefined,
+            email: clerkUser.primaryEmailAddress?.emailAddress ?? "",
+            imageUrl: clerkUser.imageUrl,
+          });
+        }
         await completeOnboarding({ identityStatement: identityTrimmed });
         router.replace("/dashboard");
-      } catch (err) {
+      } catch (err: unknown) {
         console.error(err);
+        setErrorMsg(err instanceof Error ? err.message : "Failed to save. Please try again.");
         setSubmitting(false);
       }
       return;
@@ -110,16 +135,29 @@ export default function OnboardingPage() {
   async function handleStep2() {
     if (!canFinish || submitting) return;
     setSubmitting(true);
+    setErrorMsg(null);
     try {
+      if (clerkUser) {
+        await upsertUser({
+          name: clerkUser.fullName ?? clerkUser.username ?? "Anonymous",
+          firstName: clerkUser.firstName ?? undefined,
+          lastName: clerkUser.lastName ?? undefined,
+          email: clerkUser.primaryEmailAddress?.emailAddress ?? "",
+          imageUrl: clerkUser.imageUrl,
+        });
+      }
       await createHabit({
         title: habitNameTrimmed,
         startTime: habitTime,
         frequency: "daily",
       });
-      await completeOnboarding({ identityStatement: identityTrimmed });
+      await completeOnboarding({
+        identityStatement: identityTrimmed.length >= 3 ? identityTrimmed : habitNameTrimmed,
+      });
       router.replace("/dashboard");
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
+      setErrorMsg(err instanceof Error ? err.message : "Failed to save habit. Please try again.");
       setSubmitting(false);
     }
   }
@@ -222,8 +260,29 @@ export default function OnboardingPage() {
           width: "100%",
           margin: "0 auto",
           boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
         }}
       >
+        {errorMsg && (
+          <div
+            role="alert"
+            style={{
+              padding: "12px 16px",
+              borderRadius: 12,
+              background: "rgba(239, 68, 68, 0.1)",
+              border: "1px solid rgba(239, 68, 68, 0.25)",
+              color: "#ef4444",
+              fontSize: 14,
+              fontFamily: "var(--font-sans)",
+              textAlign: "center",
+            }}
+          >
+            {errorMsg}
+          </div>
+        )}
+
         <button
           type="button"
           onClick={step === 1 ? handleStep1 : handleStep2}

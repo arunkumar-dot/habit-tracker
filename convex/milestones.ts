@@ -1,25 +1,8 @@
 import { internalMutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import type { QueryCtx } from "./_generated/server";
 import { MILESTONES } from "../lib/milestone-config";
 import { calculateStreak } from "../lib/streak-utils";
-
-// ============================================
-// INTERNAL HELPER
-// ============================================
-
-async function getAuthUser(ctx: QueryCtx) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthenticated");
-
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-    .unique();
-
-  if (!user) throw new Error("User not found. Please reload the page.");
-  return user;
-}
+import { getOptionalAuthUser } from "./lib/auth";
 
 // ============================================
 // QUERIES
@@ -35,7 +18,8 @@ export const getUserMilestones = query({
     habitId: v.optional(v.id("habits")),
   },
   handler: async (ctx, args) => {
-    const user = await getAuthUser(ctx);
+    const user = await getOptionalAuthUser(ctx);
+    if (!user) return [];
 
     if (args.habitId) {
       // Verify habit ownership

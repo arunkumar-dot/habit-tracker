@@ -1,24 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
-import type { QueryCtx, MutationCtx } from "./_generated/server";
-
-// ============================================
-// INTERNAL HELPER
-// ============================================
-
-async function getAuthUser(ctx: QueryCtx | MutationCtx) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthenticated");
-
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-    .unique();
-
-  if (!user) throw new Error("User not found. Please reload the page.");
-  return user;
-}
+import { getAuthUser, getOptionalAuthUser } from "./lib/auth";
 
 // Returns "YYYY-MM-DD" in local time (same convention as the rest of the app)
 function todayDate(): string {
