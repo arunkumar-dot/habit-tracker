@@ -16,7 +16,7 @@ export function Footer() {
         color: "var(--text-tertiary)",
       }}
     >
-      <span>© 2026 HabitFlow</span>
+      <span>© 2026 RoutineIQ</span>
       <span className="mx-2" aria-hidden="true">
         ·
       </span>

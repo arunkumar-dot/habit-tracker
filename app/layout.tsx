@@ -36,14 +36,14 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "HabitFlow — Build Better Habits",
+  title: "RoutineIQ — Build Better Habits",
   description:
-    "Track your habits, monitor consistency, and visualize your daily routine with a beautiful timeline view.",
+    "Identity-first habit transformation with 3D streak crystals, reflection memories, and ambient focus soundscapes.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "HabitFlow",
+    title: "RoutineIQ",
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
