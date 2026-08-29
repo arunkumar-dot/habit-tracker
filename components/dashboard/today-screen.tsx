@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, Sparkles, Flame, CheckCircle2, Trophy, Target, Check } from "lucide-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -10,6 +10,7 @@ import { useCompletionsForDate, useCompletionsForDateRange } from "@/hooks/use-c
 import { useHabits } from "@/hooks/use-habits";
 import { TodaysHabits } from "@/components/dashboard/todays-habits";
 import { ThreeStreakCrystal } from "@/components/3d/three-streak-crystal";
+import { ThreeDevBar } from "@/components/3d/three-dev-bar";
 import { today } from "@/lib/date-utils";
 
 function timeGreeting(): string {
@@ -211,12 +212,41 @@ export function TodayScreen() {
   const { habits } = useHabits();
   const { completedHabitIds } = useCompletionsForDate(todayStr);
 
+  const [liveCompletion, setLiveCompletion] = useState<{ isDone: boolean; ratio: number } | null>(null);
+
   const totalHabitsCount = habits?.length ?? 0;
   const completedCount = habits?.filter((h) => completedHabitIds.has(h._id)).length ?? 0;
-  const isCompletedToday = totalHabitsCount > 0 && completedCount === totalHabitsCount;
-  const completionRatio = totalHabitsCount > 0 ? completedCount / totalHabitsCount : 0;
+  const realIsCompletedToday = liveCompletion
+    ? liveCompletion.isDone
+    : totalHabitsCount > 0 && completedCount === totalHabitsCount;
+  const realCompletionRatio = liveCompletion
+    ? liveCompletion.ratio
+    : totalHabitsCount > 0
+    ? completedCount / totalHabitsCount
+    : 0;
+  const realStreak = bestStreak ?? 0;
 
-  const milestone = getNextMilestone(bestStreak ?? 0);
+  const [devOverrides, setDevOverrides] = useState<{
+    streak: number;
+    isCompletedToday: boolean;
+    completionRatio: number;
+    isOverridden: boolean;
+  }>({
+    streak: realStreak,
+    isCompletedToday: realIsCompletedToday,
+    completionRatio: realCompletionRatio,
+    isOverridden: false,
+  });
+
+  const activeStreak = devOverrides.isOverridden ? devOverrides.streak : realStreak;
+  const activeIsCompleted = devOverrides.isOverridden
+    ? devOverrides.isCompletedToday
+    : realIsCompletedToday;
+  const activeRatio = devOverrides.isOverridden
+    ? devOverrides.completionRatio
+    : realCompletionRatio;
+
+  const milestone = getNextMilestone(activeStreak);
 
   return (
     <motion.div
@@ -366,10 +396,10 @@ export function TodayScreen() {
           {/* Interactive 3D Streak Solid Widget */}
           <div className="flex-shrink-0 flex items-center justify-center self-center sm:self-start mt-2 sm:mt-0">
             <ThreeStreakCrystal
-              streak={bestStreak ?? 0}
+              streak={activeStreak}
               size={150}
-              isCompletedToday={isCompletedToday}
-              completionRatio={completionRatio}
+              isCompletedToday={activeIsCompleted}
+              completionRatio={activeRatio}
             />
           </div>
         </div>
@@ -398,7 +428,9 @@ export function TodayScreen() {
           </Link>
         </div>
 
-        <TodaysHabits />
+        <TodaysHabits
+          onCompletedChange={(isDone, ratio) => setLiveCompletion({ isDone, ratio })}
+        />
       </motion.section>
 
       {/* ── 3. Reflection CTA ─────────────────────────────────────────────── */}
@@ -409,6 +441,14 @@ export function TodayScreen() {
       >
         <ReflectionCTA />
       </motion.section>
+
+      {/* ── 4. Floating 3D Crystal Dev Testing Bar ────────────────────────── */}
+      <ThreeDevBar
+        realStreak={realStreak}
+        realIsCompleted={realIsCompletedToday}
+        realCompletionRatio={realCompletionRatio}
+        onOverrideChange={setDevOverrides}
+      />
     </motion.div>
   );
 }
