@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { DURATIONS, type PomodoroMode } from "@/hooks/use-pomodoro";
 import { ThreeFocusOrb } from "@/components/3d/three-focus-orb";
+import { PomodoroAudioVisualizer } from "./pomodoro-audio-visualizer";
 
 // All modes use --accent; the mode label provides semantic distinction
 const MODE_COLORS: Record<PomodoroMode, string> = {
@@ -36,6 +37,9 @@ export function PomodoroTimer({ mode, remainingSecs, isRunning }: PomodoroTimerP
   return (
     <div className="flex items-center justify-center p-2 relative">
       <div className="relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
+        {/* Fluid Audio Frequency Visualizer */}
+        <PomodoroAudioVisualizer isActive={isRunning} color={color} size={320} />
+
         {/* Background 3D Focus Orb */}
         <div className="absolute inset-0 flex items-center justify-center opacity-75">
           <ThreeFocusOrb mode={mode} isRunning={isRunning} size={280} />

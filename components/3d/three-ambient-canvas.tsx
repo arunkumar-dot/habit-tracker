@@ -70,11 +70,13 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
     const container = containerRef.current;
     if (!container) return;
 
+    // Clean prior canvas
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+
     // Minimal mode disables WebGL canvas completely for battery saving
     if (backgroundStyle === "minimal") {
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
-      }
       return;
     }
 
@@ -144,7 +146,7 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
         positions[i3 + 1] = (Math.random() - 0.5) * spreadY;
         positions[i3 + 2] = (Math.random() - 0.5) * spreadZ;
 
-        speeds[i] = Math.random() * 0.02 + 0.008; // Upward drift
+        speeds[i] = Math.random() * 0.02 + 0.008;
         phases[i] = Math.random() * Math.PI * 2;
         sways[i] = Math.random() * 0.015 + 0.005;
 
@@ -176,7 +178,7 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
       const emberSystem = new THREE.Points(emberGeo, emberMat);
       scene.add(emberSystem);
 
-      // Dreamy foreground bokeh orbs
+      // Foreground bokeh orbs
       const bokehCount = 14;
       const bokehGeo = new THREE.BufferGeometry();
       const bokehPos = new Float32Array(bokehCount * 3);
@@ -230,18 +232,15 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
         for (let i = 0; i < emberCount; i++) {
           const i3 = i * 3;
 
-          // Upward rising + organic sway
           pos[i3 + 1] += speeds[i]!;
           pos[i3] += Math.sin(t * 1.2 + phases[i]!) * sways[i]!;
           pos[i3 + 2] += Math.cos(t * 0.9 + phases[i]!) * sways[i]!;
 
-          // Wrap vertically
           if (pos[i3 + 1]! > spreadY / 2) {
             pos[i3 + 1] = -spreadY / 2;
             pos[i3] = (Math.random() - 0.5) * spreadX;
           }
 
-          // Cursor proximity glow & magnetic swirl
           const dx = pos[i3]! - mouseWorldX;
           const dy = pos[i3 + 1]! - mouseWorldY;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -264,7 +263,6 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
         posAttr.needsUpdate = true;
         colAttr.needsUpdate = true;
 
-        // Bokeh floating drift
         const bPos = (bokehGeo.attributes.position as THREE.BufferAttribute).array as Float32Array;
         for (let i = 0; i < bokehCount; i++) {
           const i3 = i * 3;
@@ -369,7 +367,6 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
           const bx = basePositions[i3]!;
           const by = basePositions[i3 + 1]!;
 
-          // Subtle ambient breathing wave
           const ambientWave = Math.sin(bx * 0.2 + t * 1.5) * Math.cos(by * 0.2 + t) * 0.8;
 
           const dx = bx - mouseWorldX;
@@ -378,17 +375,14 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
 
           if (dist < magneticRadius) {
             const factor = 1 - dist / magneticRadius;
-            // 3D displacement toward camera + lateral magnetic pull
             pos[i3] = bx - (dx / (dist + 0.1)) * factor * 1.5;
             pos[i3 + 1] = by - (dy / (dist + 0.1)) * factor * 1.5;
             pos[i3 + 2] = ambientWave + factor * 5.0;
 
-            // Radiant color flare
             col[i3] = THREE.MathUtils.lerp(baseColors[i3]!, warmColor.r * 1.6, factor);
             col[i3 + 1] = THREE.MathUtils.lerp(baseColors[i3 + 1]!, warmColor.g * 1.6, factor);
             col[i3 + 2] = THREE.MathUtils.lerp(baseColors[i3 + 2]!, warmColor.b * 1.6, factor);
           } else {
-            // Spring return to origin
             pos[i3] += (bx - pos[i3]!) * 0.08;
             pos[i3 + 1] += (by - pos[i3 + 1]!) * 0.08;
             pos[i3 + 2] += (ambientWave - pos[i3 + 2]!) * 0.08;
@@ -413,7 +407,7 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
     }
 
     // -------------------------------------------------------------
-    // MODE 3: CELESTIAL CONSTELLATION
+    // MODE 3: CELESTIAL CONSTELLATION (constellation)
     // -------------------------------------------------------------
     else if (backgroundStyle === "constellation") {
       const nodeCount = window.innerWidth < 768 ? 65 : 110;
@@ -506,7 +500,6 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
           if (Math.abs(posArray[i3 + 1]!) > spreadY / 2) velocities[i]!.y *= -1;
           if (Math.abs(posArray[i3 + 2]!) > spreadZ / 2) velocities[i]!.z *= -1;
 
-          // Proximity connections
           for (let j = i + 1; j < nodeCount; j++) {
             const j3 = j * 3;
             const dx = posArray[i3]! - posArray[j3]!;
@@ -552,7 +545,7 @@ export function ThreeAmbientCanvas({ intensity = 1 }: ThreeAmbientCanvasProps) {
     }
 
     // -------------------------------------------------------------
-    // MODE 4: ETHEREAL AURORA GLOW (Soft Volumetric Glow Orbs)
+    // MODE 4: ETHEREAL AURORA GLOW (aurora_glow)
     // -------------------------------------------------------------
     else if (backgroundStyle === "aurora_glow") {
       const orbCount = 5;
