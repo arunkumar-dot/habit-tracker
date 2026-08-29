@@ -10,7 +10,6 @@ import { useCompletionsForDate, useCompletionsForDateRange } from "@/hooks/use-c
 import { useHabits } from "@/hooks/use-habits";
 import { TodaysHabits } from "@/components/dashboard/todays-habits";
 import { ThreeStreakCrystal } from "@/components/3d/three-streak-crystal";
-import { ThreeDevBar } from "@/components/3d/three-dev-bar";
 import { today } from "@/lib/date-utils";
 
 function timeGreeting(): string {
@@ -216,27 +215,9 @@ export function TodayScreen() {
   const completedCount = habits?.filter((h) => completedHabitIds.has(h._id)).length ?? 0;
   const realIsCompletedToday = totalHabitsCount > 0 && completedCount === totalHabitsCount;
   const realCompletionRatio = totalHabitsCount > 0 ? completedCount / totalHabitsCount : 0;
-  const realStreak = bestStreak ?? 0;
-
-  const [devOverrides, setDevOverrides] = useState<{
-    streak: number;
-    isCompletedToday: boolean;
-    completionRatio: number;
-    isOverridden: boolean;
-  }>({
-    streak: 0,
-    isCompletedToday: false,
-    completionRatio: 0,
-    isOverridden: false,
-  });
-
-  const activeStreak = devOverrides.isOverridden ? devOverrides.streak : realStreak;
-  const activeIsCompleted = devOverrides.isOverridden
-    ? devOverrides.isCompletedToday
-    : realIsCompletedToday;
-  const activeRatio = devOverrides.isOverridden
-    ? devOverrides.completionRatio
-    : realCompletionRatio;
+  const activeStreak = bestStreak ?? 0;
+  const activeIsCompleted = totalHabitsCount > 0 && completedCount === totalHabitsCount;
+  const activeRatio = totalHabitsCount > 0 ? completedCount / totalHabitsCount : 0;
 
   const milestone = getNextMilestone(activeStreak);
 
@@ -435,14 +416,6 @@ export function TodayScreen() {
       >
         <ReflectionCTA />
       </motion.section>
-
-      {/* ── 4. Floating 3D Crystal Dev Testing Bar ────────────────────────── */}
-      <ThreeDevBar
-        realStreak={realStreak}
-        realIsCompleted={realIsCompletedToday}
-        realCompletionRatio={realCompletionRatio}
-        onOverrideChange={setDevOverrides}
-      />
     </motion.div>
   );
 }
