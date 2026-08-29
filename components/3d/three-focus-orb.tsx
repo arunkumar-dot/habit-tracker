@@ -22,7 +22,7 @@ const THEME_FOCUS_COLORS: Record<string, { main: string; emissive: string; ring:
 
 export function ThreeFocusOrb({ mode, isRunning, size = 260 }: ThreeFocusOrbProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { palette: activePalette } = useTheme();
+  const { palette: activePalette, theme } = useTheme();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -189,7 +189,7 @@ export function ThreeFocusOrb({ mode, isRunning, size = 260 }: ThreeFocusOrbProp
         renderer.dispose();
       }
     };
-  }, [mode, isRunning, size]);
+  }, [mode, isRunning, size, activePalette, theme]);
 
   return (
     <div

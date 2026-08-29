@@ -17,6 +17,7 @@ import type * as habits from "../habits.js";
 import type * as http from "../http.js";
 import type * as insights from "../insights.js";
 import type * as journal from "../journal.js";
+import type * as lib_auth from "../lib/auth.js";
 import type * as lib_sentry from "../lib/sentry.js";
 import type * as milestones from "../milestones.js";
 import type * as notifications from "../notifications.js";
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   insights: typeof insights;
   journal: typeof journal;
+  "lib/auth": typeof lib_auth;
   "lib/sentry": typeof lib_sentry;
   milestones: typeof milestones;
   notifications: typeof notifications;

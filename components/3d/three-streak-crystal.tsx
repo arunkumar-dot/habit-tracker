@@ -20,7 +20,7 @@ const PALETTE_CRYSTAL_THEMES: Record<string, { base: string; emissive: string; m
 
 export function ThreeStreakCrystal({ streak, size = 180 }: ThreeStreakCrystalProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { palette } = useTheme();
+  const { palette, theme } = useTheme();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -181,7 +181,7 @@ export function ThreeStreakCrystal({ streak, size = 180 }: ThreeStreakCrystalPro
         renderer.dispose();
       }
     };
-  }, [streak, size]);
+  }, [streak, size, palette, theme]);
 
   return (
     <div
