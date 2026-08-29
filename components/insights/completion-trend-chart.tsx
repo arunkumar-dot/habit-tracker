@@ -8,8 +8,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  DotProps,
 } from "recharts";
+import { useTheme, THEME_PALETTES } from "@/components/providers/theme-provider";
 
 interface TrendRow {
   date: string;
@@ -33,25 +33,13 @@ function buildTrendData(rows: TrendRow[]) {
   });
 }
 
-// Only show a dot when the user hovers (active dot)
-function NoActiveDot(props: DotProps & { value?: number }) {
-  if (props.value === undefined) return null;
-  return (
-    <circle
-      cx={props.cx}
-      cy={props.cy}
-      r={4}
-      fill="#C2410C"
-      stroke="var(--bg-elevated, #FFFFFF)"
-      strokeWidth={2}
-    />
-  );
-}
-
 export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
-  const chartData = buildTrendData(data);
+  const { theme, palette } = useTheme();
+  const isDark = theme === "dark";
+  const activePaletteInfo = THEME_PALETTES.find((p) => p.id === palette) ?? THEME_PALETTES[0];
+  const accent = isDark ? activePaletteInfo.accentDark : activePaletteInfo.accentLight;
 
-  // Thin out X-axis labels when there are many data points
+  const chartData = buildTrendData(data);
   const tickInterval = data.length > 14 ? Math.ceil(data.length / 7) - 1 : 0;
 
   return (
@@ -59,15 +47,15 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
       <LineChart data={chartData}>
         <CartesianGrid
           strokeDasharray="3 3"
-          stroke="var(--border-subtle, #E8E3DA)"
+          stroke={isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}
           vertical={false}
         />
         <XAxis
           dataKey="label"
+          interval={tickInterval}
           tick={{ fill: "#8A8680", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
-          interval={tickInterval}
         />
         <YAxis
           domain={[0, 100]}
@@ -81,20 +69,26 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           formatter={(value: any) => [`${value}%`, "Completion"]}
           contentStyle={{
-            background: "var(--bg-elevated, #FFFFFF)",
-            border: "1px solid var(--border-subtle, #E8E3DA)",
+            background: isDark ? activePaletteInfo.bgDark : "#FFFFFF",
+            border: `1px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.1)"}`,
             borderRadius: 12,
-            color: "var(--text-primary, #1C1B18)",
+            color: isDark ? "#F5F1EA" : "#1C1B18",
             fontSize: 12,
           }}
         />
         <Line
           type="monotone"
           dataKey="rate"
-          stroke="#C2410C"
-          strokeWidth={2}
+          name="Completion"
+          stroke={accent}
+          strokeWidth={2.5}
           dot={false}
-          activeDot={<NoActiveDot />}
+          activeDot={{
+            r: 5,
+            fill: accent,
+            stroke: isDark ? "#121626" : "#FFFFFF",
+            strokeWidth: 2,
+          }}
           animationDuration={600}
         />
       </LineChart>

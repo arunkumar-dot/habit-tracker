@@ -1,5 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { Sparkles, Trophy } from "lucide-react";
+
 interface JourneyOneNumberProps {
   totalCompletions: number;
   isLoading: boolean;
@@ -7,68 +10,60 @@ interface JourneyOneNumberProps {
 
 export function JourneyOneNumber({ totalCompletions, isLoading }: JourneyOneNumberProps) {
   return (
-    <section
-      style={{
-        marginBottom: 40,
-        textAlign: "center",
-        padding: "36px 16px",
-        background: "var(--bg-surface)",
-        borderRadius: 16,
-        border: "1px solid var(--border)",
-      }}
+    <motion.section
+      initial={{ opacity: 0, scale: 0.96 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.45 }}
+      className="glass-card glow-card rounded-3xl p-8 sm:p-10 mb-10 text-center relative overflow-hidden"
     >
+      <div className="flex items-center justify-center gap-1.5 mb-3">
+        <Trophy size={16} className="text-[var(--accent)]" />
+        <p
+          className="text-xs uppercase tracking-widest font-semibold"
+          style={{ color: "var(--accent)" }}
+        >
+          All-Time Milestones
+        </p>
+      </div>
+
       <p
-        style={{
-          margin: 0,
-          fontFamily: "var(--font-sans)",
-          fontSize: 13,
-          fontWeight: 500,
-          letterSpacing: "0.06em",
-          textTransform: "uppercase",
-          color: "var(--text-subtle)",
-          marginBottom: 8,
-        }}
+        className="text-sm font-medium mb-4"
+        style={{ color: "var(--text-secondary)" }}
       >
-        You showed up
+        Total times you chose to show up
       </p>
 
       {isLoading ? (
         <div
-          className="animate-pulse rounded-lg"
-          style={{
-            height: 80,
-            width: 160,
-            background: "var(--surface-alt)",
-            margin: "0 auto 8px",
-          }}
+          className="animate-pulse rounded-2xl h-24 w-48 mx-auto my-3"
+          style={{ background: "var(--bg-sunken)" }}
         />
       ) : (
-        <p
+        <motion.p
+          key={totalCompletions}
+          initial={{ scale: 0.85, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 350, damping: 25 }}
+          className="my-2 font-normal select-none"
           style={{
-            margin: "0 0 8px",
             fontFamily: "var(--font-display)",
             fontStyle: "italic",
-            fontSize: "clamp(64px, 18vw, 88px)",
-            fontWeight: 400,
+            fontSize: "clamp(64px, 16vw, 96px)",
             lineHeight: 1,
-            color: "var(--text)",
+            color: "var(--text-primary)",
+            textShadow: "0 4px 20px color-mix(in srgb, var(--accent) 20%, transparent)",
           }}
           aria-label={`${totalCompletions} total habit completions`}
         >
           {totalCompletions.toLocaleString()}
-        </p>
+        </motion.p>
       )}
 
-      <p
-        style={{
-          margin: 0,
-          fontFamily: "var(--font-sans)",
-          fontSize: 15,
-          color: "var(--text-muted)",
-        }}
-      >
-        {totalCompletions === 1 ? "time" : "times"}
-      </p>
-    </section>
+      <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold mt-2 glass-panel" style={{ color: "var(--text-secondary)" }}>
+        <Sparkles size={13} className="text-[var(--accent)]" />
+        <span>{totalCompletions === 1 ? "Habit completed" : "Habits completed"}</span>
+      </div>
+    </motion.section>
   );
 }

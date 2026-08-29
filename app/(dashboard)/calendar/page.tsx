@@ -10,6 +10,8 @@ import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDateRange } from "@/hooks/use-completions";
 import { today, toDateString } from "@/lib/date-utils";
 
+import { motion } from "framer-motion";
+
 export default function CalendarPage() {
   const todayStr = today();
   const now = new Date();
@@ -79,20 +81,25 @@ export default function CalendarPage() {
   const isLoading = habitsLoading || completionsLoading;
 
   return (
-    <>
-      <PageHeader title="Calendar" />
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col gap-6"
+    >
+      <PageHeader
+        title="Calendar"
+        description="Inspect past consistency and habit histories."
+      />
 
       {isLoading ? (
-        <div
-          className="w-full rounded-lg p-4"
-          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
-        >
+        <div className="w-full glass-card rounded-3xl p-6">
           <CalendarGridSkeleton />
         </div>
       ) : (
         <>
           {/* ── Top section: grid + detail panel side-by-side on md+ ── */}
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row gap-5">
             {/* Month grid — 60% on desktop */}
             <div className="md:w-[60%]">
               <MonthGrid
@@ -116,7 +123,7 @@ export default function CalendarPage() {
           </div>
 
           {/* ── This month stats ── */}
-          <div className="mt-4">
+          <div>
             <MonthStats
               year={year}
               month={month}
@@ -127,6 +134,6 @@ export default function CalendarPage() {
           </div>
         </>
       )}
-    </>
+    </motion.div>
   );
 }

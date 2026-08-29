@@ -18,6 +18,8 @@ import type { Habit } from "@/types";
 
 type FrequencyFilter = "all" | "daily" | "weekly";
 
+import { motion } from "framer-motion";
+
 export default function HabitsPage() {
   const { isLoaded, isSignedIn } = useUser();
 
@@ -55,9 +57,15 @@ export default function HabitsPage() {
   if (!isSignedIn) return <RedirectToSignIn />;
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col gap-6"
+    >
       <PageHeader
-        title="My Habits"
+        title="Habits Hub"
+        description="Organize your daily and weekly habits."
         actions={
           <Button variant="primary" size="md" onClick={() => setIsCreateOpen(true)}>
             <Plus size={16} />
@@ -66,65 +74,73 @@ export default function HabitsPage() {
         }
       />
 
-      {/* Progress bar */}
+      {/* Progress card */}
       {totalCount > 0 && (
-        <div className="mb-5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.35, delay: 0.1 }}
+          className="glass-card rounded-2xl p-4 sm:p-5"
+        >
+          <div className="flex items-center justify-between mb-2.5">
+            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
               Today&apos;s Progress
             </span>
             <span
-              className="text-xs font-semibold"
+              className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
               style={{
+                background:
+                  completedCount === totalCount
+                    ? "color-mix(in srgb, var(--success) 15%, transparent)"
+                    : "color-mix(in srgb, var(--accent) 15%, transparent)",
                 color:
                   completedCount === totalCount
                     ? "var(--success)"
-                    : "var(--text-secondary)",
+                    : "var(--accent)",
               }}
             >
-              {completedCount}/{totalCount} completed
+              {completedCount} of {totalCount} completed ({Math.round(progressPct)}%)
             </span>
           </div>
           <Progress
             value={progressPct}
             color={completedCount === totalCount ? "var(--success)" : "var(--accent)"}
           />
-        </div>
+        </motion.div>
       )}
 
       {/* Filters */}
       {(habits?.length ?? 0) > 0 && (
-        <div className="mb-5">
-          <HabitFilters
-            search={search}
-            onSearchChange={setSearch}
-            frequencyFilter={frequencyFilter}
-            onFrequencyChange={setFrequencyFilter}
-            totalCount={totalCount}
-            completedCount={completedCount}
-          />
-        </div>
+        <HabitFilters
+          search={search}
+          onSearchChange={setSearch}
+          frequencyFilter={frequencyFilter}
+          onFrequencyChange={setFrequencyFilter}
+          totalCount={habits?.length ?? 0}
+          completedCount={habits?.filter((h) => completedHabitIds.has(h._id)).length ?? 0}
+        />
       )}
 
+      {/* Habits list */}
       <HabitList
         habits={filteredHabits}
         date={selectedDate}
         isLoading={isLoading}
-        onEdit={setEditingHabit}
+        onEdit={(habit) => setEditingHabit(habit)}
         onAddNew={() => setIsCreateOpen(true)}
       />
 
-      {/* Journal reflection prompt — shown after completing ≥1 habit, hidden once entry exists */}
-      {completedHabitIds.size > 0 && <ReflectionPrompt />}
+      {/* Reflection prompt */}
+      <div className="mt-4">
+        <ReflectionPrompt />
+      </div>
 
-      <CreateHabitDialog
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-      />
+      {/* Create / Edit Dialogs */}
+      <CreateHabitDialog isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
       <EditHabitDialog
         habit={editingHabit}
         onClose={() => setEditingHabit(null)}
       />
-    </>
+    </motion.div>
   );
 }

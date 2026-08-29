@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo } from "react";
+import { motion } from "framer-motion";
+import { Sparkles, Calendar, Zap } from "lucide-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useBestStreak } from "@/hooks/use-best-streak";
-import { StreakRibbon } from "@/components/ui/streak-ribbon";
+import { ThreeStreakCrystal } from "@/components/3d/three-streak-crystal";
 
 interface HeroStatsProps {
   totalCompletions: number;
@@ -22,52 +24,6 @@ function formatJourneyStart(firstDate: string | null, createdAt?: number): strin
   });
 }
 
-function StatRow({
-  label,
-  value,
-  extra,
-}: {
-  label: string;
-  value: React.ReactNode;
-  extra?: React.ReactNode;
-}) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingTop: 10,
-        paddingBottom: 10,
-        borderBottom: "1px solid var(--border-subtle)",
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-sans)",
-          fontSize: 14,
-          color: "var(--text-subtle)",
-        }}
-      >
-        {label}
-      </span>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: 14,
-            fontWeight: 600,
-            color: "var(--text)",
-          }}
-        >
-          {value}
-        </span>
-        {extra}
-      </div>
-    </div>
-  );
-}
-
 export function JourneyHero({ totalCompletions, daysActive, firstDate, isLoading }: HeroStatsProps) {
   const { user, isLoading: userLoading } = useCurrentUser();
   const { bestStreak, isLoading: streakLoading } = useBestStreak();
@@ -77,86 +33,82 @@ export function JourneyHero({ totalCompletions, daysActive, firstDate, isLoading
     [firstDate, user?.createdAt]
   );
 
-  const anyLoading = userLoading || isLoading || streakLoading;
-
   return (
-    <section style={{ marginBottom: 32 }}>
-      {/* Identity statement */}
-      <div style={{ marginBottom: 24 }}>
-        {userLoading ? (
-          <div
-            className="animate-pulse rounded-md"
-            style={{ height: 52, background: "var(--surface-alt)" }}
-          />
-        ) : user?.identityStatement ? (
-          <p
-            style={{
-              margin: 0,
-              fontFamily: "var(--font-display)",
-              fontStyle: "italic",
-              fontSize: "clamp(20px, 5vw, 26px)",
-              lineHeight: 1.3,
-              color: "var(--text)",
-            }}
-          >
-            You are becoming{" "}
-            <span style={{ color: "var(--accent)" }}>{user.identityStatement}</span>
-          </p>
-        ) : (
-          <p
-            style={{
-              margin: 0,
-              fontFamily: "var(--font-display)",
-              fontStyle: "italic",
-              fontSize: 22,
-              lineHeight: 1.3,
-              color: "var(--text-subtle)",
-            }}
-          >
-            Who do you want to become?
-          </p>
-        )}
-      </div>
+    <motion.section
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+      className="glass-card glow-card rounded-3xl p-6 sm:p-7 mb-8 relative overflow-hidden"
+    >
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="flex-1 text-center sm:text-left">
+          <div className="flex items-center justify-center sm:justify-start gap-1.5 mb-2">
+            <Sparkles size={14} className="text-[var(--accent)]" />
+            <span className="text-xs uppercase tracking-widest font-semibold" style={{ color: "var(--accent)" }}>
+              Growth Journey
+            </span>
+          </div>
 
-      {/* Stats rows */}
-      <div
-        style={{
-          background: "var(--bg-surface)",
-          borderRadius: 12,
-          border: "1px solid var(--border)",
-          overflow: "hidden",
-        }}
-      >
-        {anyLoading ? (
-          <div style={{ padding: "12px 16px" }}>
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                className="animate-pulse rounded"
-                style={{
-                  height: 16,
-                  background: "var(--surface-alt)",
-                  marginBottom: i < 2 ? 14 : 0,
-                  width: i === 0 ? "60%" : i === 1 ? "45%" : "55%",
-                }}
-              />
-            ))}
+          {/* Identity statement */}
+          {userLoading ? (
+            <div className="animate-pulse rounded-xl h-10 w-3/4 bg-[var(--bg-sunken)] mb-4" />
+          ) : user?.identityStatement ? (
+            <p
+              className="text-2xl sm:text-3xl leading-snug font-normal mb-5"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontStyle: "italic",
+                color: "var(--text-primary)",
+              }}
+            >
+              &ldquo;{user.identityStatement}&rdquo;
+            </p>
+          ) : (
+            <p
+              className="text-xl leading-snug font-normal mb-5"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontStyle: "italic",
+                color: "var(--text-secondary)",
+              }}
+            >
+              Your personal transformation archive
+            </p>
+          )}
+
+          {/* Stat grid */}
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="glass-panel p-3 rounded-xl flex items-center gap-2.5">
+              <Calendar size={16} className="text-[var(--accent)] flex-shrink-0" />
+              <div>
+                <span className="text-[11px] block" style={{ color: "var(--text-tertiary)" }}>
+                  Journey Started
+                </span>
+                <span className="text-xs font-semibold truncate block" style={{ color: "var(--text-primary)" }}>
+                  {startLabel}
+                </span>
+              </div>
+            </div>
+
+            <div className="glass-panel p-3 rounded-xl flex items-center gap-2.5">
+              <Zap size={16} className="text-[var(--warning)] flex-shrink-0" />
+              <div>
+                <span className="text-[11px] block" style={{ color: "var(--text-tertiary)" }}>
+                  Best Streak
+                </span>
+                <span className="text-xs font-semibold block" style={{ color: "var(--text-primary)" }}>
+                  {streakLoading ? "..." : `${bestStreak} Days`}
+                </span>
+              </div>
+            </div>
           </div>
-        ) : (
-          <div style={{ padding: "0 16px" }}>
-            <StatRow label="Journey started" value={startLabel} />
-            <StatRow
-              label="Best streak"
-              value={bestStreak > 0 ? `Day ${bestStreak}` : "—"}
-              extra={bestStreak > 0 ? <StreakRibbon count={bestStreak} /> : undefined}
-            />
-            <StatRow
-              label="Days active"
-              value={daysActive > 0 ? `${daysActive} day${daysActive !== 1 ? "s" : ""}` : "—"}
-            />
-          </div>
-        )}
+        </div>
+
+        {/* 3D Visualizer */}
+        <div className="flex-shrink-0 flex items-center justify-center">
+          <ThreeStreakCrystal streak={bestStreak ?? 0} size={140} />
+        </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

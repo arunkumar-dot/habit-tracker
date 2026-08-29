@@ -2,9 +2,9 @@
 
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { BarChart3, Star, Frown, Flame, Zap, Timer } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { BarChart3, Star, Frown, Flame, Zap, Timer, Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCard, MetricCardSkeleton } from "@/components/insights/metric-card";
 import { InsightCard } from "@/components/insights/insight-card";
 import { useInsights } from "@/hooks/use-insights";
@@ -15,7 +15,7 @@ const CompletionBarChart = dynamic(
     import("@/components/insights/completion-bar-chart").then(
       (m) => m.CompletionBarChart
     ),
-  { ssr: false, loading: () => <div className="h-[200px] animate-pulse rounded-xl" style={{ background: "var(--bg-elevated)" }} /> }
+  { ssr: false, loading: () => <div className="h-[200px] animate-pulse rounded-xl" style={{ background: "var(--bg-sunken)" }} /> }
 );
 
 const CompletionTrendChart = dynamic(
@@ -23,7 +23,7 @@ const CompletionTrendChart = dynamic(
     import("@/components/insights/completion-trend-chart").then(
       (m) => m.CompletionTrendChart
     ),
-  { ssr: false, loading: () => <div className="h-[200px] animate-pulse rounded-xl" style={{ background: "var(--bg-elevated)" }} /> }
+  { ssr: false, loading: () => <div className="h-[200px] animate-pulse rounded-xl" style={{ background: "var(--bg-sunken)" }} /> }
 );
 
 type Window = 7 | 30;
@@ -46,44 +46,59 @@ export default function InsightsPage() {
     !isLoading && metrics && metrics.overallRate === 0 && (completionStats?.every((r) => r.total === 0) ?? true);
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="max-w-4xl mx-auto flex flex-col gap-6"
+    >
       <PageHeader
-        title="Insights"
-        description="Understand your habit patterns and get smart suggestions"
+        title="Behavioral Insights"
+        description="Understand your subconscious habit patterns and receive smart suggestions."
+        actions={
+          <div className="flex items-center gap-1 p-1 rounded-2xl glass-panel">
+            {([7, 30] as Window[]).map((w) => {
+              const isSelected = window === w;
+              return (
+                <button
+                  key={w}
+                  onClick={() => setWindow(w)}
+                  className={`relative px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                    isSelected
+                      ? "text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {isSelected && (
+                    <motion.div
+                      layoutId="insightWindowPill"
+                      className="absolute inset-0 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] shadow-sm"
+                      transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{w} Days</span>
+                </button>
+              );
+            })}
+          </div>
+        }
       />
-
-      {/* Window toggle — segmented control */}
-      <div className="flex items-end gap-0 mb-6">
-        {([7, 30] as Window[]).map((w) => (
-          <button
-            key={w}
-            onClick={() => setWindow(w)}
-            className="seg-btn"
-            data-active={window === w}
-          >
-            {w} days
-          </button>
-        ))}
-      </div>
 
       {/* Empty state for new users */}
       {hasNoData && (
-        <div
-          className="rounded-2xl p-8 text-center mb-6"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
-        >
-          <BarChart3 size={32} className="mb-3" style={{ color: "var(--text-tertiary)" }} />
-          <p className="font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
-            No data yet
+        <div className="glass-card rounded-3xl p-8 text-center">
+          <BarChart3 size={32} className="mb-3 mx-auto text-[var(--accent)] opacity-80" />
+          <p className="font-semibold text-base mb-1" style={{ color: "var(--text-primary)" }}>
+            Building Your Dataset
           </p>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            Complete a few habits and check back — insights will appear here.
+          <p className="text-sm max-w-md mx-auto" style={{ color: "var(--text-secondary)" }}>
+            Complete a few habits this week — AI pattern analysis and behavior recommendations will automatically emerge here.
           </p>
         </div>
       )}
 
-      {/* Metric cards — 2 cols on mobile, 3 on sm+ */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+      {/* Metric cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => <MetricCardSkeleton key={i} />)
         ) : (
@@ -138,51 +153,51 @@ export default function InsightsPage() {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-        <Card variant="default" padding="md">
-          <CardHeader>
-            <CardTitle>Completion by Day of Week</CardTitle>
-          </CardHeader>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="glass-card rounded-3xl p-6">
+          <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+            Completion by Day of Week
+          </h3>
           {isLoading ? (
-            <div className="h-[200px] animate-pulse rounded-xl" style={{ background: "var(--bg-elevated)" }} />
+            <div className="h-[200px] animate-pulse rounded-2xl" style={{ background: "var(--bg-sunken)" }} />
           ) : (
             <CompletionBarChart data={metrics?.dayOfWeekStats ?? []} />
           )}
-        </Card>
+        </div>
 
-        <Card variant="default" padding="md">
-          <CardHeader>
-            <CardTitle>Daily Trend ({window} days)</CardTitle>
-          </CardHeader>
+        <div className="glass-card rounded-3xl p-6">
+          <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+            Daily Consistency Trend ({window} Days)
+          </h3>
           {isLoading ? (
-            <div className="h-[200px] animate-pulse rounded-xl" style={{ background: "var(--bg-elevated)" }} />
+            <div className="h-[200px] animate-pulse rounded-2xl" style={{ background: "var(--bg-sunken)" }} />
           ) : (
             <CompletionTrendChart data={completionStats ?? []} />
           )}
-        </Card>
+        </div>
       </div>
 
       {/* Behaviour insights */}
       {(isLoading || visibleInsights.length > 0) && (
-        <section className="mb-6">
-          <h2
-            className="text-sm font-semibold mb-3 uppercase tracking-wide"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Behaviour Patterns
-          </h2>
+        <section>
+          <div className="flex items-center gap-1.5 mb-3">
+            <Sparkles size={14} className="text-[var(--accent)]" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
+              Behavior Patterns
+            </h2>
+          </div>
           {isLoading ? (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {[1, 2].map((i) => (
                 <div
                   key={i}
-                  className="h-14 rounded-xl animate-pulse"
-                  style={{ background: "var(--bg-surface)" }}
+                  className="h-16 rounded-2xl animate-pulse"
+                  style={{ background: "var(--bg-sunken)" }}
                 />
               ))}
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {visibleInsights.map((insight) => (
                 <InsightCard key={insight.id} insight={insight} onDismiss={dismiss} />
               ))}
@@ -193,25 +208,25 @@ export default function InsightsPage() {
 
       {/* Recommendations */}
       {(isLoading || visibleRecs.length > 0) && (
-        <section className="mb-6">
-          <h2
-            className="text-sm font-semibold mb-3 uppercase tracking-wide"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Recommendations
-          </h2>
+        <section>
+          <div className="flex items-center gap-1.5 mb-3">
+            <Zap size={14} className="text-[var(--warning)]" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
+              AI Recommendations
+            </h2>
+          </div>
           {isLoading ? (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {[1].map((i) => (
                 <div
                   key={i}
-                  className="h-14 rounded-xl animate-pulse"
-                  style={{ background: "var(--bg-surface)" }}
+                  className="h-16 rounded-2xl animate-pulse"
+                  style={{ background: "var(--bg-sunken)" }}
                 />
               ))}
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {visibleRecs.map((rec) => (
                 <InsightCard key={rec.id} insight={rec} onDismiss={dismiss} />
               ))}
@@ -219,6 +234,6 @@ export default function InsightsPage() {
           )}
         </section>
       )}
-    </>
+    </motion.div>
   );
 }

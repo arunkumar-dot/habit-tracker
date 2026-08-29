@@ -12,6 +12,9 @@ import { SessionCounter } from "@/components/pomodoro/session-counter";
 import { HabitSelector } from "@/components/pomodoro/habit-selector";
 import { DurationSettings } from "@/components/pomodoro/duration-settings";
 
+import { motion } from "framer-motion";
+import { AmbientSoundPlayer } from "@/components/pomodoro/ambient-sound-player";
+
 export default function PomodoroPage() {
   const {
     mode,
@@ -41,10 +44,15 @@ export default function PomodoroPage() {
   );
 
   return (
-    <div className="flex flex-col gap-6">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col gap-6 max-w-xl mx-auto w-full"
+    >
       <PageHeader
-        title="Pomodoro"
-        description="Stay focused, one session at a time."
+        title="Pomodoro Focus"
+        description="Stay immersed with 3D focus and ambient soundscapes."
       />
 
       {/* Mode selector */}
@@ -52,12 +60,10 @@ export default function PomodoroPage() {
 
       {/* Timer — hidden until hydrated to prevent flash */}
       <div
-        className="flex flex-col gap-6 items-center py-6 rounded-2xl"
+        className="glass-card glow-card flex flex-col gap-6 items-center py-8 px-4 rounded-3xl relative overflow-hidden"
         style={{
-          background: "var(--bg-surface)",
-          border: "1px solid var(--border)",
           opacity: hydrated ? 1 : 0,
-          transition: "opacity 0.2s",
+          transition: "opacity 0.3s ease",
         }}
       >
         <PomodoroTimer
@@ -76,11 +82,11 @@ export default function PomodoroPage() {
         <SessionCounter sessionCount={sessionCount} />
       </div>
 
+      {/* Ambient Sound Player */}
+      <AmbientSoundPlayer />
+
       {/* Habit link */}
-      <div
-        className="px-4 py-3 rounded-xl"
-        style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
-      >
+      <div className="glass-card px-4 py-3 rounded-2xl">
         <HabitSelector linkedHabitId={linkedHabitId} onSelect={setLinkedHabitId} />
       </div>
 
@@ -93,21 +99,18 @@ export default function PomodoroPage() {
 
       {/* Daily stats */}
       {sessions !== undefined && (
-        <div
-          className="flex items-center justify-center gap-6 px-4 py-4 rounded-xl"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
-        >
+        <div className="glass-card flex items-center justify-around px-4 py-4 rounded-2xl">
           <Stat label="Sessions today" value={String(focusSessions.length)} />
-          <div className="w-px h-8" style={{ background: "var(--border)" }} />
+          <div className="w-px h-8" style={{ background: "var(--border-subtle)" }} />
           <Stat label="Focus time" value={`${totalFocusMin} min`} />
-          <div className="w-px h-8" style={{ background: "var(--border)" }} />
+          <div className="w-px h-8" style={{ background: "var(--border-subtle)" }} />
           <Stat
             label="Current mode"
             value={MODE_LABELS[mode]}
           />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

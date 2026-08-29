@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useTheme, THEME_PALETTES } from "@/components/providers/theme-provider";
 import type { DayStats } from "@/lib/insights";
 
 interface CompletionBarChartProps {
@@ -16,12 +17,17 @@ interface CompletionBarChartProps {
 }
 
 export function CompletionBarChart({ data }: CompletionBarChartProps) {
+  const { theme, palette } = useTheme();
+  const isDark = theme === "dark";
+  const activePaletteInfo = THEME_PALETTES.find((p) => p.id === palette) ?? THEME_PALETTES[0];
+  const accent = isDark ? activePaletteInfo.accentDark : activePaletteInfo.accentLight;
+
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} barCategoryGap="30%">
         <CartesianGrid
           strokeDasharray="3 3"
-          stroke="var(--border-subtle, #E8E3DA)"
+          stroke={isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}
           vertical={false}
         />
         <XAxis
@@ -42,18 +48,18 @@ export function CompletionBarChart({ data }: CompletionBarChartProps) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           formatter={(value: any) => [`${value}%`, "Completion"]}
           contentStyle={{
-            background: "var(--bg-elevated, #FFFFFF)",
-            border: "1px solid var(--border-subtle, #E8E3DA)",
+            background: isDark ? activePaletteInfo.bgDark : "#FFFFFF",
+            border: `1px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.1)"}`,
             borderRadius: 12,
-            color: "var(--text-primary, #1C1B18)",
+            color: isDark ? "#F5F1EA" : "#1C1B18",
             fontSize: 12,
           }}
-          cursor={{ fill: "rgba(194,65,12,0.06)" }}
+          cursor={{ fill: `${accent}15` }}
         />
         <Bar
           dataKey="rate"
           name="Completion"
-          fill="#C2410C"
+          fill={accent}
           radius={[6, 6, 0, 0]}
           maxBarSize={40}
           animationDuration={600}

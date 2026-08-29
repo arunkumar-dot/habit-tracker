@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trophy } from "lucide-react";
+import { motion } from "framer-motion";
+import { Trophy, Award, Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { MilestoneGrid } from "@/components/milestones/milestone-grid";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -30,10 +31,15 @@ export default function MilestonesPage() {
   const noHabits = !habitsLoading && (!habits || habits.length === 0);
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="max-w-4xl mx-auto flex flex-col gap-6"
+    >
       <PageHeader
-        title="Milestones"
-        description="Track your achievements and consistency rewards"
+        title="Achievements & Trophies"
+        description="Unlock lifetime milestone badges and celebrate your consistency milestones."
       />
 
       {noHabits ? (
@@ -44,25 +50,37 @@ export default function MilestonesPage() {
         />
       ) : (
         <div className="space-y-6">
-          {/* Habit selector — segmented control */}
+          {/* Habit selector — glass pills with spring animation */}
           {habits && habits.length > 1 && (
-            <div className="flex flex-wrap items-end gap-0">
+            <div className="flex items-center gap-1.5 p-1 rounded-2xl glass-panel overflow-x-auto no-scrollbar">
               {habits.map((habit) => {
-                const isActive = habit._id === selectedHabitId;
+                const isSelected = habit._id === selectedHabitId;
+                const color = habit.color ?? "var(--accent)";
+
                 return (
                   <button
                     key={habit._id}
                     onClick={() => setSelectedHabitId(habit._id)}
-                    className="seg-btn"
-                    data-active={isActive}
+                    className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                      isSelected
+                        ? "text-[var(--text-primary)]"
+                        : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-sunken)]"
+                    }`}
                   >
-                    {habit.color && (
-                      <span
-                        className="inline-block w-2 h-2 rounded-full mr-1.5"
-                        style={{ background: habit.color }}
+                    {isSelected && (
+                      <motion.div
+                        layoutId="milestoneHabitPill"
+                        className="absolute inset-0 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] shadow-sm"
+                        transition={{ type: "spring", stiffness: 450, damping: 30 }}
                       />
                     )}
-                    {habit.title}
+                    <span className="relative z-10 flex items-center gap-2">
+                      <span
+                        className="w-2 h-2 rounded-full flex-shrink-0"
+                        style={{ background: color }}
+                      />
+                      {habit.title}
+                    </span>
                   </button>
                 );
               })}
@@ -77,6 +95,6 @@ export default function MilestonesPage() {
           />
         </div>
       )}
-    </>
+    </motion.div>
   );
 }

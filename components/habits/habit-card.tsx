@@ -7,6 +7,7 @@ import { HabitGoalProgress } from "@/components/retention/habit-goal-progress";
 import { HabitMenu } from "./habit-menu";
 import { useOptimisticCompletion } from "@/hooks/use-optimistic-completion";
 import { formatDisplayTime, formatDuration, getDurationMinutes } from "@/lib/time-utils";
+import { playCompletionChime } from "@/lib/sound-effects";
 import type { Habit } from "@/types";
 
 interface HabitCardProps {
@@ -40,21 +41,20 @@ export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
     : null;
 
   return (
-    // No border-radius, no shadow, no full border — reads as a list row
     <div
-      className="relative overflow-hidden transition-colors hover:bg-[var(--bg-hover)]"
-      style={{ borderBottom: "1px solid var(--border-default)" }}
+      className="relative overflow-hidden transition-all duration-200 rounded-2xl glass-card my-2 hover:translate-x-1"
+      style={{ border: "1px solid var(--border-subtle)" }}
     >
       {/* Swipe tint */}
       <motion.div className="absolute inset-0 pointer-events-none" style={{ background: cardBackground }} />
 
       {/* Right swipe hint — Complete */}
       <motion.div
-        className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center gap-1"
+        className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center gap-1.5"
         style={{ opacity: rightOpacity }}
       >
-        <span className="text-xs font-semibold" style={{ color: "#10b981" }}>Complete</span>
-        <Check size={16} style={{ color: "#10b981" }} />
+        <span className="text-xs font-semibold" style={{ color: "var(--success)" }}>Complete</span>
+        <Check size={16} style={{ color: "var(--success)" }} />
       </motion.div>
 
       {/* Left swipe hint — Edit */}
@@ -136,7 +136,11 @@ export function HabitCard({ habit, date, onEdit }: HabitCardProps) {
 
           {/* 20px completion circle — text-primary fill when done, border-strong when not */}
           <button
-            onClick={(e) => { e.stopPropagation(); void toggle(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isCompleted) playCompletionChime();
+              void toggle();
+            }}
             aria-label={isCompleted ? "Mark incomplete" : "Mark complete"}
             className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
             style={

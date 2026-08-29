@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo } from "react";
+import { motion } from "framer-motion";
+import { Sparkles, BarChart2, Zap, TrendingUp, CheckCircle } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
-import { Card } from "@/components/ui/card";
 import { StatCardSkeleton } from "@/components/ui/skeleton";
 import { StreakSummary } from "@/components/analytics/streak-summary";
 import { StreakThread } from "@/components/StreakThread";
+import { WeeklyChart } from "@/components/analytics/weekly-chart";
 import { getMockMonthDays } from "@/lib/streaks";
 import { useHabits } from "@/hooks/use-habits";
 import { useCompletionsForDateRange } from "@/hooks/use-completions";
@@ -60,67 +62,99 @@ export default function AnalyticsPage() {
       : 0;
 
   return (
-    <>
-      <PageHeader title="Analytics" description="Your habit performance over time" />
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="max-w-4xl mx-auto flex flex-col gap-6"
+    >
+      <PageHeader
+        title="Analytics & Velocity"
+        description="Comprehensive insights into your daily momentum and habit performance."
+      />
 
-      {/* Stats row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+      {/* Stats Cards Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {isStatsLoading ? (
           <>
             <StatCardSkeleton />
             <StatCardSkeleton />
-            <div className="col-span-2 sm:col-span-1">
-              <StatCardSkeleton />
-            </div>
+            <StatCardSkeleton />
           </>
         ) : (
           <>
-            <Card variant="default" padding="md">
-              <p className="type-hero-number" style={{ color: "var(--text-primary)" }}>
+            <div className="glass-card glow-card rounded-3xl p-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs uppercase tracking-wider font-semibold" style={{ color: "var(--text-tertiary)" }}>
+                  Active Habits
+                </span>
+                <CheckCircle size={16} className="text-[var(--accent)]" />
+              </div>
+              <p className="text-4xl font-normal" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
                 {totalHabits}
               </p>
-              <p className="type-meta-label mt-2" style={{ color: "var(--text-tertiary)" }}>
-                Active Habits
+              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                Currently tracked routines
               </p>
-            </Card>
-            <Card variant="default" padding="md">
-              <p className="type-hero-number" style={{ color: "var(--text-primary)" }}>
+            </div>
+
+            <div className="glass-card glow-card rounded-3xl p-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs uppercase tracking-wider font-semibold" style={{ color: "var(--text-tertiary)" }}>
+                  This Week
+                </span>
+                <Zap size={16} className="text-[var(--warning)]" />
+              </div>
+              <p className="text-4xl font-normal" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
                 {totalCompletionsThisWeek}
               </p>
-              <p className="type-meta-label mt-2" style={{ color: "var(--text-tertiary)" }}>
-                This Week
+              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                Completions in the last 7 days
               </p>
-            </Card>
-            <Card variant="default" padding="md" className="col-span-2 sm:col-span-1">
-              <p className="type-hero-number" style={{ color: "var(--text-primary)" }}>
+            </div>
+
+            <div className="glass-card glow-card rounded-3xl p-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs uppercase tracking-wider font-semibold" style={{ color: "var(--text-tertiary)" }}>
+                  Consistency Rate
+                </span>
+                <TrendingUp size={16} className="text-[var(--success)]" />
+              </div>
+              <p className="text-4xl font-normal" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
                 {avgCompletionRate}%
               </p>
-              <p className="type-meta-label mt-2" style={{ color: "var(--text-tertiary)" }}>
-                Avg Completion
+              <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                Average daily completion
               </p>
-            </Card>
+            </div>
           </>
         )}
       </div>
 
+      {/* 7-Day Performance Chart */}
+      <div className="glass-card rounded-3xl p-6 sm:p-7">
+        <div className="flex items-center gap-2 mb-4">
+          <BarChart2 size={18} className="text-[var(--accent)]" />
+          <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+            7-Day Activity Velocity
+          </h2>
+        </div>
+        <WeeklyChart data={weeklyData} />
+      </div>
+
       {/* 30-day streak thread */}
-      <div className="mb-6">
-        <p
-          style={{
-            fontFamily: "var(--font-display)",
-            fontStyle: "italic",
-            fontSize: 20,
-            color: "var(--text-primary)",
-            marginBottom: 8,
-          }}
-        >
-          Last 30 days
-        </p>
+      <div className="glass-card rounded-3xl p-6 sm:p-7">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles size={18} className="text-[var(--accent)]" />
+          <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+            30-Day Activity Thread
+          </h2>
+        </div>
         <StreakThread variant="month" days={getMockMonthDays()} />
       </div>
 
       {/* Streak summary */}
       <StreakSummary />
-    </>
+    </motion.div>
   );
 }

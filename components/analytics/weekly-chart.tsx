@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useTheme } from "@/components/providers/theme-provider";
+import { useTheme, THEME_PALETTES } from "@/components/providers/theme-provider";
 import type { WeeklyData } from "@/types";
 
 interface WeeklyChartProps {
@@ -17,15 +17,15 @@ interface WeeklyChartProps {
 }
 
 export function WeeklyChart({ data }: WeeklyChartProps) {
-  const { theme } = useTheme();
+  const { theme, palette } = useTheme();
   const isDark = theme === "dark";
 
-  // Use design tokens resolved to hex for Recharts (SVG attributes, not CSS)
-  const accent      = isDark ? "#E86F3C" : "#C2410C";
-  const gridColor   = isDark ? "#2E2825" : "#E8E3DA";
+  const activePaletteInfo = THEME_PALETTES.find((p) => p.id === palette) ?? THEME_PALETTES[0];
+  const accent = isDark ? activePaletteInfo.accentDark : activePaletteInfo.accentLight;
+  const gridColor   = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
   const axisColor   = isDark ? "#8A8680" : "#8A8680";
-  const tooltipBg   = isDark ? "#231E1B" : "#FFFFFF";
-  const tooltipBorder = isDark ? "#2E2825" : "#E8E3DA";
+  const tooltipBg   = isDark ? activePaletteInfo.bgDark : "#FFFFFF";
+  const tooltipBorder = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.1)";
   const tooltipText = isDark ? "#F5F1EA" : "#1C1B18";
 
   return (

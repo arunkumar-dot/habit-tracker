@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { MoreHorizontal, X } from "lucide-react";
 import { Drawer } from "vaul";
 import { PRIMARY_NAV, MORE_NAV } from "@/lib/nav-config";
@@ -44,30 +45,48 @@ export function MobileNav() {
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
-                className="flex items-center justify-center transition-all duration-200"
+                className="relative flex items-center justify-center transition-all duration-200"
                 style={{
-                  gap: "5px",
-                  // Active tab takes its natural width; inactive tabs share remaining space equally
+                  gap: "6px",
                   flex: isActive ? "0 0 auto" : "1",
                   minWidth: 0,
-                  padding: isActive ? "9px 14px" : "9px 0",
+                  padding: isActive ? "10px 16px" : "10px 0",
                   borderRadius: "100px",
-                  background: isActive ? "var(--accent)" : "transparent",
-                  color: isActive ? "#fff" : "var(--text-tertiary)",
+                  color: isActive ? "#ffffff" : "var(--text-tertiary)",
                   whiteSpace: "nowrap",
                   minHeight: 44,
                 }}
               >
-                <item.icon
-                  size={18}
-                  aria-hidden="true"
-                  strokeWidth={isActive ? 2.5 : 1.75}
-                />
                 {isActive && (
-                  <span className="text-sm font-semibold leading-none">
-                    {item.mobileLabel ?? item.label}
-                  </span>
+                  <motion.div
+                    layoutId="mobileActiveTabPill"
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: "var(--accent)",
+                      boxShadow: "0 4px 16px -2px color-mix(in srgb, var(--accent) 50%, transparent)",
+                    }}
+                    transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                  />
                 )}
+                <motion.div
+                  whileTap={{ scale: 0.85 }}
+                  className="relative z-10 flex items-center gap-1.5"
+                >
+                  <item.icon
+                    size={19}
+                    aria-hidden="true"
+                    strokeWidth={isActive ? 2.5 : 1.75}
+                  />
+                  {isActive && (
+                    <motion.span
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="text-sm font-semibold leading-none"
+                    >
+                      {item.mobileLabel ?? item.label}
+                    </motion.span>
+                  )}
+                </motion.div>
               </Link>
             );
           })}

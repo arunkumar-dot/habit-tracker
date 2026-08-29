@@ -15,6 +15,9 @@ import { NotificationProvider } from "@/components/notifications/notification-pr
 import { OfflineBanner } from "@/components/layout/offline-banner";
 import { InstallPrompt } from "@/components/install-prompt";
 
+import { ThreeAmbientCanvas } from "@/components/3d/three-ambient-canvas";
+import { CommandPalette } from "@/components/layout/command-palette";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -31,7 +34,13 @@ export default function DashboardLayout({
         {/* Sync Clerk user → Convex on every dashboard load */}
         <UserSync />
 
-        <div className="flex h-full">
+        {/* Global Command Palette */}
+        <CommandPalette />
+
+        {/* Ambient 3D canvas */}
+        <ThreeAmbientCanvas intensity={0.9} />
+
+        <div className="relative z-10 flex h-full">
           {/* Desktop sidebar */}
           <Sidebar collapsed={collapsed} />
 
@@ -43,7 +52,7 @@ export default function DashboardLayout({
 
             <main
               className="flex-1 overflow-y-auto pb-28 lg:pb-0"
-              style={{ background: "var(--bg-base)" }}
+              style={{ background: "transparent" }}
             >
               <div className="max-w-3xl mx-auto px-4 lg:px-6 py-6">
                 {/* NotificationProvider is inside UserGate so it only mounts

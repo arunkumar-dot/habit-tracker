@@ -13,7 +13,10 @@ import { ProfileForm } from "@/components/profile/profile-form";
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { useToast } from "@/components/ui/toast";
 import { downloadUserDataExport } from "@/lib/export-client";
+import { ThemeSettingsCard } from "@/components/settings/theme-settings-card";
 import * as Sentry from "@sentry/nextjs";
+
+import { motion } from "framer-motion";
 
 export default function SettingsPage() {
   const { getToken } = useAuth();
@@ -47,14 +50,18 @@ export default function SettingsPage() {
   const isNameLoading = !clerkLoaded || isLoading;
 
   return (
-    <>
-      <PageHeader title="Settings" description="Manage your account and data" />
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="max-w-xl mx-auto space-y-6"
+    >
+      <PageHeader title="Settings" description="Manage your account, preferences, and data." />
 
-      <div className="max-w-lg mx-auto space-y-6">
+      <div className="space-y-6">
         {/* ── Avatar ───────────────────────────────────────────────────────── */}
         <div
-          className="rounded-lg p-6 flex flex-col items-center shadow-warm-sm"
-          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
+          className="glass-card rounded-3xl p-6 sm:p-7 flex flex-col items-center shadow-warm-sm"
         >
           {isLoading ? (
             <div className="flex flex-col items-center gap-3">
@@ -83,10 +90,7 @@ export default function SettingsPage() {
         </div>
 
         {/* ── Name (read-only, managed by Clerk) ───────────────────────────── */}
-        <div
-          className="rounded-lg p-6 shadow-warm-sm space-y-4"
-          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
-        >
+        <div className="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
           <div>
             <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
               Name
@@ -112,9 +116,9 @@ export default function SettingsPage() {
                     {label}
                   </p>
                   <div
-                    className="px-3 py-2 rounded-xl text-sm"
+                    className="px-3.5 py-2.5 rounded-xl text-sm"
                     style={{
-                      background: "var(--bg-surface)",
+                      background: "var(--bg-sunken)",
                       border: "1px solid var(--border-subtle)",
                       color: "var(--text-disabled)",
                     }}
@@ -137,11 +141,11 @@ export default function SettingsPage() {
           </button>
         </div>
 
+        {/* ── Appearance & Themes ─────────────────────────────────────────── */}
+        <ThemeSettingsCard />
+
         {/* ── Profile details (Convex fields) ──────────────────────────────── */}
-        <div
-          className="rounded-lg p-6 shadow-warm-sm"
-          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
-        >
+        <div className="glass-card rounded-3xl p-6 sm:p-7">
           <h2 className="text-base font-semibold mb-5" style={{ color: "var(--text-primary)" }}>
             Profile details
           </h2>
@@ -161,10 +165,7 @@ export default function SettingsPage() {
         </div>
 
         {/* ── Export ───────────────────────────────────────────────────────── */}
-        <div
-          className="rounded-lg p-6 shadow-warm-sm space-y-4"
-          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
-        >
+        <div className="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
           <div>
             <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
               Export your data
@@ -187,10 +188,7 @@ export default function SettingsPage() {
 
         {/* ── Install app ──────────────────────────────────────────────────── */}
         {installState !== "unavailable" && (
-          <div
-            className="rounded-lg p-6 shadow-warm-sm space-y-4"
-            style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
-          >
+          <div className="glass-card rounded-3xl p-6 sm:p-7 space-y-4">
             <div>
               <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
                 Install app
@@ -222,9 +220,8 @@ export default function SettingsPage() {
 
         {/* ── Danger Zone ──────────────────────────────────────────────────── */}
         <div
-          className="rounded-lg p-6 shadow-warm-sm space-y-4"
+          className="glass-card rounded-3xl p-6 sm:p-7 space-y-4"
           style={{
-            background: "var(--bg-elevated)",
             border: "1px solid color-mix(in srgb, var(--danger) 30%, var(--border-subtle))",
           }}
         >
@@ -253,6 +250,6 @@ export default function SettingsPage() {
         isOpen={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}
       />
-    </>
+    </motion.div>
   );
 }
