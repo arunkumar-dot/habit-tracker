@@ -4,6 +4,7 @@ import { useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useHabits } from "@/hooks/use-habits";
 import { JourneyHero } from "@/components/journey/journey-hero";
+import { Journey3DConstellation } from "@/components/journey/journey-3d-constellation";
 import { JourneyHeatmapSection } from "@/components/journey/journey-heatmap-section";
 import { JourneyMilestones } from "@/components/journey/journey-milestones";
 import { JourneyOneNumber } from "@/components/journey/journey-one-number";
@@ -43,7 +44,10 @@ export default function JourneyPage() {
         isLoading={statsLoading}
       />
 
-      {/* Section 2: History — year heatmap */}
+      {/* Section 2: 3D Habit Constellation Galaxy Map */}
+      <Journey3DConstellation habits={habits} isLoading={habitsLoading} />
+
+      {/* Section 3: History — year heatmap */}
       <JourneyHeatmapSection />
 
       {/* Section 3: Milestones — personal names */}
