@@ -316,15 +316,19 @@ export function TodayScreen() {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
-                      <Target size={13} className="text-[var(--accent)]" />
-                      <span>Next: <strong>{milestone.label}</strong></span>
-                    </div>
+                    <Link
+                      href="/milestones"
+                      className="flex items-center gap-1.5 text-xs font-medium hover:text-[var(--accent)] transition-colors group cursor-pointer"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      <Target size={13} className="text-[var(--accent)] group-hover:scale-110 transition-transform" />
+                      <span>Next: <strong>{milestone.label}</strong> →</span>
+                    </Link>
                   </div>
 
-                  {/* Milestone Progress Bar */}
-                  <div className="space-y-1">
-                    <div className="w-full h-2 rounded-full bg-[var(--bg-sunken)] overflow-hidden border border-[var(--border-subtle)]">
+                  {/* Milestone Progress Bar (Click to view Milestones) */}
+                  <Link href="/milestones" className="block space-y-1 group cursor-pointer">
+                    <div className="w-full h-2 rounded-full bg-[var(--bg-sunken)] overflow-hidden border border-[var(--border-subtle)] group-hover:border-[var(--accent)]/50 transition-colors">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${milestone.progressPercent}%` }}
@@ -337,9 +341,9 @@ export function TodayScreen() {
                     </div>
                     <div className="flex items-center justify-between text-[11px]" style={{ color: "var(--text-tertiary)" }}>
                       <span>{milestone.current} / {milestone.target} days to unlock</span>
-                      <span>{milestone.progressPercent}%</span>
+                      <span className="group-hover:text-[var(--accent)] font-semibold transition-colors">{milestone.progressPercent}%</span>
                     </div>
-                  </div>
+                  </Link>
 
                   {/* 7-Day Consistency Week Dots */}
                   <div className="pt-1 flex items-center justify-between sm:justify-start gap-2 sm:gap-3">

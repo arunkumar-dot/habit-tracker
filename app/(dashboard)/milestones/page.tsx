@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Trophy, Award, Sparkles } from "lucide-react";
+import { Trophy, Award, Sparkles, Flame } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { MilestoneGrid } from "@/components/milestones/milestone-grid";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -39,7 +39,7 @@ export default function MilestonesPage() {
     >
       <PageHeader
         title="Achievements & Trophies"
-        description="Unlock lifetime milestone badges and celebrate your consistency milestones."
+        description="Earn rare 3D holographic badges as you build consistency and hit unbroken streak milestones."
       />
 
       {noHabits ? (
@@ -61,7 +61,7 @@ export default function MilestonesPage() {
                   <button
                     key={habit._id}
                     onClick={() => setSelectedHabitId(habit._id)}
-                    className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                    className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                       isSelected
                         ? "text-[var(--text-primary)]"
                         : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-sunken)]"
@@ -87,7 +87,7 @@ export default function MilestonesPage() {
             </div>
           )}
 
-          {/* Milestone grid */}
+          {/* Milestone grid: Locked cards are locked, unlocked cards are 3D interactive */}
           <MilestoneGrid
             milestones={milestones}
             unlockedCount={unlockedCount}
