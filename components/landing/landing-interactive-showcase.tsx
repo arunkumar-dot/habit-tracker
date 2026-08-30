@@ -116,11 +116,11 @@ export function LandingInteractiveShowcase() {
                     <div className="flex items-center gap-1.5 mb-1">
                       <Sparkles size={13} className="text-[var(--accent)]" />
                       <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--accent)]">
-                        Identity in Progress
+                        Daily Identity Anchor
                       </span>
                     </div>
                     <p className="text-xl sm:text-2xl font-normal italic" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
-                      &ldquo;A Calmer, Highly Focused Writer&rdquo;
+                      &ldquo;Every action is a vote for who you wish to become.&rdquo;
                     </p>
                     <div className="mt-2 flex items-center gap-2">
                       <div className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--accent)]/15 text-[var(--accent)] flex items-center gap-1">

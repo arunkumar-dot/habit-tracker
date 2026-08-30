@@ -1,22 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Shield, Zap, Flame, CheckCircle2, Play, Lock } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, Flame, CheckCircle2, Play, Lock } from "lucide-react";
 import { ThreeStreakCrystal } from "@/components/3d/three-streak-crystal";
 
-const DEMO_MILESTONES = [
-  { days: 1, label: "Day 1 (Initiate)" },
-  { days: 3, label: "Day 3 (Sprout)" },
-  { days: 7, label: "Day 7 (Momentum)" },
-  { days: 30, label: "Day 30 (Identity)" },
-];
-
 export function LandingHero() {
-  const [demoStreak, setDemoStreak] = useState(7);
-  const [demoCompletedToday, setDemoCompletedToday] = useState(false);
-
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -51,7 +40,7 @@ export function LandingHero() {
               }}
             >
               Don&apos;t just track habits.{" "}
-              <span className="italic font-normal underline decoration-[var(--accent)]/40 decoration-wavy decoration-2 underline-offset-8">
+              <span className="italic font-normal">
                 Become the person
               </span>{" "}
               you designed.
@@ -153,65 +142,31 @@ export function LandingHero() {
               </div>
 
               <h3 className="text-lg font-normal mb-1" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
-                &ldquo;A Disciplined Athlete&rdquo;
+                Living 3D Streak Solid
               </h3>
-              <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
-                Move cursor to tilt. Streak solids evolve their geometry and ember halo as your streak grows.
+              <p className="text-xs mb-3" style={{ color: "var(--text-secondary)" }}>
+                Move cursor to tilt. Your streak solid comes alive with real-time WebGL physics and ambient lighting.
               </p>
 
-              {/* 3D Crystal Container */}
-              <div className="flex items-center justify-center my-2 h-[190px] relative">
+              {/* Single 3D Crystal Container */}
+              <div className="flex items-center justify-center my-2 h-[220px] relative">
                 <ThreeStreakCrystal
-                  streak={demoStreak}
-                  size={210}
-                  isCompletedToday={demoCompletedToday}
-                  completionRatio={demoCompletedToday ? 1 : 0.4}
+                  streak={7}
+                  size={220}
+                  isCompletedToday={false}
+                  completionRatio={0.65}
                 />
               </div>
 
-              {/* Interactive Milestone & Daily Completion Selector */}
-              <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex flex-col gap-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-medium" style={{ color: "var(--text-tertiary)" }}>
-                    Streak level:
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setDemoCompletedToday(!demoCompletedToday)}
-                    className="text-[10px] font-semibold px-2 py-0.5 rounded-md cursor-pointer transition-all flex items-center gap-1"
-                    style={{
-                      background: demoCompletedToday ? "var(--success)" : "var(--bg-sunken)",
-                      color: demoCompletedToday ? "#ffffff" : "var(--text-secondary)",
-                      border: demoCompletedToday ? "1px solid var(--success)" : "1px solid var(--border-subtle)",
-                    }}
-                  >
-                    <Sparkles size={11} />
-                    <span>{demoCompletedToday ? "All Habits Done ✨" : "Mark 100% Done"}</span>
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {DEMO_MILESTONES.map((m) => (
-                    <button
-                      key={m.days}
-                      type="button"
-                      onClick={() => setDemoStreak(m.days)}
-                      className="px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer text-center"
-                      style={{
-                        background: demoStreak === m.days
-                          ? "var(--accent)"
-                          : "var(--bg-sunken)",
-                        color: demoStreak === m.days
-                          ? "#ffffff"
-                          : "var(--text-secondary)",
-                        border: demoStreak === m.days
-                          ? "1px solid var(--accent)"
-                          : "1px solid var(--border-subtle)",
-                      }}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
+              {/* Interactive Cursor Hint Footer */}
+              <div className="mt-3 pt-3.5 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs" style={{ color: "var(--text-tertiary)" }}>
+                <span className="flex items-center gap-1.5 font-medium">
+                  <Sparkles size={13} className="text-[var(--accent)]" />
+                  <span>Real-Time Physics</span>
+                </span>
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[var(--bg-sunken)]" style={{ color: "var(--text-tertiary)" }}>
+                  Pointer Tilt Active
+                </span>
               </div>
             </div>
           </motion.div>

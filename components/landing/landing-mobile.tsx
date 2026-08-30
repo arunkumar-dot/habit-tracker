@@ -39,42 +39,88 @@ export function LandingMobile() {
           {/* iOS Guide */}
           <div className="p-7 rounded-3xl glass-card border border-[var(--border-default)] flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--bg-sunken)] text-[var(--text-primary)] font-bold text-sm">
+              <div className="flex items-center gap-3.5 mb-5">
+                <div
+                  className="px-3.5 py-1.5 rounded-xl flex items-center justify-center font-bold text-xs tracking-wider"
+                  style={{
+                    background: "color-mix(in srgb, var(--accent) 15%, transparent)",
+                    color: "var(--accent)",
+                    border: "1px solid color-mix(in srgb, var(--accent) 25%, transparent)",
+                  }}
+                >
                   iOS
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-[var(--text-primary)] m-0">
+                  <h3 className="text-base font-semibold m-0 leading-snug" style={{ color: "var(--text-primary)" }}>
                     Apple iPhone & iPad
                   </h3>
-                  <span className="text-xs text-[var(--text-tertiary)]">Safari Browser</span>
+                  <span className="text-xs font-medium" style={{ color: "var(--text-tertiary)" }}>Safari Browser</span>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3 my-4">
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-[var(--bg-base)] border border-[var(--border-subtle)]">
-                  <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-[var(--accent)]/15 text-[var(--accent)] flex-shrink-0 mt-0.5">
-                    <Share size={13} />
+                <div
+                  className="flex items-start gap-3.5 p-3.5 rounded-2xl border"
+                  style={{
+                    background: "var(--bg-base)",
+                    borderColor: "var(--border-subtle)",
+                  }}
+                >
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{
+                      background: "color-mix(in srgb, var(--accent) 15%, transparent)",
+                      color: "var(--accent)",
+                    }}
+                  >
+                    <Share size={14} />
                   </div>
-                  <div className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                    <strong className="text-[var(--text-primary)] block">Step 1: Tap Share</strong>
-                    Open <code className="text-[11px] px-1 py-0.5 rounded bg-[var(--bg-sunken)]">tryhabitflow.com</code> in Safari and tap the Share button.
+                  <div className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                    <strong className="block mb-0.5 font-semibold" style={{ color: "var(--text-primary)" }}>
+                      Step 1: Tap Share
+                    </strong>
+                    <span>Open </span>
+                    <code
+                      className="text-[11px] px-1.5 py-0.5 rounded font-mono font-medium"
+                      style={{ background: "var(--bg-sunken)", color: "var(--text-primary)" }}
+                    >
+                      tryhabitflow.com
+                    </code>
+                    <span> in Safari and tap the Share button.</span>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-[var(--bg-base)] border border-[var(--border-subtle)]">
-                  <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-[var(--accent)]/15 text-[var(--accent)] flex-shrink-0 mt-0.5">
-                    <PlusSquare size={13} />
+                <div
+                  className="flex items-start gap-3.5 p-3.5 rounded-2xl border"
+                  style={{
+                    background: "var(--bg-base)",
+                    borderColor: "var(--border-subtle)",
+                  }}
+                >
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{
+                      background: "color-mix(in srgb, var(--accent) 15%, transparent)",
+                      color: "var(--accent)",
+                    }}
+                  >
+                    <PlusSquare size={14} />
                   </div>
-                  <div className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                    <strong className="text-[var(--text-primary)] block">Step 2: Add to Home Screen</strong>
-                    Select <em>&quot;Add to Home Screen&quot;</em> to launch in standalone fullscreen app mode.
+                  <div className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                    <strong className="block mb-0.5 font-semibold" style={{ color: "var(--text-primary)" }}>
+                      Step 2: Add to Home Screen
+                    </strong>
+                    <span>Select </span>
+                    <em className="not-italic font-medium" style={{ color: "var(--text-primary)" }}>
+                      &quot;Add to Home Screen&quot;
+                    </em>
+                    <span> to launch in standalone fullscreen app mode.</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <span className="text-[11px] text-[var(--text-tertiary)] text-center block pt-2">
+            <span className="text-[11px] text-center block pt-3 border-t border-[var(--border-subtle)]" style={{ color: "var(--text-tertiary)" }}>
               Supports offline caching & lockscreen launch
             </span>
           </div>
@@ -82,42 +128,92 @@ export function LandingMobile() {
           {/* Android Guide */}
           <div className="p-7 rounded-3xl glass-card border border-[var(--border-default)] flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--bg-sunken)] text-[var(--text-primary)] font-bold text-sm">
+              <div className="flex items-center gap-3.5 mb-5">
+                <div
+                  className="px-3.5 py-1.5 rounded-xl flex items-center justify-center font-bold text-xs tracking-wider"
+                  style={{
+                    background: "color-mix(in srgb, var(--accent) 15%, transparent)",
+                    color: "var(--accent)",
+                    border: "1px solid color-mix(in srgb, var(--accent) 25%, transparent)",
+                  }}
+                >
                   Android
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-[var(--text-primary)] m-0">
+                  <h3 className="text-base font-semibold m-0 leading-snug" style={{ color: "var(--text-primary)" }}>
                     Android Phones & Tablets
                   </h3>
-                  <span className="text-xs text-[var(--text-tertiary)]">Chrome or Brave Browser</span>
+                  <span className="text-xs font-medium" style={{ color: "var(--text-tertiary)" }}>Chrome or Brave Browser</span>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3 my-4">
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-[var(--bg-base)] border border-[var(--border-subtle)]">
-                  <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-[var(--accent)]/15 text-[var(--accent)] flex-shrink-0 mt-0.5">
-                    <MoreVertical size={13} />
+                <div
+                  className="flex items-start gap-3.5 p-3.5 rounded-2xl border"
+                  style={{
+                    background: "var(--bg-base)",
+                    borderColor: "var(--border-subtle)",
+                  }}
+                >
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{
+                      background: "color-mix(in srgb, var(--accent) 15%, transparent)",
+                      color: "var(--accent)",
+                    }}
+                  >
+                    <MoreVertical size={14} />
                   </div>
-                  <div className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                    <strong className="text-[var(--text-primary)] block">Step 1: Open Menu</strong>
-                    Open <code className="text-[11px] px-1 py-0.5 rounded bg-[var(--bg-sunken)]">tryhabitflow.com</code> and tap the 3-dots browser menu.
+                  <div className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                    <strong className="block mb-0.5 font-semibold" style={{ color: "var(--text-primary)" }}>
+                      Step 1: Open Menu
+                    </strong>
+                    <span>Open </span>
+                    <code
+                      className="text-[11px] px-1.5 py-0.5 rounded font-mono font-medium"
+                      style={{ background: "var(--bg-sunken)", color: "var(--text-primary)" }}
+                    >
+                      tryhabitflow.com
+                    </code>
+                    <span> and tap the 3-dots browser menu.</span>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-[var(--bg-base)] border border-[var(--border-subtle)]">
-                  <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-[var(--accent)]/15 text-[var(--accent)] flex-shrink-0 mt-0.5">
-                    <Download size={13} />
+                <div
+                  className="flex items-start gap-3.5 p-3.5 rounded-2xl border"
+                  style={{
+                    background: "var(--bg-base)",
+                    borderColor: "var(--border-subtle)",
+                  }}
+                >
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{
+                      background: "color-mix(in srgb, var(--accent) 15%, transparent)",
+                      color: "var(--accent)",
+                    }}
+                  >
+                    <Download size={14} />
                   </div>
-                  <div className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                    <strong className="text-[var(--text-primary)] block">Step 2: Tap Install App</strong>
-                    Tap <em>&quot;Install App&quot;</em> or <em>&quot;Add to Home Screen&quot;</em> for instant setup.
+                  <div className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                    <strong className="block mb-0.5 font-semibold" style={{ color: "var(--text-primary)" }}>
+                      Step 2: Tap Install App
+                    </strong>
+                    <span>Tap </span>
+                    <em className="not-italic font-medium" style={{ color: "var(--text-primary)" }}>
+                      &quot;Install App&quot;
+                    </em>
+                    <span> or </span>
+                    <em className="not-italic font-medium" style={{ color: "var(--text-primary)" }}>
+                      &quot;Add to Home Screen&quot;
+                    </em>
+                    <span> for instant setup.</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <span className="text-[11px] text-[var(--text-tertiary)] text-center block pt-2">
+            <span className="text-[11px] text-center block pt-3 border-t border-[var(--border-subtle)]" style={{ color: "var(--text-tertiary)" }}>
               Includes Web Push notifications & offline service worker
             </span>
           </div>
