@@ -12,6 +12,8 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     <ClerkProvider
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
     >
       <CapacitorSplashHider />
       <SentryUserContext />
