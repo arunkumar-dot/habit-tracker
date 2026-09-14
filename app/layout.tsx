@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { ProvidersWrapper } from "@/components/providers/providers-wrapper";
 import { CapacitorInit } from "@/components/capacitor-init";
 import "./globals.css";
@@ -102,6 +103,7 @@ export default function RootLayout({
         </Script>
         <CapacitorInit />
         <ProvidersWrapper>{children}</ProvidersWrapper>
+        <Analytics />
       </body>
     </html>
   );
